@@ -12,6 +12,9 @@ find_package(catkin REQUIRED COMPONENTS
   image_transport
 )
 
+find_package(OpenCV REQUIRED)
+find_package(Boost REQUIRED COMPONENTS thread)
+
 # EBUS LIBRARY (it is necessary to source the set_puregev_env file inside the ebus sdk bin/ directory)
 set(EBUS_INCLUDE_DIRS $ENV{PUREGEV_ROOT}/include)
 
@@ -159,6 +162,8 @@ add_executable(find_camera src/utilities/find_camera.cpp)
 # )
 target_link_libraries(photonfocuslib
     ${EBUS_LIBRARIES}
+    ${OpenCV_LIBRARIES}
+    ${Boost_LIBRARIES}
 )
 
 target_link_libraries(photonfocus_node

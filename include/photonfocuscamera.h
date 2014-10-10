@@ -16,14 +16,17 @@
 #define BUFFER_COUNT 16
 
 #include <iostream>
+#include <iomanip>
 #include <stdexcept>
-#include <vector>
-#include <assert.h>
 
 #include <boost/function.hpp>
+#include <boost/thread.hpp>
+
+#include <opencv2/opencv.hpp>
 
 #include "PvDeviceGEV.h"
 #include "PvStreamGEV.h"
+#include "PvPipeline.h"
 
 namespace IRALab
 {
@@ -31,33 +34,36 @@ namespace PhotonFocus
 {
 class Camera
 {
-    PvDeviceGEV * device;
+    PvDevice * device;
+    PvStream * stream;
+    PvPipeline * pipeline;
     PvString camera_id; // MAC or IP
-    PvStreamGEV * stream;
 
     PvGenParameterArray * device_parameters;
     PvGenParameterArray * stream_parameters;
 
-    std::vector<PvBuffer *> buffer;
+    boost::shared_ptr<boost::thread> image_thread;
 
-    boost::function<void (const PvBuffer *)> callback;
+    cv::Size image_size;
 
 public:
+    boost::function<void(const cv::Mat &image)> callback;
+
     Camera(std::string ip_address);
     ~Camera();
-    void start();
-private:
-    PvResult openStream();
-    void initBuffer();
-    void freeBuffer();
 
-    void setFrameCallback(boost::function<void (const PvBuffer *)> callback);
+    void start();
+    void stop();
+private:
+    void open();
+    void close();
+    void acquireImages();
 
     void setRoiToWholeFrame();
 
     PvAccessType getAccessType();
-    long getAttribute(std::string name, long * min = NULL, long * max = NULL);
-    void setAttribute(std::string name, long value);
+    long getDeviceAttribute(std::string name, long * min = NULL, long * max = NULL);
+    void setDeviceAttribute(std::string name, long value);
 };
 }
 }

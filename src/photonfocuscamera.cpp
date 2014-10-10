@@ -43,103 +43,161 @@ Camera::Camera(std::string ip_address)
 
     device_parameters = device->GetParameters();
 
-    setRoiToWholeFrame();
-    assert(device != NULL);
-    openStream(); // TODO std::string("Unable to stream from ") + camera_id.GetAscii()
-    assert(stream != NULL);
-    initBuffer();
+    image_size = cv::Size(getDeviceAttribute("Width"),getDeviceAttribute("Height")); // width,column and not row,height
 }
 
 
 Camera::~Camera()
 {
-    // Disable streaming on the device
-    device->StreamDisable();
-
-    // Abort all buffers from the stream and dequeue
-    stream->AbortQueuedBuffers();
-
-    while(stream->GetQueuedBufferCount() > 0)
-    {
-        PvBuffer *frame = NULL;
-        PvResult result;
-
-        stream->RetrieveBuffer( &frame, &result );
-    }
-
-    freeBuffer();
-
-    CHECK_RESULT(stream->Close());
-    PvStream::Free(stream);
-
     CHECK_RESULT(device->Disconnect());
     PvDevice::Free(device);
 }
 
-PvResult Camera::openStream()
+void Camera::start()
 {
+    setRoiToWholeFrame();
+    open();
+
+    //    // TLParamsLocked is optional but when present, it MUST be set to 1
+    //    // before sending the AcquisitionStart command
+    //    device_params_->SetIntegerValue( "TLParamsLocked", 1 );
+
+    //    printf( "Resetting timestamp counter...\n" );
+    //    device_params_->ExecuteCommand( "GevTimestampControlReset" );
+
+    // All is set and ready, now say to the camera to start sending images
+    device_parameters->ExecuteCommand("AcquisitionStart");
+
+    // Start the thread which polls images from the camera buffer
+    image_thread.reset(new boost::thread(boost::bind(&IRALab::PhotonFocus::Camera::acquireImages, this)));
+}
+
+void Camera::stop()
+{
+    // Tell the camera to stop sending images
+    device_parameters->ExecuteCommand( "AcquisitionStop" );
+
+    close();
+}
+
+void Camera::open()
+{
+    // Test the network connection for the largest possible packet size that the network can support on the link between camera and controller
     PvDeviceGEV * device = static_cast<PvDeviceGEV *>(this->device);
     CHECK_RESULT(device->NegotiatePacketSize());
 
+    // Open a stream with the device
     PvResult result;
-    stream = static_cast<PvStreamGEV *>(PvStream::CreateAndOpen(camera_id,&result));
+    stream = PvStream::CreateAndOpen(camera_id,&result);
     if(stream == NULL)
         throw std::runtime_error(std::string("Unable to stream from ") + camera_id.GetAscii() + ".");
 
-    // Configure device streaming destination
-    device->SetStreamDestination(stream->GetLocalIPAddress(), stream->GetLocalPort());
-}
+    stream_parameters = stream->GetParameters(); // get stream parameters (for future usages)
 
-void Camera::initBuffer()
-{
+    // One endpoint of the stream is the camera itself, the other one is this software on the controller and it must be specified
+    PvStreamGEV * stream_gev = static_cast<PvStreamGEV *>(this->stream);
+    device->SetStreamDestination(stream_gev->GetLocalIPAddress(), stream_gev->GetLocalPort());
+
+    // Pipeline initialization (it manages buffers)
+    pipeline = new PvPipeline(stream);
+
     int payload_size = device->GetPayloadSize();
 
-    // Use BUFFER_COUNT or the maximum number of buffers, whichever is smaller
-    int buffer_length = (stream->GetQueuedBufferMaximum() < BUFFER_COUNT) ? stream->GetQueuedBufferMaximum() : BUFFER_COUNT;
+    // Set the Buffer count and the Buffer size
+    pipeline->SetBufferCount(BUFFER_COUNT);
+    pipeline->SetBufferSize(payload_size);
 
-    // allocate frame buffers
-    for(int i=0;i < buffer_length;i++)
-    {
-        PvBuffer * frame = new PvBuffer;
-        CHECK_RESULT(frame->Alloc(payload_size));
-        buffer.push_back(frame);
-    }
-
-    // Queue all buffers in the stream
-    std::vector<PvBuffer *>::iterator frame = buffer.begin();
-    while(frame != buffer.end())
-    {
-        stream->QueueBuffer(*frame);
-        frame++;
-    }
+    // IMPORTANT: the pipeline needs to be "armed", or started before we instruct the device to send us images
+    pipeline->Start();
+    device->StreamEnable();
 }
 
-void Camera::freeBuffer()
+void Camera::close()
 {
-    std::vector<PvBuffer *>::iterator frame = buffer.begin();
-    while(frame != buffer.end())
-    {
-        delete *frame;
-        frame++;
-    }
-    buffer.clear();
+    // STOP THE THREAD WHICH RETRIEVE IMAGES FROM THE CAMERA AND WAIT FOR ITS CONCLUSION!
+    image_thread->interrupt();
+    image_thread->join(); // TODO is it necessary?
+    image_thread.reset();
+
+    std::cout << std::endl;
+
+    device->StreamDisable();
+
+    pipeline->Stop();
+    delete pipeline;
+
+    stream->Close();
+    PvStream::Free(stream);
 }
 
-void Camera::setFrameCallback(boost::function<void (const PvBuffer *)> callback)
+void Camera::acquireImages()
 {
-    this->callback = callback;
+    char doodle[] = "|\\-|-/";
+    int doodle_index = 0;
+    double frame_rate_val_ = 0.0;
+    double bandwidth_val_ = 0.0;
+
+    while(true)
+    {
+        PvBuffer *buffer = NULL;
+        PvImage *image = NULL;
+        cv::Mat raw_image;
+
+        PvResult buffer_result, operation_result;
+
+        operation_result = pipeline->RetrieveNextBuffer(&buffer, 1000, &buffer_result);
+
+        if(operation_result.IsOK()) // operation results says about the retrieving from the pipeline
+        {
+            if(buffer_result.IsOK()) // buffer results says about the retrieved buffer status
+            {
+                stream_parameters->GetFloatValue( "AcquisitionRateAverage", frame_rate_val_ );
+                stream_parameters->GetFloatValue( "BandwidthAverage", bandwidth_val_ );
+
+                std::cout << std::fixed << std::setprecision(1);
+                std::cout << doodle[doodle_index];
+                std::cout << " BlockID: " << std::uppercase << std::hex << std::setfill('0') << std::setw(16) << buffer->GetBlockID();
+                if(buffer->GetPayloadType() == PvPayloadTypeImage)
+                {
+                    image = buffer->GetImage();
+                    raw_image = cv::Mat(image_size.height,image_size.width,CV_8UC1,image->GetDataPointer());
+
+                    std::cout << " W: " << std::dec << image_size.width << " H: " << image_size.height;
+
+                    // !!!! THIS IS THE POINT WHERE THE EXTERNAL CALLBACK IS CALLED !!!!
+                    callback(raw_image);
+                }
+                else
+                    std::cout << " (buffer does not contain image)";
+
+                std::cout << "  " << frame_rate_val_ << " FPS  " << ( bandwidth_val_ / 1000000.0 ) << " Mb/s \r";
+            }
+            else{
+                std::cout << doodle[doodle_index] << " " << buffer_result.GetCode() << " " << buffer_result.GetDescription().GetAscii() << "\r";
+            }
+            // release the buffer back to the pipeline
+            pipeline->ReleaseBuffer(buffer);
+        }
+        else
+        {
+            std::cout << doodle[doodle_index] << " " << buffer_result.GetCode() << " " << buffer_result.GetDescription().GetAscii() << "\r";
+        }
+        // when the interruption on the thread is called, its execution must reach this point! in this way the whole should be in a clear state
+        boost::this_thread::interruption_point();
+        ++doodle_index %= 6;
+    }
 }
 
 void Camera::setRoiToWholeFrame()
 {
     long value;
     long max_width;
-    value = getAttribute("Width",NULL,&max_width);
-    setAttribute("Width",max_width);
+    value = getDeviceAttribute("Width",NULL,&max_width);
+    setDeviceAttribute("Width",max_width);
 
     long max_height;
-    value = getAttribute("Height",NULL,&max_height);
-    setAttribute("Height",max_height);
+    value = getDeviceAttribute("Height",NULL,&max_height);
+    setDeviceAttribute("Height",max_height);
 }
 
 PvAccessType Camera::getAccessType()
@@ -149,9 +207,12 @@ PvAccessType Camera::getAccessType()
     return access_type;
 }
 
-long Camera::getAttribute(std::string name, long *min, long *max)
+long Camera::getDeviceAttribute(std::string name, long *min, long *max)
 {
-    PvGenInteger * parameter = dynamic_cast<PvGenInteger *>(device->GetParameters()->Get(PvString(name.c_str())));
+    if(device_parameters == NULL)
+        throw std::runtime_error("Device parameters are not yet initialized.");
+
+    PvGenInteger * parameter = dynamic_cast<PvGenInteger *>(device_parameters->Get(PvString(name.c_str())));
 
     if(parameter == NULL)
         throw std::runtime_error("Attribute " + name + " does not exist.");
@@ -165,8 +226,11 @@ long Camera::getAttribute(std::string name, long *min, long *max)
     return value;
 }
 
-void Camera::setAttribute(std::string name, long value)
+void Camera::setDeviceAttribute(std::string name, long value)
 {
+    if(device_parameters == NULL)
+        throw std::runtime_error("Device parameters are not yet initialized.");
+
     PvGenInteger * parameter = dynamic_cast<PvGenInteger *>(device->GetParameters()->Get(PvString(name.c_str())));
 
     if(parameter == NULL)
