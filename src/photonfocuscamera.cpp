@@ -12,14 +12,6 @@
 
 #include "photonfocuscamera.h"
 
-// THIS MACRO EXPLOITS RESULT DESCRIPTION FOR THROWING EXCEPTIONS ON EXPR WHICH RETURNS A PvResult
-#define CHECK_RESULT(expression)\
-do{\
-    PvResult result = expression;\
-    if(!result.IsOK())\
-        throw std::runtime_error(result.GetDescription().GetAscii());\
-}while(false)
-
 namespace IRALab
 {
 namespace PhotonFocus
@@ -42,8 +34,6 @@ Camera::Camera(std::string ip_address)
         throw std::runtime_error("Another process is using the camera " + ip_address); // TODO custom exeception
 
     device_parameters = device->GetParameters();
-
-    image_size = cv::Size(getDeviceAttribute("Width"),getDeviceAttribute("Height")); // width,column and not row,height
 }
 
 
@@ -51,11 +41,11 @@ Camera::~Camera()
 {
     CHECK_RESULT(device->Disconnect());
     PvDevice::Free(device);
+    std::cout << std::endl;
 }
 
 void Camera::start()
 {
-    setRoiToWholeFrame();
     open();
 
     //    // TLParamsLocked is optional but when present, it MUST be set to 1
@@ -119,8 +109,6 @@ void Camera::close()
     image_thread->join(); // TODO is it necessary?
     image_thread.reset();
 
-    std::cout << std::endl;
-
     device->StreamDisable();
 
     pipeline->Stop();
@@ -134,8 +122,12 @@ void Camera::acquireImages()
 {
     char doodle[] = "|\\-|-/";
     int doodle_index = 0;
-    double frame_rate_val_ = 0.0;
-    double bandwidth_val_ = 0.0;
+
+    double framerate = 0.0;
+    double bandwidth = 0.0;
+    long error_count = 0;
+    long image_average = 0;
+    PvString last_error;
 
     while(true)
     {
@@ -151,18 +143,21 @@ void Camera::acquireImages()
         {
             if(buffer_result.IsOK()) // buffer results says about the retrieved buffer status
             {
-                stream_parameters->GetFloatValue( "AcquisitionRateAverage", frame_rate_val_ );
-                stream_parameters->GetFloatValue( "BandwidthAverage", bandwidth_val_ );
+                CHECK_RESULT(stream_parameters->GetFloatValue("AcquisitionRate", framerate));
+                CHECK_RESULT(stream_parameters->GetFloatValue("Bandwidth", bandwidth));
+                CHECK_RESULT(stream_parameters->GetIntegerValue("ErrorCount",error_count));
+                CHECK_RESULT(stream_parameters->GetEnumValue("LastError",last_error));
+                CHECK_RESULT(device_parameters->GetIntegerValue("Average_Value",image_average));
 
                 std::cout << std::fixed << std::setprecision(1);
                 std::cout << doodle[doodle_index];
-                std::cout << " BlockID: " << std::uppercase << std::hex << std::setfill('0') << std::setw(16) << buffer->GetBlockID();
                 if(buffer->GetPayloadType() == PvPayloadTypeImage)
                 {
                     image = buffer->GetImage();
-                    raw_image = cv::Mat(image_size.height,image_size.width,CV_8UC1,image->GetDataPointer());
+                    raw_image = cv::Mat(image->GetHeight(),image->GetWidth(),CV_8UC1,image->GetDataPointer());
 
-                    std::cout << " W: " << std::dec << image_size.width << " H: " << image_size.height;
+                    std::cout << " W:" << std::setw(4) << std::setfill(' ') << std::left << std::dec << raw_image.cols
+                              << " H:" << std::setw(4) << std::setfill(' ') << std::left << std::dec << raw_image.rows;
 
                     // !!!! THIS IS THE POINT WHERE THE EXTERNAL CALLBACK IS CALLED !!!!
                     callback(raw_image);
@@ -170,7 +165,11 @@ void Camera::acquireImages()
                 else
                     std::cout << " (buffer does not contain image)";
 
-                std::cout << "  " << frame_rate_val_ << " FPS  " << ( bandwidth_val_ / 1000000.0 ) << " Mb/s \r";
+                std::cout << " "
+                          << std::setw(3) << std::setfill(' ') << std::fixed << std::setprecision(1) << framerate << "FPS "
+                          << std::setw(3) << (int)(bandwidth / 1000000.0) << "Mb/s"
+                          << " AvgVal: " << std::setw(4) << std::setfill(' ') << std::right << image_average
+                          << " * Errors:" << error_count << " - " << std::setw(26) << std::setfill(' ') << std::left << last_error.GetAscii() << "\r";
             }
             else{
                 std::cout << doodle[doodle_index] << " " << buffer_result.GetCode() << " " << buffer_result.GetDescription().GetAscii() << "\r";
@@ -188,55 +187,11 @@ void Camera::acquireImages()
     }
 }
 
-void Camera::setRoiToWholeFrame()
-{
-    long value;
-    long max_width;
-    value = getDeviceAttribute("Width",NULL,&max_width);
-    setDeviceAttribute("Width",max_width);
-
-    long max_height;
-    value = getDeviceAttribute("Height",NULL,&max_height);
-    setDeviceAttribute("Height",max_height);
-}
-
 PvAccessType Camera::getAccessType()
 {
     PvAccessType access_type;
     PvDeviceGEV::GetAccessType(camera_id,access_type);
     return access_type;
-}
-
-long Camera::getDeviceAttribute(std::string name, long *min, long *max)
-{
-    if(device_parameters == NULL)
-        throw std::runtime_error("Device parameters are not yet initialized.");
-
-    PvGenInteger * parameter = dynamic_cast<PvGenInteger *>(device_parameters->Get(PvString(name.c_str())));
-
-    if(parameter == NULL)
-        throw std::runtime_error("Attribute " + name + " does not exist.");
-
-    long value;
-    CHECK_RESULT(parameter->GetValue(value));
-    if(min != NULL)
-        CHECK_RESULT(parameter->GetMin(*min));
-    if(max != NULL)
-        CHECK_RESULT(parameter->GetMax(*max));
-    return value;
-}
-
-void Camera::setDeviceAttribute(std::string name, long value)
-{
-    if(device_parameters == NULL)
-        throw std::runtime_error("Device parameters are not yet initialized.");
-
-    PvGenInteger * parameter = dynamic_cast<PvGenInteger *>(device->GetParameters()->Get(PvString(name.c_str())));
-
-    if(parameter == NULL)
-        throw std::runtime_error("Attribute " + name + " does not exist.");
-
-    CHECK_RESULT(parameter->SetValue(value));
 }
 
 }

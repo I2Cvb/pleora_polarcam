@@ -10,6 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   cv_bridge
   image_transport
+  dynamic_reconfigure
 )
 
 find_package(OpenCV REQUIRED)
@@ -107,6 +108,10 @@ add_definitions(-D_UNIX_ -D_LINUX_)
 #   std_msgs  # Or other packages containing msgs
 # )
 
+generate_dynamic_reconfigure_options(
+  cfg/photonfocus.cfg
+)
+
 ###################################
 ## catkin specific configuration ##
 ###################################
@@ -155,6 +160,8 @@ add_executable(find_camera src/utilities/find_camera.cpp)
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(photonfocus_camera_node photonfocus_camera_generate_messages_cpp)
+add_dependencies(photonfocus_node ${PROJECT_NAME}_gencfg)
+
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(photonfocus_camera_node

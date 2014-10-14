@@ -13,7 +13,7 @@
 #ifndef PHOTONFOCUSCAMERA_H
 #define PHOTONFOCUSCAMERA_H
 
-#define BUFFER_COUNT 16
+#define BUFFER_COUNT 16 // TODO number of buffers from parameters?
 
 #include <iostream>
 #include <iomanip>
@@ -28,12 +28,21 @@
 #include "PvStreamGEV.h"
 #include "PvPipeline.h"
 
+// THIS MACRO EXPLOITS RESULT DESCRIPTION FOR THROWING EXCEPTIONS ON EXPR WHICH RETURNS A PvResult
+#define CHECK_RESULT(expression)\
+do{\
+    PvResult result = expression;\
+    if(!result.IsOK())\
+        throw std::runtime_error(result.GetDescription().GetAscii());\
+}while(false)
+
 namespace IRALab
 {
 namespace PhotonFocus
 {
 class Camera
 {
+    // FIXME it is necessary to specialize the exceptions...
     PvDevice * device;
     PvStream * stream;
     PvPipeline * pipeline;
@@ -44,8 +53,6 @@ class Camera
 
     boost::shared_ptr<boost::thread> image_thread;
 
-    cv::Size image_size;
-
 public:
     boost::function<void(const cv::Mat &image)> callback;
 
@@ -54,17 +61,129 @@ public:
 
     void start();
     void stop();
+
+    // TODO maybe the template can be re-engineered...
+    template <typename ParamType,typename ValueType>
+    ValueType getDeviceAttribute(std::string name, ValueType * min = NULL, ValueType * max = NULL)
+    {
+        if(device_parameters == NULL)
+            throw std::runtime_error("Device parameters are not yet initialized.");
+
+        ParamType * parameter = dynamic_cast<ParamType *>(device_parameters->Get(PvString(name.c_str())));
+
+        if(parameter == NULL)
+            throw std::runtime_error("Attribute " + name + " does not exist.");
+
+        ValueType value;
+        CHECK_RESULT(parameter->GetValue(value));
+        if(min != NULL)
+            CHECK_RESULT(parameter->GetMin(*min));
+        if(max != NULL)
+            CHECK_RESULT(parameter->GetMax(*max));
+        return value;
+    }
+
+    template <typename ParamType,typename ValueType>
+    void setDeviceAttribute(std::string name, ValueType value)
+    {
+        if(device_parameters == NULL)
+            throw std::runtime_error("Device parameters are not yet initialized.");
+
+        ParamType * parameter = dynamic_cast<ParamType *>(device->GetParameters()->Get(PvString(name.c_str())));
+
+        if(parameter == NULL)
+            throw std::runtime_error("Attribute " + name + " does not exist.");
+
+        // check if the value is in the range...
+        ValueType min,max;
+        CHECK_RESULT(parameter->GetMin(min));
+        CHECK_RESULT(parameter->GetMax(max));
+
+        if(!(min <= value && value <= max))
+        {
+            std::cout << name << " is not in the range [" << min << "," << max << "]..." << std::endl;
+            return;
+        }
+
+        if(!parameter->IsWritable())
+        {
+            std::cout << name << " is not writable at the time..." << std::endl;
+            return;
+        }
+
+        CHECK_RESULT(parameter->SetValue(value));
+    }
 private:
     void open();
     void close();
     void acquireImages();
 
-    void setRoiToWholeFrame();
-
     PvAccessType getAccessType();
-    long getDeviceAttribute(std::string name, long * min = NULL, long * max = NULL);
-    void setDeviceAttribute(std::string name, long value);
 };
+
+template <>
+void Camera::setDeviceAttribute<PvGenBoolean,bool>(std::string name, bool value)
+{
+    if(device_parameters == NULL)
+        throw std::runtime_error("Device parameters are not yet initialized.");
+
+    PvGenBoolean * parameter = dynamic_cast<PvGenBoolean *>(device->GetParameters()->Get(PvString(name.c_str())));
+
+    if(parameter == NULL)
+        throw std::runtime_error("Attribute " + name + " does not exist.");
+
+    if(!parameter->IsWritable())
+    {
+        std::cout << name << " is not writable at the time..." << std::endl;
+        return;
+    }
+
+    CHECK_RESULT(parameter->SetValue(value));
+
+}
+
+template <>
+void Camera::setDeviceAttribute<PvGenEnum,long>(std::string name, long value)
+{
+    if(device_parameters == NULL)
+        throw std::runtime_error("Device parameters are not yet initialized.");
+
+    PvGenEnum * parameter = dynamic_cast<PvGenEnum *>(device->GetParameters()->Get(PvString(name.c_str())));
+
+    if(parameter == NULL)
+        throw std::runtime_error("Attribute " + name + " does not exist.");
+
+    // check if the value is in the range...
+    long entries;
+    bool is_in = false;
+    CHECK_RESULT(parameter->GetEntriesCount(entries));
+    for(int i=0;i<entries && !is_in;i++)
+    {
+        const PvGenEnumEntry * entry;
+        CHECK_RESULT(parameter->GetEntryByIndex(i,&entry));
+        long current_value;
+        CHECK_RESULT(entry->GetValue(current_value));
+        if(value == current_value)
+            is_in = true;
+    }
+
+    if(!is_in)
+    {
+        std::cout << name << ": " << value << " is not a valid value for this enum..." << std::endl;
+        return;
+    }
+
+    if(!parameter->IsWritable())
+    {
+        std::cout << name << " is not writable at the time..." << std::endl;
+        return;
+    }
+
+    CHECK_RESULT(parameter->SetValue(value));
+}
+
+// TODO setDeviceAttribute<PvGenEnum, std::string> specification (it is pratically the same of <PvGenEnum,long>)
+
 }
 }
 #endif // PHOTONFOCUSCAMERA_H

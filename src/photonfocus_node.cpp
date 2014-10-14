@@ -20,6 +20,10 @@
 #include <iostream>
 #include <photonfocuscamera.h>
 
+#include <dynamic_reconfigure/server.h>
+#include <driver_base/SensorLevels.h>
+#include <photonfocus_camera/photonfocusConfig.h>
+
 class PhotonFocusNode
 {
 private:
@@ -35,7 +39,7 @@ private:
     boost::scoped_ptr<IRALab::PhotonFocus::Camera> camera;
 
     // TODO Dynamic Reconfigure [with parameter server]
-//    dynamic_reconfigure::Server<gige_camera::FlirConfig> reconfig_svr_;
+    dynamic_reconfigure::Server<photonfocus_camera::photonfocusConfig> reconfig_svr_;
 
 public:
     PhotonFocusNode(std::string ip,const ros::NodeHandle & node_handle):
@@ -48,8 +52,8 @@ public:
         camera->start();
         camera->callback = boost::bind(&PhotonFocusNode::publishImage, this, _1);
         // TODO parameter server callback
-//        reconfig_svr_.setCallback(boost::bind(&PhotonFocusNode::configCb, this, _1, _2));
-        std::cout << "===== PhotonFocus Camera ----- START ===== " << std::endl;
+        reconfig_svr_.setCallback(boost::bind(&PhotonFocusNode::configCb, this, _1, _2));
+        std::cout << std::setw(80) << std::setfill(' ') << std::left << "===== PhotonFocus Camera ----- START ===== " << std::endl;
     }
 
     ~PhotonFocusNode()
@@ -68,17 +72,42 @@ public:
         publisher.publish(this->image);
     }
 
-// TODO parameter server configure callback
-//    void configCb(gige_camera::FlirConfig &config, uint32_t level)
-//    {
-//        if (level >= (uint32_t)driver_base::SensorLevels::RECONFIGURE_STOP) cam_->stop();
+    void configCb(photonfocus_camera::photonfocusConfig & config, uint32_t level)
+    {
+        if(level >= (uint32_t) driver_base::SensorLevels::RECONFIGURE_STOP)
+            camera->stop();
 
-//        cam_->setIRFormat(config.IRFormat);
-//        if (config.AutoFocus) cam_->autoFocus();
-//        //cam_->setSize(config.Width, config.Height);
+        //# ----- Image Size Control -----
+        camera->setDeviceAttribute<PvGenInteger,long>("Width",config.Width*32+768);
+        camera->setDeviceAttribute<PvGenInteger,long>("Height",config.Height);
 
-//        if (level >= (uint32_t)driver_base::SensorLevels::RECONFIGURE_STOP) cam_->start();
-//    }
+        camera->setDeviceAttribute<PvGenInteger,long>("OffsetX",config.OffsetX*32);
+        camera->setDeviceAttribute<PvGenInteger,long>("OffsetY",config.OffsetY);
+
+        //# ----- Exposure and FrameRate -----
+        camera->setDeviceAttribute<PvGenFloat,double>("ExposureTimeAbs",config.ExposureTimeAbs);
+        camera->setDeviceAttribute<PvGenBoolean,bool>("ConstantFramerate_CFR",config.ConstantFramerate_CFR);
+        if(config.ConstantFramerate_CFR)
+            camera->setDeviceAttribute<PvGenFloat,double>("Frametime",config.Frametime);
+
+        camera->setDeviceAttribute<PvGenBoolean,bool>("Trigger_Interleave",config.Trigger_Interleave);
+        if(!config.Trigger_Interleave)\
+        {
+            camera->setDeviceAttribute<PvGenEnum,long>("LinLog_Mode",config.LinLog_Mode);
+            if(config.LinLog_Mode == 4)
+            {
+                std::cout << "UserDefined" << std::endl;
+                camera->setDeviceAttribute<PvGenInteger,long>("LinLog_Value1",config.LinLog_Value1);
+                camera->setDeviceAttribute<PvGenInteger,long>("LinLog_Value2",config.LinLog_Value2);
+                camera->setDeviceAttribute<PvGenInteger,long>("LinLog_Time1",config.LinLog_Time1);
+                camera->setDeviceAttribute<PvGenInteger,long>("LinLog_Time2",config.LinLog_Time2);
+            }
+        }
+        camera->setDeviceAttribute<PvGenInteger,long>("Voltages_BlackLevelOffset",config.Voltages_BlackLevelOffset);
+
+        if(level >= (uint32_t) driver_base::SensorLevels::RECONFIGURE_STOP)
+            camera->start();
+    }
 
 };
 
@@ -87,13 +116,15 @@ int main(int argc, char **argv)
     ros::init(argc,argv,"photonfocus_node");
     ros::NodeHandle node_handle("~");
 
-    if(argc < 2)
+    std::string ip;
+
+    if(!node_handle.getParam("ip",ip))
     {
-        std::cout << "Usage: " << argv[0] << " <MAC_ADDRESS | IP_ADDRESS>" << std::endl;
+        std::cout << "Usage: " << argv[0] << " _ip:=IP_ADDRESS" << std::endl;
         return 0;
     }
 
-    PhotonFocusNode camera_handle(argv[1],node_handle);
+    PhotonFocusNode camera_handle(ip,node_handle);
     ros::spin();
     return 0;
 }
