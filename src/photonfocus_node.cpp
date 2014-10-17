@@ -11,8 +11,10 @@
  ***************************************************************************/
 
 #include <ros/ros.h>
+#include <signal.h>
 
 #include <image_transport/image_transport.h>
+#include <image_transport/camera_publisher.h>
 #include <ros/publisher.h>
 #include <sensor_msgs/Image.h>
 #include <cv_bridge/cv_bridge.h>
@@ -24,35 +26,44 @@
 #include <driver_base/SensorLevels.h>
 #include <photonfocus_camera/photonfocusConfig.h>
 
+#include <camera_info_manager/camera_info_manager.h>
+
 class PhotonFocusNode
 {
 private:
     // ROS
     ros::NodeHandle node_handle;
     image_transport::ImageTransport image_transport;
-    image_transport::Publisher publisher;
+    image_transport::CameraPublisher publisher;
 
     // ROS Message
     sensor_msgs::ImagePtr image;
 
-    // FLIR Camera
+    // PhotonFocus Camera
     boost::scoped_ptr<IRALab::PhotonFocus::Camera> camera;
+    std::string camera_name;
 
     // TODO Dynamic Reconfigure [with parameter server]
     dynamic_reconfigure::Server<photonfocus_camera::photonfocusConfig> reconfig_svr_;
 
+    // Calibration Manager
+    boost::shared_ptr<camera_info_manager::CameraInfoManager> calibration_manager;
+
 public:
-    PhotonFocusNode(std::string ip,const ros::NodeHandle & node_handle):
+    PhotonFocusNode(std::string camera_name,std::string ip, const ros::NodeHandle & node_handle):
         node_handle(node_handle),
         image_transport(node_handle),
-        publisher(image_transport.advertise("image_raw",1)),
-        camera(NULL)
+        camera_name(camera_name),
+        calibration_manager(new camera_info_manager::CameraInfoManager(node_handle,camera_name))
     {
+        publisher = image_transport.advertiseCamera("image_raw",1);
+
         camera.reset(new IRALab::PhotonFocus::Camera(ip));
         camera->start();
         camera->callback = boost::bind(&PhotonFocusNode::publishImage, this, _1);
         // TODO parameter server callback
         reconfig_svr_.setCallback(boost::bind(&PhotonFocusNode::configCb, this, _1, _2));
+
         std::cout << std::setw(80) << std::setfill(' ') << std::left << "===== PhotonFocus Camera ----- START ===== " << std::endl;
     }
 
@@ -68,8 +79,23 @@ public:
         cv_bridge::CvImage cv_image;
         cv_image.encoding = "mono8";
         cv_image.image = img;
-        this->image = cv_image.toImageMsg();
-        publisher.publish(this->image);
+        cv_image.header.stamp = ros::Time::now();
+        image = cv_image.toImageMsg();
+
+        sensor_msgs::CameraInfo::Ptr camera_info;
+        if(calibration_manager->isCalibrated()) // calibration exists
+            camera_info.reset(new sensor_msgs::CameraInfo(calibration_manager->getCameraInfo()));
+        else // calibration doesn't exist
+        {
+            camera_info.reset(new sensor_msgs::CameraInfo());
+            camera_info->width = image->width;
+            camera_info->height = image->height;
+        }
+
+        image->header.frame_id = camera_name;
+        camera_info->header.frame_id = camera_name;
+
+        publisher.publish(image,camera_info);
     }
 
     void configCb(photonfocus_camera::photonfocusConfig & config, uint32_t level)
@@ -111,10 +137,19 @@ public:
 
 };
 
+bool ros_shutdown = false;
+
+void signal_handler(int sig_code)
+{
+    ros_shutdown = true;
+}
+
 int main(int argc, char **argv)
 {
     ros::init(argc,argv,"photonfocus_node");
     ros::NodeHandle node_handle("~");
+
+    signal(SIGINT,signal_handler);
 
     std::string ip;
 
@@ -124,7 +159,18 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    PhotonFocusNode camera_handle(ip,node_handle);
-    ros::spin();
+    std::string camera_name = node_handle.getNamespace();
+    if(camera_name.at(0) == '/')
+        camera_name = std::string(camera_name.begin()+1,camera_name.end());
+
+    boost::shared_ptr<PhotonFocusNode> camera_node(new PhotonFocusNode(camera_name,ip,node_handle));
+
+    while(ros::ok() && !ros_shutdown)
+        ros::spinOnce();
+
+    // the node is shutting down...cleaning
+    camera_node.reset();
+
+    ros::shutdown();
     return 0;
 }

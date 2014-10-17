@@ -46,7 +46,7 @@ class Camera
     PvDevice * device;
     PvStream * stream;
     PvPipeline * pipeline;
-    PvString camera_id; // MAC or IP
+    PvString camera_id; // IP
 
     PvGenParameterArray * device_parameters;
     PvGenParameterArray * stream_parameters;

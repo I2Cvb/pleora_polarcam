@@ -66,7 +66,6 @@ void Camera::stop()
 {
     // Tell the camera to stop sending images
     device_parameters->ExecuteCommand( "AcquisitionStop" );
-
     close();
 }
 

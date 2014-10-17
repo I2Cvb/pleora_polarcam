@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   image_transport
   dynamic_reconfigure
+  camera_info_manager
 )
 
 find_package(OpenCV REQUIRED)
