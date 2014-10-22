@@ -92,8 +92,9 @@ public:
             camera_info->height = image->height;
         }
 
-        image->header.frame_id = camera_name;
-        camera_info->header.frame_id = camera_name;
+        image->header.frame_id = ros::this_node::getNamespace();
+        camera_info->header.frame_id = ros::this_node::getNamespace();
+        camera_info->header.stamp = cv_image.header.stamp;
 
         publisher.publish(image,camera_info);
     }
@@ -159,9 +160,8 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    std::string camera_name = node_handle.getNamespace();
-    if(camera_name.at(0) == '/')
-        camera_name = std::string(camera_name.begin()+1,camera_name.end());
+    std::string camera_name = ros::this_node::getName();
+    camera_name = std::string(camera_name.begin()+ros::this_node::getNamespace().length(),camera_name.end());
 
     boost::shared_ptr<PhotonFocusNode> camera_node(new PhotonFocusNode(camera_name,ip,node_handle));
 
