@@ -92,8 +92,9 @@ public:
             camera_info->height = image->height;
         }
 
-        image->header.frame_id = "/" + camera_name;
-        camera_info->header.frame_id = "/" + camera_name;
+		// WARNING for calibration with cameracalibrator for ROS replace "stereo_rig" with ("/" + camera_name) in both next 2 lines
+        image->header.frame_id = "stereo_rig"; 
+        camera_info->header.frame_id = "stereo_rig";
         camera_info->header.stamp = cv_image.header.stamp;
 
         publisher.publish(image,camera_info);
@@ -103,6 +104,8 @@ public:
     {
         if(level >= (uint32_t) driver_base::SensorLevels::RECONFIGURE_STOP)
             camera->stop();
+
+        camera->setDeviceAttribute<PvGenEnum,std::string>("PixelFormat","Mono8");
 
         //# ----- Image Size Control -----
         camera->setDeviceAttribute<PvGenInteger,long>("Width",config.Width*32+768);

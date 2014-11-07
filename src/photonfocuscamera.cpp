@@ -146,7 +146,7 @@ void Camera::acquireImages()
                 CHECK_RESULT(stream_parameters->GetFloatValue("Bandwidth", bandwidth));
                 CHECK_RESULT(stream_parameters->GetIntegerValue("ErrorCount",error_count));
                 CHECK_RESULT(stream_parameters->GetEnumValue("LastError",last_error));
-                CHECK_RESULT(device_parameters->GetIntegerValue("Average_Value",image_average));
+//                CHECK_RESULT(device_parameters->GetIntegerValue("Average_Value",image_average));
 
                 std::cout << std::fixed << std::setprecision(1);
                 std::cout << doodle[doodle_index];

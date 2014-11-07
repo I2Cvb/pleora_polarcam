@@ -182,7 +182,45 @@ void Camera::setDeviceAttribute<PvGenEnum,long>(std::string name, long value)
     CHECK_RESULT(parameter->SetValue(value));
 }
 
-// TODO setDeviceAttribute<PvGenEnum, std::string> specification (it is pratically the same of <PvGenEnum,long>)
+template <>
+void Camera::setDeviceAttribute<PvGenEnum,std::string>(std::string name, std::string value)
+{
+    if(device_parameters == NULL)
+        throw std::runtime_error("Device parameters are not yet initialized.");
+
+    PvGenEnum * parameter = dynamic_cast<PvGenEnum *>(device->GetParameters()->Get(PvString(name.c_str())));
+
+    if(parameter == NULL)
+        throw std::runtime_error("Attribute " + name + " does not exist.");
+
+    // check if the value is in the range...
+    long entries;
+    bool is_in = false;
+    CHECK_RESULT(parameter->GetEntriesCount(entries));
+    for(int i=0;i<entries && !is_in;i++)
+    {
+        const PvGenEnumEntry * entry;
+        CHECK_RESULT(parameter->GetEntryByIndex(i,&entry));
+        PvString current_value;
+        CHECK_RESULT(entry->GetName(current_value));
+        if(value == std::string(current_value.GetAscii()))
+            is_in = true;
+    }
+
+    if(!is_in)
+    {
+        std::cout << name << ": " << value << " is not a valid value for this enum..." << std::endl;
+        return;
+    }
+
+    if(!parameter->IsWritable())
+    {
+        std::cout << name << " is not writable at the time..." << std::endl;
+        return;
+    }
+
+    CHECK_RESULT(parameter->SetValue(PvString(value.c_str())));
+}
 
 }
 }
