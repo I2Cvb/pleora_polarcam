@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(photonfocus_camera)
+project(ira_photonfocus_driver)
 
 set(CMAKE_BUILD_TYPE Debug)
 
@@ -146,13 +146,13 @@ include_directories(
 # add_library(photonfocus_camera
 #   src/${PROJECT_NAME}/photonfocus_camera.cpp
 # )
-add_library(photonfocuslib src/photonfocuscamera.cpp)
+add_library(ira_photonfocus src/photonfocus_camera.cpp)
 
 ## Declare a cpp executable
 # add_executable(photonfocus_camera_node src/photonfocus_camera_node.cpp)
 
 # DRIVER
-add_executable(photonfocus_node src/photonfocus_node.cpp)
+add_executable(ira_photonfocus_driver src/photonfocus_driver.cpp)
 
 # UTILITIES
 add_executable(set_ip src/utilities/set_ip.cpp)
@@ -161,21 +161,21 @@ add_executable(find_camera src/utilities/find_camera.cpp)
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(photonfocus_camera_node photonfocus_camera_generate_messages_cpp)
-add_dependencies(photonfocus_node ${PROJECT_NAME}_gencfg)
+add_dependencies(ira_photonfocus_driver ${PROJECT_NAME}_gencfg)
 
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(photonfocus_camera_node
 #   ${catkin_LIBRARIES}
 # )
-target_link_libraries(photonfocuslib
+target_link_libraries(ira_photonfocus
     ${EBUS_LIBRARIES}
     ${OpenCV_LIBRARIES}
     ${Boost_LIBRARIES}
 )
 
-target_link_libraries(photonfocus_node
-    photonfocuslib
+target_link_libraries(ira_photonfocus_driver
+    ira_photonfocus
     ${EBUS_LIBRARIES}
     ${catkin_LIBRARIES}
 )

@@ -20,15 +20,17 @@
 #include <cv_bridge/cv_bridge.h>
 
 #include <iostream>
-#include <photonfocuscamera.h>
+#include <photonfocus_camera.h>
 
 #include <dynamic_reconfigure/server.h>
 #include <driver_base/SensorLevels.h>
-#include <photonfocus_camera/photonfocusConfig.h>
+#include <ira_photonfocus_driver/photonfocusConfig.h>
 
 #include <camera_info_manager/camera_info_manager.h>
 
-class PhotonFocusNode
+namespace IRALab
+{
+class PhotonFocusDriver
 {
 private:
     // ROS
@@ -40,7 +42,7 @@ private:
     sensor_msgs::ImagePtr image;
 
     // PhotonFocus Camera
-    boost::scoped_ptr<IRALab::PhotonFocus::Camera> camera;
+    boost::scoped_ptr<IRALab::PhotonFocusCamera> camera;
     std::string camera_name;
 
     // TODO Dynamic Reconfigure [with parameter server]
@@ -50,7 +52,7 @@ private:
     boost::shared_ptr<camera_info_manager::CameraInfoManager> calibration_manager;
 
 public:
-    PhotonFocusNode(std::string camera_name,std::string ip, const ros::NodeHandle & node_handle):
+    PhotonFocusDriver(std::string camera_name,std::string ip, const ros::NodeHandle & node_handle):
         node_handle(node_handle),
         image_transport(node_handle),
         camera_name(camera_name),
@@ -58,16 +60,16 @@ public:
     {
         publisher = image_transport.advertiseCamera("image_raw",1);
 
-        camera.reset(new IRALab::PhotonFocus::Camera(ip));
+        camera.reset(new IRALab::PhotonFocusCamera(ip));
         camera->start();
-        camera->callback = boost::bind(&PhotonFocusNode::publishImage, this, _1);
+        camera->callback = boost::bind(&PhotonFocusDriver::publishImage, this, _1);
         // TODO parameter server callback
-        reconfig_svr_.setCallback(boost::bind(&PhotonFocusNode::configCb, this, _1, _2));
+        reconfig_svr_.setCallback(boost::bind(&PhotonFocusDriver::configCb, this, _1, _2));
 
         std::cout << std::setw(80) << std::setfill(' ') << std::left << "===== PhotonFocus Camera ----- START ===== " << std::endl;
     }
 
-    ~PhotonFocusNode()
+    ~PhotonFocusDriver()
     {
         camera->stop();
         camera.reset();
@@ -140,6 +142,7 @@ public:
     }
 
 };
+}
 
 bool ros_shutdown = false;
 
@@ -150,7 +153,7 @@ void signal_handler(int sig_code)
 
 int main(int argc, char **argv)
 {
-    ros::init(argc,argv,"photonfocus_node");
+    ros::init(argc,argv,"ira_photonfocus");
     ros::NodeHandle node_handle("~");
 
     signal(SIGINT,signal_handler);
@@ -166,7 +169,7 @@ int main(int argc, char **argv)
     std::string camera_name = ros::this_node::getName();
     camera_name = std::string(camera_name.begin()+ros::this_node::getNamespace().length(),camera_name.end());
 
-    boost::shared_ptr<PhotonFocusNode> camera_node(new PhotonFocusNode(camera_name,ip,node_handle));
+    boost::shared_ptr<IRALab::PhotonFocusDriver> camera_node(new IRALab::PhotonFocusDriver(camera_name,ip,node_handle));
 
     while(ros::ok() && !ros_shutdown)
         ros::spinOnce();

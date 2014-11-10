@@ -10,8 +10,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef PHOTONFOCUSCAMERA_H
-#define PHOTONFOCUSCAMERA_H
+#ifndef PHOTONFOCUS_CAMERA_H
+#define PHOTONFOCUS_CAMERA_H
 
 #define BUFFER_COUNT 16 // TODO number of buffers from parameters?
 
@@ -38,9 +38,7 @@ do{\
 
 namespace IRALab
 {
-namespace PhotonFocus
-{
-class Camera
+class PhotonFocusCamera
 {
     // FIXME it is necessary to specialize the exceptions...
     PvDevice * device;
@@ -56,8 +54,8 @@ class Camera
 public:
     boost::function<void(const cv::Mat &image)> callback;
 
-    Camera(std::string ip_address);
-    ~Camera();
+    PhotonFocusCamera(std::string ip_address);
+    ~PhotonFocusCamera();
 
     void start();
     void stop();
@@ -122,7 +120,7 @@ private:
 };
 
 template <>
-void Camera::setDeviceAttribute<PvGenBoolean,bool>(std::string name, bool value)
+void PhotonFocusCamera::setDeviceAttribute<PvGenBoolean,bool>(std::string name, bool value)
 {
     if(device_parameters == NULL)
         throw std::runtime_error("Device parameters are not yet initialized.");
@@ -143,7 +141,7 @@ void Camera::setDeviceAttribute<PvGenBoolean,bool>(std::string name, bool value)
 }
 
 template <>
-void Camera::setDeviceAttribute<PvGenEnum,long>(std::string name, long value)
+void PhotonFocusCamera::setDeviceAttribute<PvGenEnum,long>(std::string name, long value)
 {
     if(device_parameters == NULL)
         throw std::runtime_error("Device parameters are not yet initialized.");
@@ -183,7 +181,7 @@ void Camera::setDeviceAttribute<PvGenEnum,long>(std::string name, long value)
 }
 
 template <>
-void Camera::setDeviceAttribute<PvGenEnum,std::string>(std::string name, std::string value)
+void PhotonFocusCamera::setDeviceAttribute<PvGenEnum,std::string>(std::string name, std::string value)
 {
     if(device_parameters == NULL)
         throw std::runtime_error("Device parameters are not yet initialized.");
@@ -223,5 +221,4 @@ void Camera::setDeviceAttribute<PvGenEnum,std::string>(std::string name, std::st
 }
 
 }
-}
-#endif // PHOTONFOCUSCAMERA_H
+#endif // PHOTONFOCUS_CAMERA_H

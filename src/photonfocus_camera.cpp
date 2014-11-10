@@ -10,13 +10,11 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "photonfocuscamera.h"
+#include "photonfocus_camera.h"
 
 namespace IRALab
 {
-namespace PhotonFocus
-{
-Camera::Camera(std::string ip_address)
+PhotonFocusCamera::PhotonFocusCamera(std::string ip_address)
     : camera_id(ip_address.c_str())
 {
     // Find the camera and connect to it
@@ -37,14 +35,14 @@ Camera::Camera(std::string ip_address)
 }
 
 
-Camera::~Camera()
+PhotonFocusCamera::~PhotonFocusCamera()
 {
     CHECK_RESULT(device->Disconnect());
     PvDevice::Free(device);
     std::cout << std::endl;
 }
 
-void Camera::start()
+void PhotonFocusCamera::start()
 {
     open();
 
@@ -59,17 +57,17 @@ void Camera::start()
     device_parameters->ExecuteCommand("AcquisitionStart");
 
     // Start the thread which polls images from the camera buffer
-    image_thread.reset(new boost::thread(boost::bind(&IRALab::PhotonFocus::Camera::acquireImages, this)));
+    image_thread.reset(new boost::thread(boost::bind(&IRALab::PhotonFocusCamera::acquireImages, this)));
 }
 
-void Camera::stop()
+void PhotonFocusCamera::stop()
 {
     // Tell the camera to stop sending images
     device_parameters->ExecuteCommand( "AcquisitionStop" );
     close();
 }
 
-void Camera::open()
+void PhotonFocusCamera::open()
 {
     // Test the network connection for the largest possible packet size that the network can support on the link between camera and controller
     PvDeviceGEV * device = static_cast<PvDeviceGEV *>(this->device);
@@ -101,7 +99,7 @@ void Camera::open()
     device->StreamEnable();
 }
 
-void Camera::close()
+void PhotonFocusCamera::close()
 {
     // STOP THE THREAD WHICH RETRIEVE IMAGES FROM THE CAMERA AND WAIT FOR ITS CONCLUSION!
     image_thread->interrupt();
@@ -117,7 +115,7 @@ void Camera::close()
     PvStream::Free(stream);
 }
 
-void Camera::acquireImages()
+void PhotonFocusCamera::acquireImages()
 {
     char doodle[] = "|\\-|-/";
     int doodle_index = 0;
@@ -186,12 +184,11 @@ void Camera::acquireImages()
     }
 }
 
-PvAccessType Camera::getAccessType()
+PvAccessType PhotonFocusCamera::getAccessType()
 {
     PvAccessType access_type;
     PvDeviceGEV::GetAccessType(camera_id,access_type);
     return access_type;
 }
 
-}
 }
