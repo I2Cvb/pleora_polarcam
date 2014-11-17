@@ -20,7 +20,7 @@ find_package(Boost REQUIRED COMPONENTS thread)
 # EBUS SDK
 set(EBUS_INCLUDE_DIRS ebus_sdk/include)
 set(EBUS_LIBRARIES PvBase PvDevice PvPersistence PvGenICam PvStream PvTransmitter PvVirtualDevice PvAppUtils PvSerial PvGUI PvBuffer)
-link_directories("${PROJECT_SOURCE_DIR}/ebus_sdk/lib")
+link_directories("${CMAKE_CURRENT_SOURCE_DIR}/ebus_sdk/lib")
 
 add_definitions(-D_UNIX_ -D_LINUX_)
 
