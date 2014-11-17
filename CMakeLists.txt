@@ -17,41 +17,15 @@ find_package(catkin REQUIRED COMPONENTS
 find_package(OpenCV REQUIRED)
 find_package(Boost REQUIRED COMPONENTS thread)
 
-# EBUS LIBRARY (it is necessary to source the set_puregev_env file inside the ebus sdk bin/ directory)
-set(EBUS_INCLUDE_DIRS $ENV{PUREGEV_ROOT}/include)
-
-find_library(EBUS_PvBase_LIB PvBase $ENV{PUREGEV_ROOT}/lib)
-find_library(EBUS_PvDevice_LIB PvDevice $ENV{PUREGEV_ROOT}/lib)
-find_library(EBUS_PvPersistence_LIB PvPersistence $ENV{PUREGEV_ROOT}/lib)
-find_library(EBUS_PvGenICam_LIB PvGenICam $ENV{PUREGEV_ROOT}/lib)
-find_library(EBUS_PvStream_LIB PvStream $ENV{PUREGEV_ROOT}/lib)
-find_library(EBUS_PvTransmitter_LIB PvTransmitter $ENV{PUREGEV_ROOT}/lib)
-find_library(EBUS_PvVirtualDevice_LIB PvVirtualDevice $ENV{PUREGEV_ROOT}/lib)
-find_library(EBUS_PvAppUtils_LIB PvAppUtils $ENV{PUREGEV_ROOT}/lib)
-find_library(EBUS_PvSerial_LIB PvSerial $ENV{PUREGEV_ROOT}/lib)
-find_library(EBUS_PvGUI_LIB PvGUI $ENV{PUREGEV_ROOT}/lib)
-find_library(EBUS_PvBuffer_LIB PvBuffer $ENV{PUREGEV_ROOT}/lib)
-
-set(EBUS_LIBRARIES
-    ${EBUS_PvBase_LIB}
-    ${EBUS_PvDevice_LIB}
-    ${EBUS_PvPersistence_LIB}
-    ${EBUS_PvGenICam_LIB}
-    ${EBUS_PvStream_LIB}
-    ${EBUS_PvTransmitter_LIB}
-    ${EBUS_PvVirtualDevice_LIB}
-    ${EBUS_PvAppUtils_LIB}
-    ${EBUS_PvSerial_LIB}
-    ${EBUS_PvGUI_LIB}
-    ${EBUS_PvBuffer_LIB}
-)
+# EBUS SDK
+set(EBUS_INCLUDE_DIRS ebus_sdk/include)
+set(EBUS_LIBRARIES PvBase PvDevice PvPersistence PvGenICam PvStream PvTransmitter PvVirtualDevice PvAppUtils PvSerial PvGUI PvBuffer)
+link_directories("${PROJECT_SOURCE_DIR}/ebus_sdk/lib")
 
 add_definitions(-D_UNIX_ -D_LINUX_)
-# END EBUS LIBRARY
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
-
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
