@@ -19,8 +19,33 @@ find_package(Boost REQUIRED COMPONENTS thread)
 
 # EBUS SDK
 set(EBUS_INCLUDE_DIRS ebus_sdk/include)
-set(EBUS_LIBRARIES PvBase PvDevice PvPersistence PvGenICam PvStream PvTransmitter PvVirtualDevice PvAppUtils PvSerial PvGUI PvBuffer)
-link_directories("${CMAKE_CURRENT_SOURCE_DIR}/ebus_sdk/lib")
+
+find_library(EBUS_PvBase_LIB PvBase ebus_sdk/lib)
+find_library(EBUS_PvDevice_LIB PvDevice ebus_sdk/lib)
+find_library(EBUS_PvPersistence_LIB PvPersistence ebus_sdk/lib)
+find_library(EBUS_PvGenICam_LIB PvGenICam ebus_sdk/lib)
+find_library(EBUS_PvStream_LIB PvStream ebus_sdk/lib)
+find_library(EBUS_PvTransmitter_LIB PvTransmitter ebus_sdk/lib)
+find_library(EBUS_PvVirtualDevice_LIB PvVirtualDevice ebus_sdk/lib)
+find_library(EBUS_PvAppUtils_LIB PvAppUtils ebus_sdk/lib)
+find_library(EBUS_PvSerial_LIB PvSerial ebus_sdk/lib)
+find_library(EBUS_PvGUI_LIB PvGUI ebus_sdk/lib)
+find_library(EBUS_PvBuffer_LIB PvBuffer ebus_sdk/lib)
+
+set(EBUS_LIBRARIES
+    ${EBUS_PvBase_LIB}
+    ${EBUS_PvDevice_LIB}
+    ${EBUS_PvPersistence_LIB}
+    ${EBUS_PvGenICam_LIB}
+    ${EBUS_PvStream_LIB}
+    ${EBUS_PvTransmitter_LIB}
+    ${EBUS_PvVirtualDevice_LIB}
+    ${EBUS_PvAppUtils_LIB}
+    ${EBUS_PvSerial_LIB}
+    ${EBUS_PvGUI_LIB}
+    ${EBUS_PvBuffer_LIB}
+)
+
 
 add_definitions(-D_UNIX_ -D_LINUX_)
 
