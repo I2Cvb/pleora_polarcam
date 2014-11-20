@@ -1,0 +1,899 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RegisterDescription ModelName="ModelName" VendorName="VendorName" ToolTip="Model Description" StandardNameSpace="GEV" SchemaMajorVersion="1" SchemaMinorVersion="1" SchemaSubMinorVersion="1" MajorVersion="1" MinorVersion="0" SubMinorVersion="0" ProductGuid="CB9328DB-1273-42a3-90C7-EB3224537C39" VersionGuid="321DAFF5-A243-42ae-8B5D-B5BD18C31488" xmlns="http://www.genicam.org/GenApi/Version_1_1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.genicam.org/GenApi/Version_1_1  ../GenApiSchema_Version_1_1.xsd">
+	<Group Comment="Root">
+		<Category Name="Root">
+			<pFeature>Connection</pFeature>
+			<pFeature>Heartbeat</pFeature>
+			<pFeature>ControlInterface</pFeature>
+			<pFeature>EventInterface</pFeature>
+			<pFeature>StreamInterface</pFeature>
+			<pFeature>DeviceGenICamXMLAccess</pFeature>
+			<pFeature>Recovery</pFeature>
+			<pFeature>Internal</pFeature>
+		</Category>
+	</Group>
+	<Group Comment="Connection">
+		<Category Name="Connection">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<pFeature>DeviceGUID</pFeature>
+			<pFeature>ConnectionSpeed</pFeature>
+		</Category>
+		<StringReg Name="DeviceGUID">
+			<ToolTip>USB3 Vision GUID of the device the controller is connected to.</ToolTip>
+			<Description>USB3 Vision GUID of the device the controller is connected to.</Description>
+			<DisplayName>Device GUID</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>Connected</pIsAvailable>
+			<Address>0xE800</Address>
+			<Length>64</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+		</StringReg>
+		<Enumeration Name="ConnectionSpeed">
+			<ToolTip>Effective connection speed to the device once connected.</ToolTip>
+			<Description>Effective connection speed to the device once connected.</Description>
+			<DisplayName>Connection Speed</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pIsAvailable>Connected</pIsAvailable>
+			<EnumEntry Name="LowSpeed">
+				<DisplayName>Low Sped</DisplayName>
+				<Value>0</Value>
+			</EnumEntry>
+			<EnumEntry Name="FullSpeed">
+				<DisplayName>Full Speed</DisplayName>
+				<Value>1</Value>
+			</EnumEntry>
+			<EnumEntry Name="HighSpeed">
+				<DisplayName>High Speed</DisplayName>
+				<Value>2</Value>
+			</EnumEntry>
+			<EnumEntry Name="SuperSpeed">
+				<DisplayName>Super Speed</DisplayName>
+				<Value>3</Value>
+			</EnumEntry>
+			<EnumEntry Name="NotConnected">
+				<DisplayName>Not Connected</DisplayName>
+				<Value>4</Value>
+			</EnumEntry>
+			<pValue>ConnectionSpeedReg</pValue>
+		</Enumeration>
+		<IntReg Name="ConnectionSpeedReg">
+			<Address>0xE840</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+	</Group>
+	<Group Comment="Heartbeat">
+		<Category Name="Heartbeat">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<pFeature>HeartbeatInterval</pFeature>
+		</Category> 
+		<Integer Name="HeartbeatInterval">
+			<ToolTip>Time between each heartbeat sent by the software.</ToolTip>
+			<Description>Time in milliseconds between each heartbeat sent to the USB3 Vision device.</Description>
+			<Visibility>Beginner</Visibility>
+			<Streamable>Yes</Streamable>
+			<pValue>HeartbeatIntervalReg</pValue>
+			<Min>100</Min>
+			<Max>65535</Max>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="HeartbeatIntervalReg">
+			<Address>0xE844</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+	</Group>
+	<Group Comment="ControlInterface">
+		<Category Name="ControlInterface">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<DisplayName>Control Interface</DisplayName>
+			<pFeature>CIPacketSize</pFeature>
+			<pFeature>CISuccess</pFeature>
+			<pFeature>CIPendingAcknowledge</pFeature>
+			<pFeature>CICancelled</pFeature>
+			<pFeature>CITimeout</pFeature>
+			<pFeature>CILinkError</pFeature>
+			<pFeature>CIFormattingRequestError</pFeature>
+			<pFeature>CIMalformedAcknowledge</pFeature>
+			<pFeature>CIDiscardedLateAcknowledge</pFeature>
+		</Category>  
+		<Integer Name="CIPacketSize">
+			<ToolTip>Packet size used for device control.</ToolTip>
+			<Description>Packet size of the control channel end point in bytes.</Description>
+			<DisplayName>Control Packet Size</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>Connected</pIsAvailable>
+			<pValue>CIPacketSizeReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="CIPacketSizeReg">
+			<Address>0xE848</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="CISuccess">
+			<ToolTip>Count of control commands success.</ToolTip>
+			<Description>Count of control commands success.</Description>
+			<Visibility>Expert</Visibility>
+			<pValue>CISuccessReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="CISuccessReg">
+			<Address>0xE84C</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="CIPendingAcknowledge">
+			<ToolTip>Count of control pending acknowledge.</ToolTip>
+			<Description>Count of control pending acknowledge.</Description>
+			<Visibility>Expert</Visibility>
+			<pValue>CIPendingAcknowledgeReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="CIPendingAcknowledgeReg">
+			<Address>0xE850</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="CICancelled">
+			<ToolTip>Count of cancelled commands.</ToolTip>
+			<Description>Count of cancelled commands.</Description>
+			<Visibility>Guru</Visibility>
+			<pValue>CICancelledReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="CICancelledReg">
+			<Address>0xE854</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="CITimeout">
+			<ToolTip>Count of command timeouts.</ToolTip>
+			<Description>Count of command timeouts.</Description>
+			<Visibility>Guru</Visibility>
+			<pValue>CITimeoutReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="CITimeoutReg">
+			<Address>0xE858</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="CILinkError">
+			<ToolTip>Count of link error.</ToolTip>
+			<Description>Count of link error.</Description>
+			<Visibility>Guru</Visibility>
+			<pValue>CILinkErrorReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="CILinkErrorReg">
+			<Address>0xE85C</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="CIFormattingRequestError">
+			<ToolTip>Count of formatting request error.</ToolTip>
+			<Description>Count of formatting request error.</Description>
+			<Visibility>Guru</Visibility>
+			<Streamable>Yes</Streamable>
+			<pValue>CIFormattingRequestErrorReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="CIFormattingRequestErrorReg">
+			<Address>0xE860</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="CIMalformedAcknowledge">
+			<ToolTip>Count of malformed acknowledge.</ToolTip>
+			<Description>Count of malformed acknowledge.</Description>
+			<Visibility>Guru</Visibility>
+			<pValue>CIMalformedAcknowledgeReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="CIMalformedAcknowledgeReg">
+			<Address>0xE864</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="CIDiscardedLateAcknowledge">
+			<ToolTip>Count of discarded late acknowledge.</ToolTip>
+			<Description>Count of discarded late acknowledge.</Description>
+			<Visibility>Guru</Visibility>
+			<pValue>CIDiscardedLateAcknowledgeReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="CIDiscardedLateAcknowledgeReg">
+			<Address>0xE868</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+	</Group>
+	<Group Comment="EventInterface">
+		<Category Name="EventInterface">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<DisplayName>Control Interface</DisplayName>
+			<pFeature>EIPacketSize</pFeature>
+		</Category>   
+		<Integer Name="EIPacketSize">
+			<ToolTip>Packet size used for device events.</ToolTip>
+			<Description>Packet size of the messaging channel end point in bytes.</Description>
+			<DisplayName>Messaging Packet Size</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>Connected</pIsAvailable>
+			<pValue>EIPacketSizeReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="EIPacketSizeReg">
+			<Address>0xE86C</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+	</Group>
+	<Group Comment="StreamInterface">
+		<Category Name="StreamInterface">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<DisplayName>Stream Interface</DisplayName>
+			<pFeature>SIChannel</pFeature>
+			<pFeature>SIPayloadSizeAlignment</pFeature>
+			<pFeature>SIRequiredPayloadSize</pFeature>
+			<pFeature>SIRequiredLeaderSize</pFeature>
+			<pFeature>SIRequiredTrailerSize</pFeature>
+			<pFeature>SIMaximumLeaderSize</pFeature>
+			<pFeature>SIPayloadTransferSize</pFeature>
+			<pFeature>SIPayloadTransferCount</pFeature>
+			<pFeature>SIPayloadFinalTransfer1Size</pFeature>
+			<pFeature>SIPayloadFinalTransfer2Size</pFeature>
+			<pFeature>SIMaximumTrailerSize</pFeature>
+			<pFeature>SIMaximumPacketSize</pFeature>
+			<pFeature>SICustomPayloadTransferSize</pFeature>
+		</Category>
+		<Integer Name="SIChannel">
+			<ToolTip>Stream channel selector.</ToolTip>
+			<Description>Stream channel selector for the parameters in the StreamInterface category.</Description>
+			<DisplayName>Channel</DisplayName>
+			<Visibility>Expert</Visibility>
+		<pIsAvailable>SIChannelAvailExpr</pIsAvailable>
+			<pValue>SIChannelReg</pValue>
+			<Min>0</Min>
+			<pMax>SIChannelMaxExpr</pMax>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+			<pSelected>SIMaximumLeaderSize</pSelected>
+			<pSelected>SIMaximumPacketSize</pSelected>
+			<pSelected>SIMaximumTrailerSize</pSelected>
+			<pSelected>SIPayloadFinalTransfer1Size</pSelected>
+			<pSelected>SIPayloadFinalTransfer2Size</pSelected>
+			<pSelected>SIPayloadSizeAlignment</pSelected>
+			<pSelected>SIPayloadTransferCount</pSelected>
+			<pSelected>SIPayloadTransferSize</pSelected>
+			<pSelected>SIRequiredLeaderSize</pSelected>
+			<pSelected>SIRequiredPayloadSize</pSelected>
+			<pSelected>SIRequiredTrailerSize</pSelected>
+		</Integer>
+		<IntReg Name="SIChannelReg">
+			<Address>0xE870</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="SIChannelMaxExpr">
+			<pVariable Name="VAR_CHANNELCOUNT">ChannelCountReg</pVariable>
+			<Formula>VAR_CHANNELCOUNT - 1</Formula>
+		</IntSwissKnife>
+		<IntSwissKnife Name="SIChannelAvailExpr">
+			<pVariable Name="VAR_CONNECTED">ConnectedReg</pVariable>
+			<pVariable Name="VAR_CHANNELCOUNT">ChannelCountReg</pVariable>
+			<Formula>VAR_CONNECTED &amp; (VAR_CHANNELCOUNT &gt; 0)</Formula>
+		</IntSwissKnife>
+		<Integer Name="SIPayloadSizeAlignment">
+			<ToolTip>Limits streaming size registers to byte size alignment.</ToolTip>
+			<Description>Limits streaming size registers to byte size alignment. Updated when streaming is enabled on the device.</Description>
+			<DisplayName>Payload Size Alignment</DisplayName>
+			<Visibility>Expert</Visibility>
+		<pIsAvailable>SIPayloadSizeAlignmentAvailExpr</pIsAvailable>
+			<pValue>SIPayloadSizeAlignmentReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="SIPayloadSizeAlignmentReg">
+			<Address>0xE874</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="SIPayloadSizeAlignmentAvailExpr">
+			<pVariable Name="VAR_CONNECTED">ConnectedReg</pVariable>
+			<pVariable Name="VAR_CHANNELCOUNT">ChannelCountReg</pVariable>
+			<Formula>VAR_CONNECTED &amp; (VAR_CHANNELCOUNT &gt; 0)</Formula>
+		</IntSwissKnife>
+		<Integer Name="SIRequiredPayloadSize">
+			<ToolTip>Device reported minimum required payload size with current settings.</ToolTip>
+			<Description>Device reported minimum required payload size with current settings.  Updated when streaming is enabled on the device.</Description>
+			<DisplayName>Required Payload Size</DisplayName>
+			<Visibility>Expert</Visibility>
+		<pIsAvailable>SIRequiredPayloadSizeAvailExpr</pIsAvailable>
+			<pValue>SIRequiredPayloadSizeValExpr</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntSwissKnife Name="SIRequiredPayloadSizeValExpr">
+			<pVariable Name="VAR_REQUIREDPAYLOADSIZEHIGH">RequiredPayloadSizeHighReg</pVariable>
+			<pVariable Name="VAR_REQUIREDPAYLOADSIZELOW">RequiredPayloadSizeLowReg</pVariable>
+			<Formula>(VAR_REQUIREDPAYLOADSIZEHIGH &lt;&lt; 32) | (VAR_REQUIREDPAYLOADSIZELOW)</Formula>
+		</IntSwissKnife>
+		<IntSwissKnife Name="SIRequiredPayloadSizeAvailExpr">
+			<pVariable Name="VAR_CONNECTED">ConnectedReg</pVariable>
+			<pVariable Name="VAR_CHANNELCOUNT">ChannelCountReg</pVariable>
+			<Formula>VAR_CONNECTED &amp; (VAR_CHANNELCOUNT &gt; 0)</Formula>
+		</IntSwissKnife>
+		<Integer Name="SIRequiredLeaderSize">
+			<ToolTip>Device reported minimum required leader size.</ToolTip>
+			<Description>Device reported minimum required leader size.  Updated when streaming is enabled on the device.</Description>
+			<DisplayName>Required Leader Size</DisplayName>
+			<Visibility>Expert</Visibility>
+		<pIsAvailable>SIRequiredLeaderSizeAvailExpr</pIsAvailable>
+			<pValue>SIRequiredLeaderSizeReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="SIRequiredLeaderSizeReg">
+			<Address>0xE878</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="SIRequiredLeaderSizeAvailExpr">
+			<pVariable Name="VAR_CONNECTED">ConnectedReg</pVariable>
+			<pVariable Name="VAR_CHANNELCOUNT">ChannelCountReg</pVariable>
+			<Formula>VAR_CONNECTED &amp; (VAR_CHANNELCOUNT &gt; 0)</Formula>
+		</IntSwissKnife>
+		<Integer Name="SIRequiredTrailerSize">
+			<ToolTip>Device reported minimum required trailer size.</ToolTip>
+			<Description>Device reported minimum required trailer size. Updated when streaming is enabled on the device.</Description>
+			<DisplayName>Required Trailer Size</DisplayName>
+			<Visibility>Expert</Visibility>
+		<pIsAvailable>SIRequiredTrailerSizeAvailExpr</pIsAvailable>
+			<pValue>SIRequiredTrailerSizeReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="SIRequiredTrailerSizeReg">
+			<Address>0xE87C</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="SIRequiredTrailerSizeAvailExpr">
+			<pVariable Name="VAR_CONNECTED">ConnectedReg</pVariable>
+			<pVariable Name="VAR_CHANNELCOUNT">ChannelCountReg</pVariable>
+			<Formula>VAR_CONNECTED &amp; (VAR_CHANNELCOUNT &gt; 0)</Formula>
+		</IntSwissKnife>
+		<Integer Name="SIMaximumLeaderSize">
+			<ToolTip>Maximum leader size configured on the device and driver.</ToolTip>
+			<Description>Maximum leader size configured on the device and driver.  Updated when streaming is enabled on the device.</Description>
+			<DisplayName>Maximum Leader Size</DisplayName>
+			<Visibility>Expert</Visibility>
+		<pIsAvailable>SIMaximumLeaderSizeAvailExpr</pIsAvailable>
+			<pValue>SIMaximumLeaderSizeReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="SIMaximumLeaderSizeReg">
+			<Address>0xE880</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="SIMaximumLeaderSizeAvailExpr">
+			<pVariable Name="VAR_CONNECTED">ConnectedReg</pVariable>
+			<pVariable Name="VAR_CHANNELCOUNT">ChannelCountReg</pVariable>
+			<Formula>VAR_CONNECTED &amp; (VAR_CHANNELCOUNT &gt; 0)</Formula>
+		</IntSwissKnife>
+		<Integer Name="SIPayloadTransferSize">
+			<ToolTip>Expected size of a single payload as configured on the device and driver.</ToolTip>
+			<Description>Expected size of a single payload as configured on the device and driver. Updated when streaming is enabled on the device.</Description>
+			<DisplayName>Payload Transfer Size</DisplayName>
+			<Visibility>Expert</Visibility>
+		<pIsAvailable>SIPayloadTransferSizeAvailExpr</pIsAvailable>
+			<pValue>SIPayloadTransferSizeReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="SIPayloadTransferSizeReg">
+			<Address>0xE884</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="SIPayloadTransferSizeAvailExpr">
+			<pVariable Name="VAR_CONNECTED">ConnectedReg</pVariable>
+			<pVariable Name="VAR_CHANNELCOUNT">ChannelCountReg</pVariable>
+			<Formula>VAR_CONNECTED &amp; (VAR_CHANNELCOUNT &gt; 0)</Formula>
+		</IntSwissKnife>
+		<Integer Name="SIPayloadTransferCount">
+			<ToolTip>Expected number of payload transfers as configured on the device and driver.</ToolTip>
+			<Description>Expected number of payload transfers as configured on the device and driver. Updated when streaming is enabled on the device.</Description>
+			<DisplayName>Payload Transfer Count</DisplayName>
+			<Visibility>Expert</Visibility>
+		<pIsAvailable>SIPayloadTransferCountAvailExpr</pIsAvailable>
+			<pValue>SIPayloadTransferCountReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="SIPayloadTransferCountReg">
+			<Address>0xE888</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="SIPayloadTransferCountAvailExpr">
+			<pVariable Name="VAR_CONNECTED">ConnectedReg</pVariable>
+			<pVariable Name="VAR_CHANNELCOUNT">ChannelCountReg</pVariable>
+			<Formula>VAR_CONNECTED &amp; (VAR_CHANNELCOUNT &gt; 0)</Formula>
+		</IntSwissKnife>
+		<Integer Name="SIPayloadFinalTransfer1Size">
+			<ToolTip>Size of the first final payload transfer as configured on the device and driver.</ToolTip>
+			<Description>Size of the first final payload transfer as configured on the device and driver. Updated when streaming is enabled on the device.</Description>
+			<DisplayName>Payload Final Transfer 1 Size</DisplayName>
+			<Visibility>Expert</Visibility>
+		<pIsAvailable>SIPayloadFinalTransfer1SizeAvailExpr</pIsAvailable>
+			<pValue>SIPayloadFinalTransfer1SizeReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="SIPayloadFinalTransfer1SizeReg">
+			<Address>0xE88C</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="SIPayloadFinalTransfer1SizeAvailExpr">
+			<pVariable Name="VAR_CONNECTED">ConnectedReg</pVariable>
+			<pVariable Name="VAR_CHANNELCOUNT">ChannelCountReg</pVariable>
+			<Formula>VAR_CONNECTED &amp; (VAR_CHANNELCOUNT &gt; 0)</Formula>
+		</IntSwissKnife>
+		<Integer Name="SIPayloadFinalTransfer2Size">
+			<ToolTip>Size of the second final payload transfer as configured on the device and driver.</ToolTip>
+			<Description>Size of the second final payload transfer as configured on the device and driver. Updated when streaming is enabled on the device.</Description>
+			<DisplayName>Payload Final Transfer 2 Size</DisplayName>
+			<Visibility>Expert</Visibility>
+		<pIsAvailable>SIPayloadFinalTransfer2SizeAvailExpr</pIsAvailable>
+			<pValue>SIPayloadFinalTransfer2SizeReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="SIPayloadFinalTransfer2SizeReg">
+			<Address>0xE890</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="SIPayloadFinalTransfer2SizeAvailExpr">
+			<pVariable Name="VAR_CONNECTED">ConnectedReg</pVariable>
+			<pVariable Name="VAR_CHANNELCOUNT">ChannelCountReg</pVariable>
+			<Formula>VAR_CONNECTED &amp; (VAR_CHANNELCOUNT &gt; 0)</Formula>
+		</IntSwissKnife>
+		<Integer Name="SIMaximumTrailerSize">
+			<ToolTip>Maximum trailer size as configured on the device and driver.</ToolTip>
+			<Description>Maximum trailer size as configured on the device and driver. Updated when streaming is enabled on the device.</Description>
+			<DisplayName>Maximum Trailer Size</DisplayName>
+			<Visibility>Expert</Visibility>
+		<pIsAvailable>SIMaximumTrailerSizeAvailExpr</pIsAvailable>
+			<pValue>SIMaximumTrailerSizeReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="SIMaximumTrailerSizeReg">
+			<Address>0xE894</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="SIMaximumTrailerSizeAvailExpr">
+			<pVariable Name="VAR_CONNECTED">ConnectedReg</pVariable>
+			<pVariable Name="VAR_CHANNELCOUNT">ChannelCountReg</pVariable>
+			<Formula>VAR_CONNECTED &amp; (VAR_CHANNELCOUNT &gt; 0)</Formula>
+		</IntSwissKnife>
+		<Integer Name="SIMaximumPacketSize">
+			<ToolTip>Maximum packet size that can be used on the streaming end point.</ToolTip>
+			<Description>Maximum packet size that can be used on the streaming end point. Automatically set on connection. Used when computing the various stream interface sizes.</Description>
+			<Visibility>Expert</Visibility>
+		<pIsAvailable>SIMaximumPacketSizeAvailExpr</pIsAvailable>
+			<pValue>SIMaximumPacketSizeReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="SIMaximumPacketSizeReg">
+			<Address>0xE898</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="SIMaximumPacketSizeAvailExpr">
+			<pVariable Name="VAR_CONNECTED">ConnectedReg</pVariable>
+			<pVariable Name="VAR_CHANNELCOUNT">ChannelCountReg</pVariable>
+			<Formula>VAR_CONNECTED &amp; (VAR_CHANNELCOUNT &gt; 0)</Formula>
+		</IntSwissKnife>
+		<Integer Name="SICustomPayloadTransferSize">
+			<ToolTip>Custom payload size to use when setting SIPayloadTransferSize.</ToolTip>
+			<Description>Custom payload size to use when setting SIPayloadSize. If 0, the payload transfer size is configured automatically by the device controller. The custom payload size is only used as a starting point and can be adjusted to meet other constraints like payload size alignment.</Description>
+			<DisplayName>Custom Payload Transfer Size</DisplayName>
+			<Visibility>Guru</Visibility>
+		<pIsAvailable>SICustomPayloadTransferSizeAvailExpr</pIsAvailable>
+			<Streamable>Yes</Streamable>
+			<pValue>SICustomPayloadTransferSizeReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="SICustomPayloadTransferSizeReg">
+			<Address>0xE89C</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="SICustomPayloadTransferSizeAvailExpr">
+			<pVariable Name="VAR_STREAMENABLED">StreamEnabledReg</pVariable>
+			<Formula>VAR_STREAMENABLED = 0</Formula>
+		</IntSwissKnife>
+	</Group>
+	<Group Comment="DeviceGenICamXMLAccess">
+		<Category Name="DeviceGenICamXMLAccess">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<pFeature>DeviceGenICamXMLLocation</pFeature>
+			<pFeature>DeviceGenICamXMLFile</pFeature>
+		</Category> 
+		<Enumeration Name="DeviceGenICamXMLLocation">
+			<ToolTip>Selects which GenICaml XML file SDK will use to build the device node map on  the next connect.</ToolTip>
+			<Description>Selects which genicam configuration file the SDK will use for the next connect. &quot;Default&quot; goes through all manifest entries (if supported) until the device node map can be successfully built. &quot;File&quot; reads from the XML file in the location specified by DeviceGenICamXMLFile.</Description>
+			<DisplayName>GenICam XML Location</DisplayName>
+			<Visibility>Guru</Visibility>
+			<Streamable>Yes</Streamable>
+			<EnumEntry Name="Default">
+				<DisplayName>Default</DisplayName>
+				<Value>0</Value>
+			</EnumEntry>
+			<EnumEntry Name="File">
+				<DisplayName>File</DisplayName>
+				<Value>3</Value>
+			</EnumEntry>
+			<EnumEntry Name="ManifestEntry1">
+				<DisplayName>Manifest Entry 1</DisplayName>
+				<Value>4</Value>
+			</EnumEntry>
+			<EnumEntry Name="ManifestEntry2">
+				<DisplayName>Manifest Entry 2</DisplayName>
+				<Value>5</Value>
+			</EnumEntry>
+			<EnumEntry Name="ManifestEntry3">
+				<DisplayName>Manifest Entry 3</DisplayName>
+				<Value>6</Value>
+			</EnumEntry>
+			<EnumEntry Name="ManifestEntry4">
+				<DisplayName>Manifest Entry 4</DisplayName>
+				<Value>7</Value>
+			</EnumEntry>
+			<EnumEntry Name="ManifestEntry5">
+				<DisplayName>Manifest Entry 5</DisplayName>
+				<Value>8</Value>
+			</EnumEntry>
+			<EnumEntry Name="ManifestEntry6">
+				<DisplayName>Manifest Entry 6</DisplayName>
+				<Value>9</Value>
+			</EnumEntry>
+			<EnumEntry Name="ManifestEntry7">
+				<DisplayName>Manifest Entry 7</DisplayName>
+				<Value>10</Value>
+			</EnumEntry>
+			<EnumEntry Name="ManifestEntry8">
+				<DisplayName>Manifest Entry 8</DisplayName>
+				<Value>11</Value>
+			</EnumEntry>
+			<pValue>DeviceGenICamXMLLocationReg</pValue>
+		</Enumeration>
+		<IntReg Name="DeviceGenICamXMLLocationReg">
+			<Address>0xE8A0</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<StringReg Name="DeviceGenICamXMLFile">
+			<ToolTip>The location on the hard drive (absolute path) where the local XML file is loaded from when DeviceXMLLocation is set to &quot;File&quot;.</ToolTip>
+			<Description>The location on the hard drive (absolute path) where the local XML file is loaded from when DeviceXMLLocation is set to &quot;File&quot;.</Description>
+			<DisplayName>GenICam XML File</DisplayName>
+			<Visibility>Guru</Visibility>
+			<Streamable>Yes</Streamable>
+			<Address>0xE8A4</Address>
+			<Length>512</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+		</StringReg>
+	</Group>
+	<Group Comment="Recovery">
+		<Category Name="Recovery">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<pFeature>LinkRecoveryEnabled</pFeature>
+			<pFeature>RecoveryStatus</pFeature>
+		</Category>  
+		<Boolean Name="LinkRecoveryEnabled">
+			<ToolTip>When enabled, attempts to automatically reconnect to a device when the connection is lost.</ToolTip>
+			<Description>When enabled, attempts to automatically reconnect to a device when the connection is lost.</Description>
+			<DisplayName>Link Recovery Enabled</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<Streamable>Yes</Streamable>
+			<pValue>LinkRecoveryEnabledReg</pValue>
+		</Boolean>
+		<IntReg Name="LinkRecoveryEnabledReg">
+			<Address>0xEAA4</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Enumeration Name="RecoveryStatus">
+			<ToolTip>Status of the connection and stream state machine.</ToolTip>
+			<Description>Status of the connection and stream state machine.</Description>
+			<DisplayName>Recovery Status</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<EnumEntry Name="StatusOK">
+				<DisplayName>Status OK</DisplayName>
+				<Value>0</Value>
+			</EnumEntry>
+			<EnumEntry Name="StatusLinkLost">
+				<DisplayName>Status Link Lost</DisplayName>
+				<Value>1</Value>
+			</EnumEntry>
+			<pValue>RecoveryStatusReg</pValue>
+		</Enumeration>
+		<IntReg Name="RecoveryStatusReg">
+			<Address>0xEAA8</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+	</Group>
+	<Group Comment="Internal">
+		<Category Name="Internal">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<pFeature>Connected</pFeature>
+			<pFeature>ChannelCount</pFeature>
+			<pFeature>RequiredPayloadSizeHigh</pFeature>
+			<pFeature>RequiredPayloadSizeLow</pFeature>
+			<pFeature>StreamEnabled</pFeature>
+		</Category>   
+		<Integer Name="Connected">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<Visibility>Invisible</Visibility>
+			<pValue>ConnectedReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ConnectedReg">
+			<Address>0xEAAC</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="ChannelCount">
+			<ToolTip>How many stream channels the device has.</ToolTip>
+			<Description>How many stream channels the device has. 0 is returned if not connected.</Description>
+			<Visibility>Invisible</Visibility>
+			<pValue>ChannelCountReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ChannelCountReg">
+			<Address>0xEAB0</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="RequiredPayloadSizeHigh">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<Visibility>Invisible</Visibility>
+			<pValue>RequiredPayloadSizeHighReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="RequiredPayloadSizeHighReg">
+			<Address>0xEAB4</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="RequiredPayloadSizeLow">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<Visibility>Invisible</Visibility>
+			<pValue>RequiredPayloadSizeLowReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="RequiredPayloadSizeLowReg">
+			<Address>0xEAB8</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Boolean Name="StreamEnabled">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<Visibility>Invisible</Visibility>
+			<pValue>StreamEnabledReg</pValue>
+		</Boolean>
+		<IntReg Name="StreamEnabledReg">
+			<Address>0xEABC</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+	</Group>
+	<Port Name="Device">
+		<ToolTip>Port giving access to the device.</ToolTip>
+	</Port>
+</RegisterDescription>

@@ -1,0 +1,63 @@
+
+# Pleora's software uses a logging backend called log4cxx which is patterned after apache log4j
+# http://logging.apache.org/log4cxx/index.html
+# This is a default configuration file that is loaded by the PtUserLib library that is used to configure log4cxx.
+# 
+# You may wish to create your own configuration file and instruct PtUserLib to load it instead by setting
+# the environment variable PT_LOG_CONFIG to point to the appropriate file.
+#
+# By default, only fatal errors are logged and outputted to stdout.
+# Log levels include OFF, FATAL, ERROR, WARN, INFO, DEBUG and ALL.
+# 
+# Each pleora subsystem has its own category. You may enable a different appender or logging level for each category.
+#
+# For convenience, this log configuration provides stdout, outputdebugstring and rolling file appenders.
+# Many other appenders are available... including the ability to log to syslog, telnet and others.
+# See http://logging.apache.org/log4cxx/apidocs/index.html for more appender options.
+# 
+# Each appender by default is using a pattern layout with a conversion pattern that outputs:
+# %r - number of milliseconds elapsed since the start of the application until the creation of the logging event
+# %p - the level of the logging event (i.e. INFO, DEBUG, ERROR, etc.)
+# %t - the thread id
+# %c - the subsystem (i.e. PvGUILib)
+# %m - the logging message
+# %n - the platform independent new line character
+# For more options see:
+# http://logging.apache.org/log4cxx/apidocs/classlog4cxx_1_1_pattern_layout.html
+
+
+log4j.rootLogger=fatal, stdout
+
+# Uncomment any of the following categories to provide further details about a particular Pleora subsystem
+
+# PureGEV Categories: 
+#log4j.category.PvGUILib=info, stdout, R
+#log4j.category.PvGUIUtilsLib=info, stdout, R
+#log4j.category.PvDeviceLib=info, stdout, R
+#log4j.category.PvGenICamLib=info, stdout, R
+#log4j.category.PvPersistenceLib=info, stdout, R
+#log4j.category.PvSerialLib=info, stdout, R
+#log4j.category.PvStreamRawLib=info, stdout, R
+#log4j.category.PvTransmitterRawLib=info, stdout, R
+#log4j.category.PvVirtualDeviceLib=info, stdout, R
+#log4j.category.Recovery=info, stdout, R
+#log4j.category.CommandLink=info, stdout, R
+#log4j.category.InterruptLink=info, stdout, R
+#log4j.category.GenICamPersistence=info, stdout, R
+#log4j.category.EbTransportLayerLib=info, stdout, R
+#log4j.category.EbUtilsLib=info, stdout, R
+#log4j.category.PtUtilsLib=info, stdout, R
+
+# stdout appender outputs to the standard output stream. There is also one available for stderr.
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%r %p %t %c - %m%n
+
+# R is a rolling file appender
+log4j.appender.R=org.apache.log4j.RollingFileAppender
+log4j.appender.R.File=$(HOME)/example.log
+log4j.appender.R.MaxFileSize=100KB
+log4j.appender.R.MaxBackupIndex=1
+log4j.appender.R.layout=org.apache.log4j.PatternLayout
+log4j.appender.R.layout.ConversionPattern=%r %p %t %c - %m%n
+
