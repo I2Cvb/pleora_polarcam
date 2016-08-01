@@ -26,6 +26,8 @@
 			<pFeature>ForceMissingPacketsAtNextBlockStart</pFeature>
 			<pFeature>EnableMissingPacketsList</pFeature>
 			<pFeature>MaximumPreQueuedBuffers</pFeature>
+			<pFeature>OnlyStartOnFirstPacket</pFeature>
+			<pFeature>ExtraBlockCompletion</pFeature>
 		</Category>
 		<Integer Name="FirstPacketTimeout">
 			<ToolTip>Maximum time to wait for the first packet of a block</ToolTip>
@@ -96,7 +98,7 @@ Upon expiry of this timer, the buffer is returned with an operation result descr
 		</IntReg>
 		<Integer Name="PreemptiveResendTimeout">
 			<ToolTip>The time (in milliseconds) the data receiver waits before making a preemptive resend request on the last block.</ToolTip>
-			<Description>The time (in milliseconds) the data receiver waits for the a packet of the most recent block becore making a resend request when no activity is detected.If set to 0, no preemptive resend will be done.</Description>
+			<Description>The time (in milliseconds) that the data receiver waits to receive a packet from the most recent block before making a resend request when no activity is detected. If set to 0, a pre-emptive resend will not occur.</Description>
 			<DisplayName>Preemptive Resend Timeout</DisplayName>
 			<Visibility>Beginner</Visibility>
 		<pIsAvailable>PreemptiveResendTimeoutAvailExpr</pIsAvailable>
@@ -327,16 +329,18 @@ This value allows the tuning of the driver to modify the acceptable amount of la
 			<Formula>((VAR_DATARECEIVERTYPE = 3 ) || (VAR_DATARECEIVERTYPE = 2 )) &amp;&amp; VAR_REQUESTMISSINGPACKETS</Formula>
 		</IntSwissKnife>
 		<Integer Name="ResetOnIdle">
-			<ToolTip>Time that the data receiver waits for while there is no GVSP packet coming before resetting itself.</ToolTip>
+			<ToolTip>Time (in milliseconds) that the data receiver waits for while there is no GVSP packet coming before resetting itself.</ToolTip>
 			<Description>This parameter defines the time that the data receiver waits for while there is no GVSP packet coming before resetting itself.
 On a reset, 1) All the Receiving block buffers to Ready for Processing states with error code AUTO_ABORTED. All Empty block buffers are still in the data receiver and ready for receiving. 2) The data receiver goes back to the pre stream start status.
 This parameter allows the data receiver to better handle the cases where the data receiver receives no packets for a long time due to a connection loss or a large number of packets are dropped on the network. Without this parameter, the data receiver may not be able to recover quickly as it may try to request many packets resends. 
-This parameter also can help the data receiver work properly in the situation that the application is only a data receiver and the transmitter resets the block_id. For example, the transmitter transmitted the block_id n and data receiver received it. Then data receiver is excepting block_id n+1 but if the transmitter resets the block_id to 1.  Without this parameter to reset it back to the pre stream start status the data receiver will ignore the new coming in blocks until it receives block_id n+1. For some transmitter devices, acquisition stop and start resets the block_id  to 1.  For a software transmitter, for instance Pleora Video server, after you call PvTransmitterGEV::Close() and then PvTransmitterRaw::Open() then the block_id resets to 1. In both cases if the stream destination IP address and port remain same as before then the data receiver application still receives those blocks.  Data receiver could not tell if those block data are from new coming block data or the packet resend for the same block_id which has been received before.</Description>
+This parameter also can help the data receiver work properly in the situation that the application is only a data receiver and the transmitter resets the block_id. For example, the transmitter transmitted the block_id n and data receiver received it. Then data receiver is excepting block_id n+1 but if the transmitter resets the block_id to 1.  Without this parameter to reset it back to the pre stream start status the data receiver will ignore the new coming in blocks until it receives block_id n+1. For some transmitter devices, acquisition stop and start resets the block_id  to 1.  For a software transmitter, for instance Pleora Video server, after you call PvTransmitterGEV::Close() and then PvTransmitterGEV::Open() then the block_id resets to 1. In both cases if the stream destination IP address and port remain same as before then the data receiver application still receives those blocks.  Data receiver could not tell if those block data are from new coming block data or the packet resend for the same block_id which has been received before.</Description>
 			<DisplayName>Reset On Idle</DisplayName>
 			<Visibility>Guru</Visibility>
 		<pIsAvailable>ResetOnIdleAvailExpr</pIsAvailable>
 			<Streamable>Yes</Streamable>
 			<pValue>ResetOnIdleReg</pValue>
+			<Min>0</Min>
+			<Max>4294967</Max>
 			<Inc>1</Inc>
 			<Representation>Linear</Representation>
 		</Integer>
@@ -358,7 +362,7 @@ This parameter also can help the data receiver work properly in the situation th
 			<ToolTip>Stop waiting for packets from a block if packets begin to arrive from the following block</ToolTip>
 			<Description>Forces the data receiver to stop waiting for packets from a block in the event that packets begin to arrive from  the next block.</Description>
 			<DisplayName>Force Missing Packets At Next Block Start</DisplayName>
-			<Visibility>Guru</Visibility>
+			<Visibility>Invisible</Visibility>
 		<pIsAvailable>ForceMissingPacketsAtNextBlockStartAvailExpr</pIsAvailable>
 			<Streamable>Yes</Streamable>
 			<pValue>ForceMissingPacketsAtNextBlockStartReg</pValue>
@@ -428,6 +432,66 @@ Number of buffers queued before passing the buffers between user space and kerne
 			<pVariable Name="VAR_DATARECEIVERTYPE">DataReceiverTypeReg</pVariable>
 			<pVariable Name="VAR_OPERATINGSYSTEM">OperatingSystemReg</pVariable>
 			<Formula>(VAR_DATARECEIVERTYPE=3)&amp;&amp;(VAR_OPERATINGSYSTEM=0)</Formula>
+		</IntSwissKnife>
+		<Boolean Name="OnlyStartOnFirstPacket">
+			<ToolTip>When set to true, the data receiver is waiting to receive the first packet ( id = 0 ) of the next block to start.</ToolTip>
+			<Description>When set to true, GVSP packets are discarded until a GVSP leader of a block is received. When it is set to false, SDK starts processing the first received GVSP packet regardless of its packet id, at which point the SDK requests that the device resend the lost packets. Setting this feature to false can cause multiple unwanted resend requests on multicast system. </Description>
+			<DisplayName>Only Start On First Packet</DisplayName>
+			<Visibility>Guru</Visibility>
+			<Streamable>Yes</Streamable>
+			<pValue>OnlyStartOnFirstPacketReg</pValue>
+		</Boolean>
+		<IntReg Name="OnlyStartOnFirstPacketReg">
+			<Address>0xE930</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>WriteThrough</Cachable>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Enumeration Name="ExtraBlockCompletion">
+			<ToolTip>Add extra condition for block completion</ToolTip>
+			<Description>Add extra condition for block completion</Description>
+			<DisplayName>Extra Block Completion</DisplayName>
+			<Visibility>Guru</Visibility>
+			<pIsAvailable>ExtraBlockCompletionAvailExpr</pIsAvailable>
+			<Streamable>Yes</Streamable>
+			<EnumEntry Name="Disabled">
+				<ToolTip>Disabled</ToolTip>
+				<Description>Disabled</Description>
+				<DisplayName>Disabled</DisplayName>
+				<Visibility>Guru</Visibility>
+				<Value>0</Value>
+			</EnumEntry>
+			<EnumEntry Name="OnNextBlockStart">
+				<ToolTip>Forces the data receiver to stop waiting for packets from a block in the event that packets begin to arrive for a next block.</ToolTip>
+				<Description>Forces the data receiver to stop waiting for packets from a block in the event that packets begin to arrive for a next block.</Description>
+				<DisplayName>On Next Block Start</DisplayName>
+				<Visibility>Guru</Visibility>
+				<Value>1</Value>
+			</EnumEntry>
+			<EnumEntry Name="OnBlockTrailer">
+				<ToolTip>Forces the data receiver to stop waiting for packets from a block in the event that the trailer packet is received or packets begin to arrive for a next block or it receive.</ToolTip>
+				<Description>Forces the data receiver to stop waiting for packets from a block in the event that the trailer packet is received or packets begin to arrive for a next block or it receive.</Description>
+				<DisplayName>On Block Trailer</DisplayName>
+				<Visibility>Guru</Visibility>
+				<Value>2</Value>
+			</EnumEntry>
+			<pValue>ExtraBlockCompletionReg</pValue>
+		</Enumeration>
+		<IntReg Name="ExtraBlockCompletionReg">
+			<Address>0xE934</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="ExtraBlockCompletionAvailExpr">
+			<pVariable Name="VAR_DATARECEIVERTYPE">DataReceiverTypeReg</pVariable>
+			<Formula>(VAR_DATARECEIVERTYPE = 3)||(VAR_DATARECEIVERTYPE = 2)</Formula>
 		</IntSwissKnife>
 	</Group>
 	<Group Comment="Connection">
@@ -800,6 +864,8 @@ Number of buffers queued before passing the buffers between user space and kerne
 			<EnumEntry Name="NO_MORE_ENTRY"><Value>1539</Value></EnumEntry>
 			<EnumEntry Name="NO_AVAILABLE_DATA"><Value>20</Value></EnumEntry>
 			<EnumEntry Name="NETWORK_ERROR"><Value>19</Value></EnumEntry>
+			<EnumEntry Name="RESYNC"><Value>40</Value></EnumEntry>
+			<EnumEntry Name="BUSY"><Value>514</Value></EnumEntry>
 			<pValue>LastErrorReg</pValue>
 		</Enumeration>
 		<IntReg Name="LastErrorReg">

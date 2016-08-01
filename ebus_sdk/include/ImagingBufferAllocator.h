@@ -2,7 +2,9 @@
 #define ImagingBufferAllocator_h__
 
 #include <stdint.h>
-#include <malloc.h>
+#ifndef __MACH__
+    #include <malloc.h>
+#endif
 #include <stdlib.h>
 
 namespace SimpleImagingLib {

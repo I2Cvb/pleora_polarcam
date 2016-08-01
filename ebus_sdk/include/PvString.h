@@ -11,7 +11,6 @@
 #ifndef __PVSTRING_H__
 #define __PVSTRING_H__
 
-
 #include <PvBaseLib.h>
 #include <PvTypes.h>
 

@@ -751,8 +751,8 @@
 			<pFeature>RecoveryStatus</pFeature>
 		</Category>  
 		<Boolean Name="LinkRecoveryEnabled">
-			<ToolTip>When enabled, attempts to automatically reconnect to a device when the connection is lost.</ToolTip>
-			<Description>When enabled, attempts to automatically reconnect to a device when the connection is lost.</Description>
+			<ToolTip>When enabled, SDK attempts to automatically reconnect to the same device when the connection is lost. SDK does not recover the stream. Application is responsible for stream recovery. </ToolTip>
+			<Description>When enabled, SDK attempts to automatically reconnect to the same device when the connection is lost. SDK does not recover the stream. Application is responsible for stream recovery. </Description>
 			<DisplayName>Link Recovery Enabled</DisplayName>
 			<Visibility>Beginner</Visibility>
 			<Streamable>Yes</Streamable>

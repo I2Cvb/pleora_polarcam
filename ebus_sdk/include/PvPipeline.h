@@ -32,12 +32,12 @@ public:
     uint32_t GetBufferSize() const;
     uint32_t GetBufferCount() const;
     uint32_t GetOutputQueueSize() const;
-    uint32_t GetDefaultBufferSize() const;
+    PV_DEPRECATED_ALTERNATIVE("GetBufferSize") uint32_t GetDefaultBufferSize() const;
     bool GetHandleBufferTooSmall() const;
 
     bool IsStarted();
 
-    void SetDefaultBufferSize( uint32_t aSize );
+    PV_DEPRECATED_ALTERNATIVE("SetBufferSize") void SetDefaultBufferSize( uint32_t aSize );
     void SetBufferSize( uint32_t aSize );
     PvResult SetBufferCount( uint32_t aBufferCount );
     void SetHandleBufferTooSmall( bool aValue );

@@ -10,6 +10,7 @@
 #include <PvStream.h>
 
 
+
 class PV_STREAM_API PvStreamGEV : public PvStream
 {
 public:
@@ -33,6 +34,8 @@ public:
         uint32_t aBuffersCapacity = 64 );
 
     PvResult FlushPacketQueue();
+    bool GetWaitForFirstPacketOfBlockToStart() const;
+    PvResult SetWaitForFirstPacketOfBlockToStart( bool aWaitForFirstPacketOfBlockToStart );
 
     uint16_t GetLocalPort();
     PvString GetLocalIPAddress();
@@ -43,13 +46,14 @@ public:
 
     static PvResult IsDriverInstalled( PvString &aIPAddress, bool &aInstalled, const PvString & aLocalIPAddress = PvString() );
 
-private:
+protected:
 
 private:
 
 	 // Not implemented
 	PvStreamGEV( const PvStreamGEV & );
     const PvStreamGEV &operator=( const PvStreamGEV & );
+   
 
 };
 

@@ -58,6 +58,8 @@ public:
     void SetID( uint64_t aValue );
 
     bool IsExtendedID() const;
+    bool IsAttached() const;
+    bool IsAllocated() const;
 
     uint32_t GetAcquiredSize() const;
     uint32_t GetRequiredSize() const;
@@ -75,7 +77,10 @@ public:
     PvResult GetOperationResult() const;
     uint64_t GetTimestamp() const;
     uint64_t GetReceptionTime() const;
+
     PvResult SetTimestamp( uint64_t aTimestamp );
+    PvResult SetBlockID( uint64_t aBlockID );
+    PvResult SetReceptionTime( uint64_t aReceptionTime );
 
     uint32_t GetPacketsRecoveredCount() const;
     uint32_t GetPacketsRecoveredSingleResendCount() const;

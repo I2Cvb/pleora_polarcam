@@ -389,6 +389,7 @@
 			<EnumEntry Name="NO_AVAILABLE_DATA"><Value>20</Value></EnumEntry>
 			<EnumEntry Name="NETWORK_ERROR"><Value>19</Value></EnumEntry>
 			<EnumEntry Name="RESYNC"><Value>40</Value></EnumEntry>
+			<EnumEntry Name="BUSY"><Value>514</Value></EnumEntry>
 			<pValue>LastErrorReg</pValue>
 		</Enumeration>
 		<IntReg Name="LastErrorReg">

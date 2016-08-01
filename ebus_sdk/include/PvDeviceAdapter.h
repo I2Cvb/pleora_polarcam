@@ -29,6 +29,7 @@ public:
 
     bool IsGenIntegerInNodeMap( const PvString &aParameterName );
     bool IsGenEnumInNodeMap( const PvString &aParameterName );
+    bool IsGenBooleanInNodeMap( const PvString &aParameterName );
     bool IsGenRegisterInNodeMap( const PvString &aParameterName );
     bool IsGenReadable( const PvString &aParameterName );
     bool IsGenWritable( const PvString &aParameterName );
@@ -38,6 +39,8 @@ public:
     PvResult GetGenEnumEntriesAvailable( const PvString &aParameterName, PvStringList &aList );
     PvResult GetGenEnumValue( const PvString &aParameterName, PvString &aEnumEntry );
     PvResult SetGenEnumValue( const PvString &aParameterName, const PvString &aEnumEntry );
+    PvResult GetGenBooleanValue( const PvString &aParameterName, bool &aValue );
+    PvResult SetGenBooleanValue( const PvString &aParameterName, bool aValue );
     PvResult GetGenStringValue( const PvString &aParameterName, PvString &aValue );
     PvResult GetGenRegisterLength( const PvString &aParameterName, int64_t &aLength );
     PvResult GetGenRegisterData( const PvString &aParameterName, uint8_t *aDataBuffer, int64_t aByteCount );

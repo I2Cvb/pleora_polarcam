@@ -13,6 +13,7 @@
 #include <PvResult.h>
 #include <PvPropertyList.h>
 #include <PvDeinterlacingType.h>
+#include <PvTapGeometry.h>
 
 
 namespace PvAppUtilsLib
@@ -32,7 +33,7 @@ class PV_APPUTILS_API PvDisplayThread
 public:
 
     PvDisplayThread();
-    ~PvDisplayThread();
+    virtual ~PvDisplayThread();
 
     PvResult Start( PvPipeline *aPipeline, PvGenParameterArray *aParameters );
     PvResult Stop( bool aWait );
@@ -66,6 +67,9 @@ public:
 
     bool GetDisplayChunkDataEnabled() const;
     void SetDisplayChunkDataEnabled( bool aEnabled );
+
+    PvTapGeometryEnum GetTapGeometry() const;
+    void SetTapGeometry( PvTapGeometryEnum aGeometry );
 
     void ResetStatistics();
 

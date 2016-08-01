@@ -22,6 +22,9 @@ PhotonFocusCamera::PhotonFocusCamera(std::string ip_address)
     if(access_type == PvAccessOpen) // The device is reachable and no one is connected to it
     {
         PvResult result;
+        //PvStream *lStream;
+        std::cout << "Opening stream to device." << std::endl;
+        //lStream = PvStream::CreateAndOpen(camera_id,&result);
         device = static_cast<PvDeviceGEV *>(PvDevice::CreateAndConnect(camera_id,&result));
         if(device == NULL || !result.IsOK()) // for some reason the device is not reachable anymore...
             throw std::runtime_error("Device " + ip_address + " not found!"); // TODO custom exeception

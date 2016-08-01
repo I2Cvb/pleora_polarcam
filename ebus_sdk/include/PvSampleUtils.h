@@ -135,6 +135,19 @@ inline void PvSleepMs( uint32_t aSleepTime )
     usleep( aSleepTime * 1000 );
 }
 
+class PvMutex
+{
+public:
+    PvMutex() { pthread_mutex_init( &mMutex, NULL ); }
+    ~PvMutex() { pthread_mutex_destroy( &mMutex ); }
+
+    void Lock() { pthread_mutex_lock( &mMutex ); }
+    void Unlock() { pthread_mutex_unlock( &mMutex ); }
+
+private:
+    pthread_mutex_t  mMutex;
+};
+
 #define PvScanf ( scanf )
 
 #endif // _UNIX_
@@ -190,14 +203,29 @@ inline void PvSleepMs( uint32_t aSleepTime )
     ::Sleep( aSleepTime );
 }
 
+class PvMutex
+{
+public:
+    PvMutex() { mMutex = ::CreateMutex( NULL, FALSE, NULL ); }
+    ~PvMutex() { ::CloseHandle( mMutex ); }
+
+    void Lock() { ::WaitForSingleObject( mMutex, INFINITE ); }
+    void Unlock() { ::ReleaseMutex( mMutex ); }
+
+private:
+    HANDLE mMutex;
+};
+
 #define PvScanf ( scanf_s )
 
 #endif // WIN32
 
 inline void PvFlushKeyboard()
 {
-    int c;
-    while( ( c = PvGetChar() ) != '\n' && c != EOF );
+    while( PvKbHit() )
+    {
+	    PvGetChar();
+    }
 }
 
 
@@ -270,13 +298,18 @@ inline const PvDeviceInfo* PvSelectDevice( PvSystem& aSystem )
             // We abort the selection process.
             return NULL;
         }
-        else if ( ( lIndex >=0 ) && ( lIndex < lDIVector.size() ) )
+        else if ( lIndex < lDIVector.size() )
         {
             // The device is selected
             lSelectedDI = lDIVector[ lIndex ];
             break;
         }
     }
+
+#ifndef WIN32
+    // Flush the keyboard buffer so subsequent !kbhit() will work
+    PvFlushKeyboard();
+#endif // WIN32
 
     // If the IP Address valid?
     if ( lSelectedDI->IsConfigurationValid() )
@@ -293,10 +326,15 @@ inline const PvDeviceInfo* PvSelectDevice( PvSystem& aSystem )
     // Read new IP address.
     string lNewIPAddress;
     cin >> lNewIPAddress;
-    if ( lNewIPAddress.length() )
+    if ( !lNewIPAddress.length() )
     {
         return NULL;
     }
+
+#ifndef WIN32
+    // Flush the keyboard buffer so subsequent !kbhit() will work
+    PvFlushKeyboard();
+#endif // WIN32
 
     const PvDeviceInfoGEV* lDeviceGEV = dynamic_cast<const PvDeviceInfoGEV *>( lSelectedDI );
     if ( lDeviceGEV != NULL )

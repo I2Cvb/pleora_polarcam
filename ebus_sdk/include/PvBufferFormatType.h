@@ -15,7 +15,8 @@
 typedef enum
 { 
     PvBufferFormatBMP = 0,
-    PvBufferFormatRaw = 1
+    PvBufferFormatRaw = 1,
+    PvBufferFormatTIFF = 2
 
 } PvBufferFormatType;
 

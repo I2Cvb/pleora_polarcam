@@ -28,7 +28,7 @@ public:
     virtual void OnStop( PvPipeline *aPipeline );
     virtual void OnReset( PvPipeline *aPipeline );
     virtual void OnBufferTooSmall( PvPipeline *aPipeline, bool *aReallocAll, bool *aResetStats );
-
+    virtual void OnBufferReady( PvPipeline *aPipeline );
 };
 
 

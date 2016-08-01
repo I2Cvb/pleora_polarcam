@@ -4,13 +4,17 @@
 //
 // *****************************************************************************
 
-#ifndef __PVSERIALTERMINALWND_H__
-#define __PVSERIALTERMINALWND_H__
+#ifndef __PVSERIALTERMINALWND_H___
+#define __PVSERIALTERMINALWND_H___
+
 
 #include <PvGUILib.h>
 #include <PvWnd.h>
 #include <PvDeviceSerialPort.h>
 
+#ifdef WIN32
+    class DeviceFinderWnd;
+#endif // WIN32
 
 class PV_GUI_API PvSerialTerminalWnd : public PvWnd
 {
@@ -35,7 +39,7 @@ private:
 };
 
 
-#endif // __PVSERIALTERMINALWND_H__
+#endif // __PVSERIALTERMINALWND_H___
 
 
 

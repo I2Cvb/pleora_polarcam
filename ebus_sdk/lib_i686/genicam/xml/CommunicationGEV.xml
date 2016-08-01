@@ -494,7 +494,7 @@
 		</Category>
 		<Boolean Name="AutoNegotiation">
 			<ToolTip>Application level parameter used by eBUS Player and Net Command. When true, automatic packet size negotiation is performed.</ToolTip>
-			<Description>Application level parameter used by eBUS Player and Net Command. When true, automatic packet size negotiation is performed. Note that this does not affect the behaviour of PvDevice::Connect. From an API perspective, automatic packet size negotiation may be performed using PvDevice::NegotiatePacketSize.</Description>
+			<Description>Application level parameter used by eBUS Player and Net Command. When true, automatic packet size negotiation is performed. Note that this does not affect the behaviour of PvDeviceGEV::Connect. From an API perspective, automatic packet size negotiation may be performed using PvDeviceGEV::NegotiatePacketSize.</Description>
 			<DisplayName>Auto Negotiation</DisplayName>
 			<Visibility>Beginner</Visibility>
 			<Streamable>Yes</Streamable>
@@ -512,7 +512,7 @@
 		</IntReg>
 		<Integer Name="DefaultPacketSize">
 			<ToolTip>Application level parameter used by eBUS Player and NetCommand. Packet size initially assigned to the device for streaming if packet size auto negotiation is disabled. </ToolTip>
-			<Description>Packet size initially assigned to the device for streaming if packet size auto negotiation is disabled. If this value is refused by the device, a fallback value of 576 is used. Note that this does not affect the behaviour of PvDevice::Connect. From an API perspective, automatic packet size negotiation may be performed using PvDevice::NegotiatePacketSize. </Description>
+			<Description>Application level parameter used by eBUS Player and NetCommand. Packet size initially assigned to the device for streaming if packet size auto negotiation is disabled. If this value is refused by the device, a fallback value of 576 is used. Note that this does not affect the behaviour of PvDeviceGEV::Connect. From an API perspective, automatic packet size negotiation may be performed using PvDeviceGEV::NegotiatePacketSize. </Description>
 			<DisplayName>Default Packet Size</DisplayName>
 			<Visibility>Beginner</Visibility>
 		<pIsAvailable>DefaultPacketSizeAvailExpr</pIsAvailable>
@@ -546,8 +546,8 @@
 			<pFeature>UseManifests</pFeature>
 		</Category> 
 		<Enumeration Name="DeviceGenICamXMLLocation">
-			<ToolTip>Selects which GenICaml XML file SDK will use to build the device node map on  the next connect.</ToolTip>
-			<Description>Selects which genicam configuration file the SDK will use for the next connect. &quot;Default&quot; goes through all manifest entries (if supported and enabled) and then URL1, URL2 until the device node map can be successfully built. &quot;File&quot; reads from the XML file in the location specified by DeviceGenICamXMLFile.</Description>
+			<ToolTip>Selects which GenICam XML file SDK will use to build the device node map on  the next connect.</ToolTip>
+			<Description>Selects which GenICam configuration file the SDK will use for the next connect. &quot;Default&quot; goes through all manifest entries (if supported and enabled) and then URL1, URL2 until the device node map can be successfully built. &quot;File&quot; reads from the XML file in the location specified by DeviceGenICamXMLFile.</Description>
 			<DisplayName>GenICam XML Location</DisplayName>
 			<Visibility>Guru</Visibility>
 			<Streamable>Yes</Streamable>
@@ -663,8 +663,8 @@
 			<pFeature>RecoveryStatus</pFeature>
 		</Category>  
 		<Boolean Name="LinkRecoveryEnabled">
-			<ToolTip>When enabled, attempts to automatically reconnect to a device when the connection is lost.</ToolTip>
-			<Description>When enabled, attempts to automatically reconnect to a device when the connection is lost.</Description>
+			<ToolTip>When enabled, SDK attempts to automatically reconnect to the same device when the connection is lost. SDK does not recover the stream. Application is responsible for stream recovery. </ToolTip>
+			<Description>When enabled, SDK attempts to automatically reconnect to the same device when the connection is lost. SDK does not recover the stream. Application is responsible for stream recovery. </Description>
 			<DisplayName>Link Recovery Enabled</DisplayName>
 			<Visibility>Beginner</Visibility>
 			<Streamable>Yes</Streamable>

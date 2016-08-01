@@ -41,15 +41,15 @@ public:
     uint64_t GetBytesReceivedFromDevice() const;
     void ResetStatistics();
 
-    // IP Engine serial port in use
+    // Device serial port in use
     PvDeviceSerial GetDevicePort() const;
 
-    // Retrieve supported/selected IP Engine port baud rates
+    // Retrieve supported/selected device serial port baud rates
     uint32_t GetSupportedBaudRateCount() const;
     uint32_t GetSupportedBaudRate( uint32_t aIndex ) const;
     uint32_t GetBaudRate() const;
 
-    // Gets, sets the IP Engine hard-coded port baud rate (if cannot be read/written)
+    // Gets, sets the device serial hard-coded port baud rate (if cannot be read/written)
     uint32_t GetHardCodedBaudRate() const;
     PvResult SetHardCodedBaudRate( uint32_t aBaudRate );
 

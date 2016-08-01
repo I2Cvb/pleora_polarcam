@@ -33,7 +33,11 @@ public:
     uint32_t GetHeight() const;
     PvPixelType GetPixelType() const;
     uint32_t GetBitsPerPixel() const;
+
     static uint32_t GetPixelSize( PvPixelType aPixelType );
+    static bool IsPixelColor( PvPixelType aPixelType );
+    static bool IsPixelHighRes( PvPixelType aPixelType );
+    static uint32_t GetBitsPerComponent(  PvPixelType aPixelType );
 
     uint32_t GetRequiredSize() const;
     uint32_t GetImageSize() const;

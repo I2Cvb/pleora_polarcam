@@ -28,7 +28,7 @@ public:
     PvBufferWriter();
     virtual ~PvBufferWriter();
 
-    PvResult Store( PvBuffer* aBuffer, const PvString& aFilename, PvBufferFormatType aType = PvBufferFormatBMP );
+    PvResult Store( PvBuffer* aBuffer, const PvString& aFilename, PvBufferFormatType aType = PvBufferFormatBMP, uint32_t *aBytesWritten = NULL );
 
     PvBufferConverter &GetConverter();
 

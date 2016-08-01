@@ -10,37 +10,34 @@ namespace SimpleImagingLib {
 class SIMPLEIMAGINGLIB_API ImagingBuffer
 {
 public:
-	ImagingBuffer(void);
 
-	ImagingBuffer( uint32_t aWidth, uint32_t aHeight );
-	
-	~ImagingBuffer(void);
+    ImagingBuffer(void);
+    ImagingBuffer( uint32_t aWidth, uint32_t aHeight );
 
-	void AllocateImage( uint32_t aWidth, uint32_t aHeight, uint32_t aPixelDepth );
+    ~ImagingBuffer(void);
 
-	uint32_t GetWidth() const;
+    void AllocateImage( uint32_t aWidth, uint32_t aHeight, uint32_t aPixelDepth );
 
-	uint32_t GetHeight() const;
+    uint32_t GetWidth() const;
+    uint32_t GetHeight() const;
 
-	uint8_t* GetFirstScanLinePtr();
+    uint8_t* GetFirstScanLinePtr();
+    uint8_t* GetTopPtr();
 
-	uint8_t* GetTopPtr();
+    uint32_t GetPixelDepth() const;
+    int32_t GetStride() const;
 
-	uint32_t GetPixelDepth() const;
+    void FillBlack();
 
-	int32_t GetStride() const;
-
-	void FillBlack();
-
-	uint32_t GetBufferSize();
-
-	bool BottomUp() const;
+    uint32_t GetBufferSize();
+    bool BottomUp() const;
 
 private:
+    
 	void AllocateImage();
 
-
 private:
+    
 	uint32_t mWidth;
 	uint32_t mHeight;
 	uint32_t mPixelDepth;
@@ -48,8 +45,8 @@ private:
 	SimpleImagingLib::ImagingBufferAllocator* mAllocator;
 	int32_t  mStride;
 	uint32_t mBufferSize;
-	int      mCorrectionFactor;
 	bool     mBottomUp;
+    
 };
 
 } // end namesapce

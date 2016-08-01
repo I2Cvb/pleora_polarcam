@@ -38,7 +38,7 @@ public:
     PvDeviceType GetType() const;
 
 	virtual PvResult Connect( const PvDeviceInfo *aDeviceInfo );
-	PvResult Connect( const PvString &aInfo );
+	virtual PvResult Connect( const PvString &aInfo );
 	PvResult Disconnect();
 
     PvResult StreamEnable( uint32_t aChannel = 0 );

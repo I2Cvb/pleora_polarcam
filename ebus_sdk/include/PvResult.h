@@ -95,7 +95,8 @@ public:
         NO_MORE_ENTRY = 0x0603,
         NO_AVAILABLE_DATA = 0x0014,
         NETWORK_ERROR = 0x0013,
-        RESYNC = 0x0028
+        RESYNC = 0x0028,
+        BUSY = 0x0202
 	};
     };
 
@@ -148,6 +149,7 @@ private:
 #define PV_NO_AVAILABLE_DATA ( 0x0014 )
 #define PV_NETWORK_ERROR ( 0x0013 )
 #define PV_RESYNC ( 0x0028 )
+#define PV_BUSY ( 0x0202 )
 
 
 #endif // __PVRESULT_H__

@@ -13,6 +13,9 @@
 #include <PvGenParameterArray.h>
 #include <PvPropertyList.h>
 
+#ifdef WIN32
+    class GenBrowserWndBase;
+#endif
 
 class PV_GUI_API PvGenBrowserWnd : public PvWnd
 {

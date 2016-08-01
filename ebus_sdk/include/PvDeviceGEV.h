@@ -19,7 +19,9 @@ public:
 
 	PvResult Connect( const PvDeviceInfo *aDeviceInfo );
 	PvResult Connect( const PvDeviceInfo *aDeviceInfo, PvAccessType aAccessType );
-	PvResult Connect( const PvString &aInfo, PvAccessType aAccessType );
+
+	PvResult Connect( const PvString &aInfo );
+    PvResult Connect( const PvString &aInfo, PvAccessType aAccessType );
 
     PvResult SetStreamDestination( const PvString &aIPAddress, uint16_t aDataPort, uint32_t aChannel = 0 ); 
     PvResult ResetStreamDestination( uint32_t aChannel = 0 );

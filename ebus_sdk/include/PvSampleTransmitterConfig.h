@@ -53,8 +53,8 @@ public:
 
     void SetDefaults()
     {
-        PvSystem lSystem;
-        lSystem.Find();
+        // Only used to enumerate network interfaces, no need to call Find
+		PvSystem lSystem;
 
         // Find default source address
         bool lFound = false;

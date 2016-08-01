@@ -23,7 +23,11 @@ public:
 	PvDeviceFinderWnd();
 	virtual ~PvDeviceFinderWnd();
 
+#ifdef WIN32
+	const PvDeviceInfo *GetSelected() const;
+#else
 	const PvDeviceInfo *GetSelected();
+#endif // WIN32
 	virtual bool OnFound( const PvDeviceInfo *aDI );
 
     void GetGEVEnabled( bool &aSelectable, bool &aVisible ) const;

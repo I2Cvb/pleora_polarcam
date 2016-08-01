@@ -15,12 +15,29 @@
 #include <IPvDeviceEventSink.h>
 
 
-class IPvDeviceAdapter
+// If implementing your own IPvDeviceAdapter, #define PV_CUSTOM_DEVICE_ADAPTER
+// in order to prevent DLL-import of IPvDeviceAdapter
+#if defined( WIN32 ) && !defined( PT_LIB_STATIC ) && !defined( PV_CUSTOM_DEVICE_ADAPTER )
+	#if defined( PV_DEVICE_EXPORTS )
+		#define IPV_DEVICE_ADAPTER_API __declspec( dllexport )
+	#else
+		#define IPV_DEVICE_ADAPTER_API __declspec( dllimport )
+	#endif
+#else
+	#define IPV_DEVICE_ADAPTER_API
+#endif
+
+
+class IPV_DEVICE_ADAPTER_API IPvDeviceAdapter
 {
 public:
 
+    IPvDeviceAdapter() {}
+    virtual ~IPvDeviceAdapter() {}
+
     virtual bool IsGenIntegerInNodeMap( const PvString &aParameterName ) = 0;
     virtual bool IsGenEnumInNodeMap( const PvString &aParameterName ) = 0;
+    virtual bool IsGenBooleanInNodeMap( const PvString &aParameterName ) = 0;
     virtual bool IsGenRegisterInNodeMap( const PvString &aParameterName ) = 0;
     virtual bool IsGenReadable( const PvString &aParameterName ) = 0;
     virtual bool IsGenWritable( const PvString &aParameterName ) = 0;
@@ -30,6 +47,8 @@ public:
     virtual PvResult GetGenEnumEntriesAvailable( const PvString &aParameterName, PvStringList &aList ) = 0;
     virtual PvResult GetGenEnumValue( const PvString &aParameterName, PvString &aEnumEntry ) = 0;
     virtual PvResult SetGenEnumValue( const PvString &aParameterName, const PvString &aEnumEntry ) = 0;
+    virtual PvResult GetGenBooleanValue( const PvString &aParameterName, bool &aValue ) = 0;
+    virtual PvResult SetGenBooleanValue( const PvString &aParameterName, bool aValue ) = 0;
     virtual PvResult GetGenStringValue( const PvString &aParameterName, PvString &aValue ) = 0;
     virtual PvResult GetGenRegisterLength( const PvString &aParameterName, int64_t &aLength ) = 0;
     virtual PvResult GetGenRegisterData( const PvString &aParameterName, uint8_t *aDataBuffer, int64_t aByteCount ) = 0;
