@@ -176,15 +176,15 @@ endif()
 
 add_definitions(-D_UNIX_ -D_LINUX_)
 
-include(FindCURL)
+include(FindGnuTLS)
 
-if(NOT CURL_FOUND)
+if(NOT GNUTLS_FOUND)
 
-    message("CURL not found! Aborting...")
+    message("GNUTLS not found! Aborting...")
 
     fail()
 
-endif(NOT CURL_FOUND)
+endif(NOT GNUTLS_FOUND)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -276,7 +276,7 @@ include_directories(
   include
   ${catkin_INCLUDE_DIRS}
   ${EBUS_INCLUDE_DIRS}
-  ${CURL_INCLUDE_DIRS}
+  ${GNUTLS_INCLUDE_DIR}
 )
 
 ## Declare a cpp library
@@ -309,24 +309,24 @@ target_link_libraries(ira_photonfocus
     ${EBUS_LIBRARIES}
     ${OpenCV_LIBRARIES}
     ${Boost_LIBRARIES}
-    ${CURL__LIBRARIES}
+    ${GNUTLS_LIBRARIES}
 )
 
 target_link_libraries(ira_photonfocus_driver
     ira_photonfocus
     ${EBUS_LIBRARIES}
     ${catkin_LIBRARIES}
-    ${CURL__LIBRARIES}
+    ${GNUTLS_LIBRARIES}
 )
 
 target_link_libraries(set_ip
     ${EBUS_LIBRARIES}
-    ${CURL__LIBRARIES}
+    ${GNUTLS_LIBRARIES}
 )
 
 target_link_libraries(find_camera
     ${EBUS_LIBRARIES}
-    ${CURL__LIBRARIES}
+    ${GNUTLS_LIBRARIES}
 )
 
 #############

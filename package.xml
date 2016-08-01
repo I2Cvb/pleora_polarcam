@@ -47,12 +47,14 @@
   <build_depend>camera_info_manager</build_depend>
   <build_depend>driver_base</build_depend>
   <build_depend>curl</build_depend>
+  <build_depend>gnutls</build_depend>
   <run_depend>cv_bridge</run_depend>
   <run_depend>image_transport</run_depend>
   <run_depend>roscpp</run_depend>
   <run_depend>dynamic_reconfigure</run_depend>
   <run_depend>camera_info_manager</run_depend>
   <run_depend>curl</run_depend>
+  <run_depend>gnutls</run_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
