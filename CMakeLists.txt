@@ -176,6 +176,16 @@ endif()
 
 add_definitions(-D_UNIX_ -D_LINUX_)
 
+include(FindCURL)
+
+if(NOT CURL_FOUND)
+
+    message("CURL not found! Aborting...")
+
+    fail()
+
+endif(NOT CURL_FOUND)
+
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -266,6 +276,7 @@ include_directories(
   include
   ${catkin_INCLUDE_DIRS}
   ${EBUS_INCLUDE_DIRS}
+  ${CURL_INCLUDE_DIRS}
 )
 
 ## Declare a cpp library
@@ -298,20 +309,24 @@ target_link_libraries(ira_photonfocus
     ${EBUS_LIBRARIES}
     ${OpenCV_LIBRARIES}
     ${Boost_LIBRARIES}
+    ${CURL__LIBRARIES}
 )
 
 target_link_libraries(ira_photonfocus_driver
     ira_photonfocus
     ${EBUS_LIBRARIES}
     ${catkin_LIBRARIES}
+    ${CURL__LIBRARIES}
 )
 
 target_link_libraries(set_ip
     ${EBUS_LIBRARIES}
+    ${CURL__LIBRARIES}
 )
 
 target_link_libraries(find_camera
     ${EBUS_LIBRARIES}
+    ${CURL__LIBRARIES}
 )
 
 #############
