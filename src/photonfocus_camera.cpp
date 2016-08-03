@@ -53,7 +53,6 @@ void PhotonFocusCamera::start()
     //    // before sending the AcquisitionStart command
     //    device_params_->SetIntegerValue( "TLParamsLocked", 1 );
 
-    printf( "Resetting timestamp counter...\n" );
     device_parameters->ExecuteCommand( "GevTimestampControlReset" );
 
     // All is set and ready, now say to the camera to start sending images
