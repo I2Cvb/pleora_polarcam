@@ -1,0 +1,1855 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RegisterDescription ModelName="ModelName" VendorName="VendorName" ToolTip="Model Description" StandardNameSpace="GEV" SchemaMajorVersion="1" SchemaMinorVersion="1" SchemaSubMinorVersion="1" MajorVersion="1" MinorVersion="0" SubMinorVersion="0" ProductGuid="CB9328DB-1273-42a3-90C7-EB3224537C39" VersionGuid="321DAFF5-A243-42ae-8B5D-B5BD18C31488" xmlns="http://www.genicam.org/GenApi/Version_1_1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.genicam.org/GenApi/Version_1_1  ../GenApiSchema_Version_1_1.xsd">
+	<Group Comment="Root">
+		<Category Name="Root">
+			<pFeature>Configuration</pFeature>
+			<pFeature>Connection</pFeature>
+			<pFeature>Statistics</pFeature>
+			<pFeature>Support</pFeature>
+		</Category>
+	</Group>
+	<Group Comment="Configuration">
+		<Category Name="Configuration">
+			<pFeature>FirstPacketTimeout</pFeature>
+			<pFeature>InterPacketTimeout</pFeature>
+			<pFeature>RequestTimeout</pFeature>
+			<pFeature>PreemptiveResendTimeout</pFeature>
+			<pFeature>MaximumPendingResends</pFeature>
+			<pFeature>RequestMissingPackets</pFeature>
+			<pFeature>LatencyLevel</pFeature>
+			<pFeature>AutoResetOnLackOfResources</pFeature>
+			<pFeature>MaximumResendRequestRetryByPacket</pFeature>
+			<pFeature>MaximumResendGroupSize</pFeature>
+			<pFeature>ResendRequestTimeout</pFeature>
+			<pFeature>ResendDelay</pFeature>
+			<pFeature>ResetOnIdle</pFeature>
+			<pFeature>ForceMissingPacketsAtNextBlockStart</pFeature>
+			<pFeature>EnableMissingPacketsList</pFeature>
+			<pFeature>MaximumPreQueuedBuffers</pFeature>
+			<pFeature>OnlyStartOnFirstPacket</pFeature>
+			<pFeature>ExtraBlockCompletion</pFeature>
+		</Category>
+		<Integer Name="FirstPacketTimeout">
+			<ToolTip>Maximum time to wait for the first packet of a block</ToolTip>
+			<Description>The maximum time (in milliseconds) the data receiver waits for the first packet of a block. This timer starts when the first packet of the stream is received. 
+The value of zero implies that no first packet timeout will be enforced.
+Upon expiry of this timer, the buffer is returned with an operation result describing the error .</Description>
+			<DisplayName>First Packet Timeout</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<Streamable>Yes</Streamable>
+			<pValue>FirstPacketTimeoutReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="FirstPacketTimeoutReg">
+			<Address>0xE800</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="InterPacketTimeout">
+			<ToolTip>Maximum time to wait in between two packets of a block</ToolTip>
+			<Description>The maximum time (in milliseconds) to wait in between two packets of a block. If set to 0, no maximum inter packet timeout is enforced. Upon expiry of this timer, the buffer is returned with an operation result describing the error.</Description>
+			<DisplayName>Inter Packet Timeout</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>InterPacketTimeoutAvailExpr</pIsAvailable>
+			<Streamable>Yes</Streamable>
+			<pValue>InterPacketTimeoutReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="InterPacketTimeoutReg">
+			<Address>0xE804</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>WriteThrough</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="InterPacketTimeoutAvailExpr">
+			<pVariable Name="VAR_DATARECEIVERTYPE">DataReceiverTypeReg</pVariable>
+			<Formula>(VAR_DATARECEIVERTYPE = 3) || (VAR_DATARECEIVERTYPE = 2)</Formula>
+		</IntSwissKnife>
+		<Integer Name="RequestTimeout">
+			<ToolTip>Maximum time to wait for all the packets of a block</ToolTip>
+			<Description>The maximum time (in milliseconds) that the data receiver waits for all the packets of a block. Upon expiry of this timer, the buffer is returned with an operation result describing the error. This timer starts when the first packet of the stream is received.</Description>
+			<DisplayName>Request Timeout</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<Streamable>Yes</Streamable>
+			<pValue>RequestTimeoutReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="RequestTimeoutReg">
+			<Address>0xE808</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="PreemptiveResendTimeout">
+			<ToolTip>The time (in milliseconds) the data receiver waits before making a preemptive resend request on the last block.</ToolTip>
+			<Description>The time (in milliseconds) that the data receiver waits to receive a packet from the most recent block before making a resend request when no activity is detected. If set to 0, a pre-emptive resend will not occur.</Description>
+			<DisplayName>Preemptive Resend Timeout</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>PreemptiveResendTimeoutAvailExpr</pIsAvailable>
+			<Streamable>Yes</Streamable>
+			<pValue>PreemptiveResendTimeoutReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="PreemptiveResendTimeoutReg">
+			<Address>0xE80C</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="PreemptiveResendTimeoutAvailExpr">
+			<pVariable Name="VAR_DATARECEIVERTYPE">DataReceiverTypeReg</pVariable>
+			<pVariable Name="VAR_REQUESTMISSINGPACKETS">RequestMissingPacketsReg</pVariable>
+			<Formula>((VAR_DATARECEIVERTYPE = 3) || (VAR_DATARECEIVERTYPE = 2)) &amp;&amp; VAR_REQUESTMISSINGPACKETS</Formula>
+		</IntSwissKnife>
+		<Integer Name="MaximumPendingResends">
+			<ToolTip>Maximum number of missing packets that are allowed at one time per block</ToolTip>
+			<Description>Maximum number of packets in a block that can be missing, at any one time, before the buffer is returned with an operation result describing the error. A value of zero indicates that there is no limit to the number of pending resend requests.</Description>
+			<DisplayName>Maximum Pending Resends</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>RequestMissingPackets</pIsAvailable>
+			<Streamable>Yes</Streamable>
+			<pValue>MaximumPendingResendsReg</pValue>
+			<Min>0</Min>
+			<Max>4096</Max>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="MaximumPendingResendsReg">
+			<Address>0xE810</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Boolean Name="RequestMissingPackets">
+			<ToolTip>If enabled, missing packets are requested</ToolTip>
+			<Description>If enabled, missing packets are requested. Other parameters that control the resend request behaviour include MaximumResendRequestRetryByPacket, MaximumResendGroupSize, ResendRequestTimeout, MaximumPendingResends and ResendDelay.</Description>
+			<DisplayName>Request Missing Packets</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>ResendsSupported</pIsAvailable>
+			<Streamable>Yes</Streamable>
+			<pValue>RequestMissingPacketsReg</pValue>
+		</Boolean>
+		<IntReg Name="RequestMissingPacketsReg">
+			<Address>0xE814</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="LatencyLevel">
+			<ToolTip>Allows the tuning of the data receiver to modify the acceptable amount of latency</ToolTip>
+			<Description>Only available when receiving data through the eBUS Universal Pro driver for windows.
+This value allows the tuning of the driver to modify the acceptable amount of latency at the cost of using greater CPU resources. A value of 0 minimizes latency as much as possible.</Description>
+			<DisplayName>Latency Level</DisplayName>
+			<Visibility>Guru</Visibility>
+		<pIsAvailable>LatencyLevelAvailExpr</pIsAvailable>
+			<Streamable>Yes</Streamable>
+			<pValue>LatencyLevelReg</pValue>
+			<Min>0</Min>
+			<Max>3</Max>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="LatencyLevelReg">
+			<Address>0xE818</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="LatencyLevelAvailExpr">
+			<pVariable Name="VAR_DATARECEIVERTYPE">DataReceiverTypeReg</pVariable>
+			<pVariable Name="VAR_OPERATINGSYSTEM">OperatingSystemReg</pVariable>
+			<Formula>(VAR_DATARECEIVERTYPE = 3)&amp;&amp;(VAR_OPERATINGSYSTEM=0)</Formula>
+		</IntSwissKnife>
+		<Integer Name="AutoResetOnLackOfResources">
+			<ToolTip>Threshold of free buffers in the data receiver</ToolTip>
+			<Description>The threshold of buffers available to be filled in the data receiver. When the number of buffers available to be filled is less than this threshold, all incomplete buffers are returned with an operation result describing the  error.</Description>
+			<DisplayName>Auto Reset On Lack Of Resources</DisplayName>
+			<Visibility>Expert</Visibility>
+		<pIsAvailable>AutoResetOnLackOfResourcesAvailExpr</pIsAvailable>
+			<Streamable>Yes</Streamable>
+			<pValue>AutoResetOnLackOfResourcesReg</pValue>
+			<Min>0</Min>
+			<pMax>AutoResetOnLackOfResourcesMaxExpr</pMax>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="AutoResetOnLackOfResourcesReg">
+			<Address>0xE81C</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="AutoResetOnLackOfResourcesMaxExpr">
+			<pVariable Name="VAR_MAXQUEUEDBUFFER">MaxQueuedBufferReg</pVariable>
+			<Formula>VAR_MAXQUEUEDBUFFER</Formula>
+		</IntSwissKnife>
+		<IntSwissKnife Name="AutoResetOnLackOfResourcesAvailExpr">
+			<pVariable Name="VAR_DATARECEIVERTYPE">DataReceiverTypeReg</pVariable>
+			<Formula>(VAR_DATARECEIVERTYPE = 3) || (VAR_DATARECEIVERTYPE = 2)</Formula>
+		</IntSwissKnife>
+		<Integer Name="MaximumResendRequestRetryByPacket">
+			<ToolTip>Maximum number of times a resend request can be issued for a given packet</ToolTip>
+			<Description>The maximum number of times a resend request can be issued before the buffer is returned with an operation result describing the error. A value of zero indicates that there is no limit on the number of resend requests.</Description>
+			<DisplayName>Maximum Resend Request Retry By Packet</DisplayName>
+			<Visibility>Guru</Visibility>
+		<pIsAvailable>MaximumResendRequestRetryByPacketAvailExpr</pIsAvailable>
+			<Streamable>Yes</Streamable>
+			<pValue>MaximumResendRequestRetryByPacketReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="MaximumResendRequestRetryByPacketReg">
+			<Address>0xE820</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="MaximumResendRequestRetryByPacketAvailExpr">
+			<pVariable Name="VAR_DATARECEIVERTYPE">DataReceiverTypeReg</pVariable>
+			<pVariable Name="VAR_REQUESTMISSINGPACKETS">RequestMissingPacketsReg</pVariable>
+			<Formula>((VAR_DATARECEIVERTYPE = 3) || (VAR_DATARECEIVERTYPE = 2)) &amp;&amp; VAR_REQUESTMISSINGPACKETS</Formula>
+		</IntSwissKnife>
+		<Integer Name="MaximumResendGroupSize">
+			<ToolTip>Maximum size of a resend group</ToolTip>
+			<Description>GigE Vision allows for a single resend request to contain requests for 1 or more packets. This parameter defines the maximum number of packets that can be requested at one time. A value of zero indicates that there is no limit to the resend group size.  If the number of consecutive missing packets is larger than this value, the operation result is set to TOO_MANY_CONSECUTIVE_RESENDS.</Description>
+			<DisplayName>Maximum Resend Group Size</DisplayName>
+			<Visibility>Guru</Visibility>
+		<pIsAvailable>MaximumResendGroupSizeAvailExpr</pIsAvailable>
+			<Streamable>Yes</Streamable>
+			<pValue>MaximumResendGroupSizeReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="MaximumResendGroupSizeReg">
+			<Address>0xE824</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="MaximumResendGroupSizeAvailExpr">
+			<pVariable Name="VAR_DATARECEIVERTYPE">DataReceiverTypeReg</pVariable>
+			<pVariable Name="VAR_REQUESTMISSINGPACKETS">RequestMissingPacketsReg</pVariable>
+			<Formula>((VAR_DATARECEIVERTYPE = 3) || (VAR_DATARECEIVERTYPE = 2)) &amp;&amp; VAR_REQUESTMISSINGPACKETS</Formula>
+		</IntSwissKnife>
+		<Integer Name="ResendRequestTimeout">
+			<ToolTip>Time to wait before re-issuing a resend request</ToolTip>
+			<Description>The amount of time (in microseconds) the data receiver waits for a response to a resend request before issuing the request again.</Description>
+			<DisplayName>Resend Request Timeout</DisplayName>
+			<Visibility>Guru</Visibility>
+		<pIsAvailable>ResendRequestTimeoutAvailExpr</pIsAvailable>
+			<Streamable>Yes</Streamable>
+			<pValue>ResendRequestTimeoutReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ResendRequestTimeoutReg">
+			<Address>0xE828</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="ResendRequestTimeoutAvailExpr">
+			<pVariable Name="VAR_DATARECEIVERTYPE">DataReceiverTypeReg</pVariable>
+			<pVariable Name="VAR_REQUESTMISSINGPACKETS">RequestMissingPacketsReg</pVariable>
+			<Formula>((VAR_DATARECEIVERTYPE = 3) || (VAR_DATARECEIVERTYPE = 2)) &amp;&amp; VAR_REQUESTMISSINGPACKETS</Formula>
+		</IntSwissKnife>
+		<Integer Name="ResendDelay">
+			<ToolTip>Time (in microseconds) to wait before issuing a resend request for a missing packet</ToolTip>
+			<Description>Time (in microseconds) to wait before issuing a resend request for a missing packet. </Description>
+			<DisplayName>Resend Delay</DisplayName>
+			<Visibility>Guru</Visibility>
+		<pIsAvailable>ResendDelayAvailExpr</pIsAvailable>
+			<Streamable>Yes</Streamable>
+			<pValue>ResendDelayReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ResendDelayReg">
+			<Address>0xE82C</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="ResendDelayAvailExpr">
+			<pVariable Name="VAR_DATARECEIVERTYPE">DataReceiverTypeReg</pVariable>
+			<pVariable Name="VAR_REQUESTMISSINGPACKETS">RequestMissingPacketsReg</pVariable>
+			<Formula>((VAR_DATARECEIVERTYPE = 3 ) || (VAR_DATARECEIVERTYPE = 2 )) &amp;&amp; VAR_REQUESTMISSINGPACKETS</Formula>
+		</IntSwissKnife>
+		<Integer Name="ResetOnIdle">
+			<ToolTip>Time (in milliseconds) that the data receiver waits for while there is no GVSP packet coming before resetting itself.</ToolTip>
+			<Description>This parameter defines the time that the data receiver waits for while there is no GVSP packet coming before resetting itself.
+On a reset, 1) All the Receiving block buffers to Ready for Processing states with error code AUTO_ABORTED. All Empty block buffers are still in the data receiver and ready for receiving. 2) The data receiver goes back to the pre stream start status.
+This parameter allows the data receiver to better handle the cases where the data receiver receives no packets for a long time due to a connection loss or a large number of packets are dropped on the network. Without this parameter, the data receiver may not be able to recover quickly as it may try to request many packets resends. 
+This parameter also can help the data receiver work properly in the situation that the application is only a data receiver and the transmitter resets the block_id. For example, the transmitter transmitted the block_id n and data receiver received it. Then data receiver is excepting block_id n+1 but if the transmitter resets the block_id to 1.  Without this parameter to reset it back to the pre stream start status the data receiver will ignore the new coming in blocks until it receives block_id n+1. For some transmitter devices, acquisition stop and start resets the block_id  to 1.  For a software transmitter, for instance Pleora Video server, after you call PvTransmitterGEV::Close() and then PvTransmitterGEV::Open() then the block_id resets to 1. In both cases if the stream destination IP address and port remain same as before then the data receiver application still receives those blocks.  Data receiver could not tell if those block data are from new coming block data or the packet resend for the same block_id which has been received before.</Description>
+			<DisplayName>Reset On Idle</DisplayName>
+			<Visibility>Guru</Visibility>
+		<pIsAvailable>ResetOnIdleAvailExpr</pIsAvailable>
+			<Streamable>Yes</Streamable>
+			<pValue>ResetOnIdleReg</pValue>
+			<Min>0</Min>
+			<Max>4294967</Max>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ResetOnIdleReg">
+			<Address>0xE830</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="ResetOnIdleAvailExpr">
+			<pVariable Name="VAR_DATARECEIVERTYPE">DataReceiverTypeReg</pVariable>
+			<Formula>(VAR_DATARECEIVERTYPE = 3) || (VAR_DATARECEIVERTYPE = 2)</Formula>
+		</IntSwissKnife>
+		<Boolean Name="ForceMissingPacketsAtNextBlockStart">
+			<ToolTip>Stop waiting for packets from a block if packets begin to arrive from the following block</ToolTip>
+			<Description>Forces the data receiver to stop waiting for packets from a block in the event that packets begin to arrive from  the next block.</Description>
+			<DisplayName>Force Missing Packets At Next Block Start</DisplayName>
+			<Visibility>Invisible</Visibility>
+		<pIsAvailable>ForceMissingPacketsAtNextBlockStartAvailExpr</pIsAvailable>
+			<Streamable>Yes</Streamable>
+			<pValue>ForceMissingPacketsAtNextBlockStartReg</pValue>
+		</Boolean>
+		<IntReg Name="ForceMissingPacketsAtNextBlockStartReg">
+			<Address>0xE834</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="ForceMissingPacketsAtNextBlockStartAvailExpr">
+			<pVariable Name="VAR_DATARECEIVERTYPE">DataReceiverTypeReg</pVariable>
+			<Formula>(VAR_DATARECEIVERTYPE = 3) || (VAR_DATARECEIVERTYPE = 2)</Formula>
+		</IntSwissKnife>
+		<Boolean Name="EnableMissingPacketsList">
+			<ToolTip>Keep track of packets that were lost while attempting to receive a block.</ToolTip>
+			<Description>Enables the data receiver to keep track of packets that were lost while attempting to receive a block. Enable if you plan on using PvBuffer::GetMissingPacketIdsCount and PvBuffer::GetMissingPacketIds .</Description>
+			<DisplayName>Enable Missing Packets List</DisplayName>
+			<Visibility>Guru</Visibility>
+		<pIsAvailable>EnableMissingPacketsListAvailExpr</pIsAvailable>
+			<Streamable>Yes</Streamable>
+			<pValue>EnableMissingPacketsListReg</pValue>
+		</Boolean>
+		<IntReg Name="EnableMissingPacketsListReg">
+			<Address>0xE838</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="EnableMissingPacketsListAvailExpr">
+			<pVariable Name="VAR_DATARECEIVERTYPE">DataReceiverTypeReg</pVariable>
+			<Formula>((VAR_DATARECEIVERTYPE=3)||(VAR_DATARECEIVERTYPE=2))</Formula>
+		</IntSwissKnife>
+		<Integer Name="MaximumPreQueuedBuffers">
+			<ToolTip>Number of buffers queued into the driver in one call between user space and kernel space</ToolTip>
+			<Description>Only available when receiving data through the eBUS Universal Pro driver.
+Number of buffers queued before passing the buffers between user space and kernel space. Increasing this number reduces the number of times data is exchanged between the SDK in user space and the driver in kernel space. This can increase performance in the case where data is being streamed at high frame rates. Before using this parameter, ensure that a sufficient number of buffers queued into the stream.</Description>
+			<DisplayName>Maximum Pre Queued Buffers</DisplayName>
+			<Visibility>Guru</Visibility>
+		<pIsAvailable>MaximumPreQueuedBuffersAvailExpr</pIsAvailable>
+			<Streamable>Yes</Streamable>
+			<pValue>MaximumPreQueuedBuffersReg</pValue>
+			<Min>1</Min>
+			<Max>32</Max>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="MaximumPreQueuedBuffersReg">
+			<Address>0xE83C</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="MaximumPreQueuedBuffersAvailExpr">
+			<pVariable Name="VAR_DATARECEIVERTYPE">DataReceiverTypeReg</pVariable>
+			<pVariable Name="VAR_OPERATINGSYSTEM">OperatingSystemReg</pVariable>
+			<Formula>(VAR_DATARECEIVERTYPE=3)&amp;&amp;(VAR_OPERATINGSYSTEM=0)</Formula>
+		</IntSwissKnife>
+		<Boolean Name="OnlyStartOnFirstPacket">
+			<ToolTip>When set to true, the data receiver is waiting to receive the first packet ( id = 0 ) of the next block to start.</ToolTip>
+			<Description>When set to true, GVSP packets are discarded until a GVSP leader of a block is received. When it is set to false, SDK starts processing the first received GVSP packet regardless of its packet id, at which point the SDK requests that the device resend the lost packets. Setting this feature to false can cause multiple unwanted resend requests on multicast system. </Description>
+			<DisplayName>Only Start On First Packet</DisplayName>
+			<Visibility>Guru</Visibility>
+			<Streamable>Yes</Streamable>
+			<pValue>OnlyStartOnFirstPacketReg</pValue>
+		</Boolean>
+		<IntReg Name="OnlyStartOnFirstPacketReg">
+			<Address>0xE930</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>WriteThrough</Cachable>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Enumeration Name="ExtraBlockCompletion">
+			<ToolTip>Add extra condition for block completion</ToolTip>
+			<Description>Add extra condition for block completion</Description>
+			<DisplayName>Extra Block Completion</DisplayName>
+			<Visibility>Guru</Visibility>
+			<pIsAvailable>ExtraBlockCompletionAvailExpr</pIsAvailable>
+			<Streamable>Yes</Streamable>
+			<EnumEntry Name="Disabled">
+				<ToolTip>Disabled</ToolTip>
+				<Description>Disabled</Description>
+				<DisplayName>Disabled</DisplayName>
+				<Visibility>Guru</Visibility>
+				<Value>0</Value>
+			</EnumEntry>
+			<EnumEntry Name="OnNextBlockStart">
+				<ToolTip>Forces the data receiver to stop waiting for packets from a block in the event that packets begin to arrive for a next block.</ToolTip>
+				<Description>Forces the data receiver to stop waiting for packets from a block in the event that packets begin to arrive for a next block.</Description>
+				<DisplayName>On Next Block Start</DisplayName>
+				<Visibility>Guru</Visibility>
+				<Value>1</Value>
+			</EnumEntry>
+			<EnumEntry Name="OnBlockTrailer">
+				<ToolTip>Forces the data receiver to stop waiting for packets from a block in the event that the trailer packet is received or packets begin to arrive for a next block or it receive.</ToolTip>
+				<Description>Forces the data receiver to stop waiting for packets from a block in the event that the trailer packet is received or packets begin to arrive for a next block or it receive.</Description>
+				<DisplayName>On Block Trailer</DisplayName>
+				<Visibility>Guru</Visibility>
+				<Value>2</Value>
+			</EnumEntry>
+			<pValue>ExtraBlockCompletionReg</pValue>
+		</Enumeration>
+		<IntReg Name="ExtraBlockCompletionReg">
+			<Address>0xE934</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="ExtraBlockCompletionAvailExpr">
+			<pVariable Name="VAR_DATARECEIVERTYPE">DataReceiverTypeReg</pVariable>
+			<Formula>(VAR_DATARECEIVERTYPE = 3)||(VAR_DATARECEIVERTYPE = 2)</Formula>
+		</IntSwissKnife>
+	</Group>
+	<Group Comment="Connection">
+		<Category Name="Connection">
+			<pFeature>DataPort</pFeature>
+			<pFeature>MulticastIPAddress</pFeature>
+			<pFeature>LocalIPAddress</pFeature>
+			<pFeature>DeviceIPAddress</pFeature>
+			<pFeature>Channel</pFeature>
+		</Category> 
+		<Integer Name="DataPort">
+			<ToolTip>UDP port to which the GigE Vision transmitter should send data</ToolTip>
+			<Description>UDP port to which the GigE Vision transmitter should send data. For unicast data, this is the local (PC side) port number. For multicast data, this is the port number to which the receiver is subscribed.</Description>
+			<DisplayName>Data Port</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>DataPortReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="DataPortReg">
+			<Address>0xE840</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="MulticastIPAddress">
+			<ToolTip>Address of the multicast group, if applicable.</ToolTip>
+			<Description>Address of the multicast group, if applicable.</Description>
+			<DisplayName>Multicast IP Address</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>MulticastIPAddressReg</pValue>
+			<Inc>1</Inc>
+			<Representation>HexNumber</Representation>
+		</Integer>
+		<IntReg Name="MulticastIPAddressReg">
+			<Address>0xE844</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="LocalIPAddress">
+			<ToolTip>Local IP address used to receive data</ToolTip>
+			<Description>Local IP address used to receive data from the GigE Vision transmitter.</Description>
+			<DisplayName>Local IP Address</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>LocalIPAddressReg</pValue>
+			<Inc>1</Inc>
+			<Representation>HexNumber</Representation>
+		</Integer>
+		<IntReg Name="LocalIPAddressReg">
+			<Address>0xE848</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="DeviceIPAddress">
+			<ToolTip>IP address of the GigE Vision transmitter from which the stream is receiving data</ToolTip>
+			<Description>IP address of the GigE Vision transmitter from which the stream is receiving data.</Description>
+			<DisplayName>Device IP Address</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>DeviceIPAddressReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="DeviceIPAddressReg">
+			<Address>0xE84C</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="Channel">
+			<ToolTip>The GigE Vision streaming channel from which data is received.</ToolTip>
+			<Description>The GigE Vision streaming channel from which data is received.</Description>
+			<Visibility>Beginner</Visibility>
+			<pValue>ChannelReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ChannelReg">
+			<Address>0xE850</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+	</Group>
+	<Group Comment="Statistics">
+		<Category Name="Statistics">
+			<pFeature>General</pFeature>
+			<pFeature>Counters</pFeature>
+		</Category>  
+	</Group>
+	<Group Comment="General">
+		<Category Name="General">
+			<pFeature>Reset</pFeature>
+			<pFeature>BitsCount</pFeature>
+			<pFeature>BytesCount</pFeature>
+			<pFeature>BlockCount</pFeature>
+			<pFeature>SamplingTime</pFeature>
+			<pFeature>AcquisitionRate</pFeature>
+			<pFeature>AcquisitionRateAverage</pFeature>
+			<pFeature>Bandwidth</pFeature>
+			<pFeature>BandwidthAverage</pFeature>
+			<pFeature>TimeoutCountedAsError</pFeature>
+			<pFeature>AbortCountedAsError</pFeature>
+			<pFeature>ErrorCount</pFeature>
+			<pFeature>LastError</pFeature>
+			<pFeature>TimestampSourceEffective</pFeature>
+			<pFeature>TimestampSourcePreferred</pFeature>
+		</Category>  
+		<Command Name="Reset">
+			<ToolTip>Resets all stream statistic counters</ToolTip>
+			<Description>Resets all stream statistic counters</Description>
+			<DisplayName>Reset</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>ResetReg</pValue>
+			<CommandValue>0</CommandValue>
+		</Command>
+		<IntReg Name="ResetReg">
+			<Address>0xE854</Address>
+			<Length>4</Length>
+			<AccessMode>WO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="BitsCount">
+			<ToolTip>Number of data payload bits received by the stream.</ToolTip>
+			<Description>Number of data payload bits received by the stream.</Description>
+			<DisplayName>Bits Count</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>BitsCountValExpr</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntSwissKnife Name="BitsCountValExpr">
+			<pVariable Name="VAR_BYTESCOUNT">BytesCountValExpr</pVariable>
+			<Formula>VAR_BYTESCOUNT * 8</Formula>
+		</IntSwissKnife>
+		<Integer Name="BytesCount">
+			<ToolTip>Number of data payload bytes received by the stream.</ToolTip>
+			<Description>Number of data payload bytes received by the stream.</Description>
+			<DisplayName>Bytes Count</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>BytesCountValExpr</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntSwissKnife Name="BytesCountValExpr">
+			<pVariable Name="VAR_BYTESCOUNTHIGH">BytesCountHighReg</pVariable>
+			<pVariable Name="VAR_BYTESCOUNTLOW">BytesCountLowReg</pVariable>
+			<Formula>(VAR_BYTESCOUNTHIGH &lt;&lt; 32) | VAR_BYTESCOUNTLOW</Formula>
+		</IntSwissKnife>
+		<Integer Name="BlockCount">
+			<ToolTip>Number of blocks received from the device.</ToolTip>
+			<Description>Number of blocks received from the device.</Description>
+			<DisplayName>Block Count</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>BlockCountValExpr</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntSwissKnife Name="BlockCountValExpr">
+			<pVariable Name="VAR_BLOCKCOUNTHIGH">BlockCountHighReg</pVariable>
+			<pVariable Name="VAR_BLOCKCOUNTLOW">BlockCountLowReg</pVariable>
+			<Formula>(VAR_BLOCKCOUNTHIGH &lt;&lt; 32) | VAR_BLOCKCOUNTLOW</Formula>
+		</IntSwissKnife>
+		<Integer Name="SamplingTime">
+			<ToolTip>The time elapsed (in ms) between the first block received and the latest block received.</ToolTip>
+			<Description>The time elapsed (in ms) between the first block received and the latest block received. Note the definition of the first block in this case would be the first block received after having either opening the stream or issuing the Reset command.</Description>
+			<DisplayName>Sampling Time</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>SamplingTimeReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="SamplingTimeReg">
+			<Address>0xE858</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Float Name="AcquisitionRate">
+			<ToolTip>Instant acquisition rate.</ToolTip>
+			<Description>Instant acquisition rate.</Description>
+			<DisplayName>Acquisition Rate</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>AcquisitionRateReg</pValue>
+			<Unit>fps</Unit>
+			<Representation>Linear</Representation>
+		</Float>
+		<FloatReg Name="AcquisitionRateReg">
+			<Address>0xE85C</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>250</PollingTime>
+			<Endianess>BigEndian</Endianess>
+		</FloatReg>
+		<Float Name="AcquisitionRateAverage">
+			<ToolTip>Average acquisition rate since the first block was received.</ToolTip>
+			<Description>Average acquisition rate since the first block was received.</Description>
+			<DisplayName>Acquisition Rate Average</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>AcquisitionRateAverageReg</pValue>
+			<Unit>fps</Unit>
+			<Representation>Linear</Representation>
+		</Float>
+		<FloatReg Name="AcquisitionRateAverageReg">
+			<Address>0xE860</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Endianess>BigEndian</Endianess>
+		</FloatReg>
+		<Float Name="Bandwidth">
+			<ToolTip>Instant throughput in bps.</ToolTip>
+			<Description>Instant throughput in bits per second. Note that this value is calculated based on a finite sequence of received blocks within a finite period of time.</Description>
+			<DisplayName>Bandwidth</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>BandwidthReg</pValue>
+			<Unit>bps</Unit>
+			<Representation>Linear</Representation>
+		</Float>
+		<FloatReg Name="BandwidthReg">
+			<Address>0xE864</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>250</PollingTime>
+			<Endianess>BigEndian</Endianess>
+		</FloatReg>
+		<Float Name="BandwidthAverage">
+			<ToolTip>Average throughput since the last reset in bps.</ToolTip>
+			<Description>Average throughput since the last reset in bits per second.</Description>
+			<DisplayName>Bandwidth Average</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>BandwidthAverageReg</pValue>
+			<Unit>bps</Unit>
+			<Representation>Linear</Representation>
+		</Float>
+		<FloatReg Name="BandwidthAverageReg">
+			<Address>0xE868</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Endianess>BigEndian</Endianess>
+		</FloatReg>
+		<Boolean Name="TimeoutCountedAsError">
+			<ToolTip>When enabled, timeouts are considered errors.</ToolTip>
+			<Description>When enabled, timeouts are considered errors. Depending on the nature and behavior of an application, timeouts can be normal occurrences or represent real errors.</Description>
+			<DisplayName>Timeout Counted As Error</DisplayName>
+			<Visibility>Guru</Visibility>
+			<Streamable>Yes</Streamable>
+			<pValue>TimeoutCountedAsErrorReg</pValue>
+		</Boolean>
+		<IntReg Name="TimeoutCountedAsErrorReg">
+			<Address>0xE86C</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Boolean Name="AbortCountedAsError">
+			<ToolTip>When enabled, aborted buffers are considered errors.</ToolTip>
+			<Description>When enabled, aborted buffers are considered errors. Depending on the nature and behavior of an application, aborted buffers can be normal occurrences or represent real errors.</Description>
+			<DisplayName>Abort Counted As Error</DisplayName>
+			<Visibility>Guru</Visibility>
+			<Streamable>Yes</Streamable>
+			<pValue>AbortCountedAsErrorReg</pValue>
+		</Boolean>
+		<IntReg Name="AbortCountedAsErrorReg">
+			<Address>0xE870</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="ErrorCount">
+			<ToolTip>Count of RetrieveBuffer operation result errors</ToolTip>
+			<Description>Count of RetrieveBuffer operation result errors since the last reset.</Description>
+			<DisplayName>Error Count</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>ErrorCountReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ErrorCountReg">
+			<Address>0xE874</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Enumeration Name="LastError">
+			<ToolTip>Last RetrieveBuffer operation result error.</ToolTip>
+			<Description>Last RetrieveBuffer operation result error.</Description>
+			<DisplayName>Last Error</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<EnumEntry Name="None"><Value>0</Value></EnumEntry>
+			<EnumEntry Name="NOT_INITIALIZED"><Value>1541</Value></EnumEntry>
+			<EnumEntry Name="NOT_FOUND"><Value>25</Value></EnumEntry>
+			<EnumEntry Name="CANNOT_OPEN_FILE"><Value>6</Value></EnumEntry>
+			<EnumEntry Name="NO_MORE_ITEM"><Value>21</Value></EnumEntry>
+			<EnumEntry Name="NOT_CONNECTED"><Value>23</Value></EnumEntry>
+			<EnumEntry Name="STATE_ERROR"><Value>28</Value></EnumEntry>
+			<EnumEntry Name="THREAD_ERROR"><Value>29</Value></EnumEntry>
+			<EnumEntry Name="INVALID_DATA_FORMAT"><Value>1281</Value></EnumEntry>
+			<EnumEntry Name="ABORTED"><Value>1</Value></EnumEntry>
+			<EnumEntry Name="NOT_ENOUGH_MEMORY"><Value>24</Value></EnumEntry>
+			<EnumEntry Name="GENERIC_ERROR"><Value>16384</Value></EnumEntry>
+			<EnumEntry Name="INVALID_PARAMETER"><Value>16385</Value></EnumEntry>
+			<EnumEntry Name="CANCEL"><Value>16386</Value></EnumEntry>
+			<EnumEntry Name="PENDING"><Value>65535</Value></EnumEntry>
+			<EnumEntry Name="TIMEOUT"><Value>30</Value></EnumEntry>
+			<EnumEntry Name="NO_LICENSE"><Value>1538</Value></EnumEntry>
+			<EnumEntry Name="GENICAM_XML_ERROR"><Value>2308</Value></EnumEntry>
+			<EnumEntry Name="NOT_IMPLEMENTED"><Value>1540</Value></EnumEntry>
+			<EnumEntry Name="NOT_SUPPORTED"><Value>26</Value></EnumEntry>
+			<EnumEntry Name="FILE_ERROR"><Value>16</Value></EnumEntry>
+			<EnumEntry Name="ERR_OVERFLOW"><Value>27</Value></EnumEntry>
+			<EnumEntry Name="IMAGE_ERROR"><Value>37</Value></EnumEntry>
+			<EnumEntry Name="MISSING_PACKETS"><Value>39</Value></EnumEntry>
+			<EnumEntry Name="BUFFER_TOO_SMALL"><Value>4</Value></EnumEntry>
+			<EnumEntry Name="TOO_MANY_RESENDS"><Value>2816</Value></EnumEntry>
+			<EnumEntry Name="RESENDS_FAILURE"><Value>2817</Value></EnumEntry>
+			<EnumEntry Name="TOO_MANY_CONSECUTIVE_RESENDS"><Value>2819</Value></EnumEntry>
+			<EnumEntry Name="AUTO_ABORTED"><Value>2818</Value></EnumEntry>
+			<EnumEntry Name="BAD_VERSION"><Value>513</Value></EnumEntry>
+			<EnumEntry Name="NO_MORE_ENTRY"><Value>1539</Value></EnumEntry>
+			<EnumEntry Name="NO_AVAILABLE_DATA"><Value>20</Value></EnumEntry>
+			<EnumEntry Name="NETWORK_ERROR"><Value>19</Value></EnumEntry>
+			<EnumEntry Name="RESYNC"><Value>40</Value></EnumEntry>
+			<EnumEntry Name="BUSY"><Value>514</Value></EnumEntry>
+			<pValue>LastErrorReg</pValue>
+		</Enumeration>
+		<IntReg Name="LastErrorReg">
+			<Address>0xE878</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Enumeration Name="TimestampSourceEffective">
+			<ToolTip>Source of the buffer timestamps in use.</ToolTip>
+			<Description>Source of the buffer timestamps in use. Hardware refers to the device timestamp present in the GVSP header. Software refers to host-side timestamps recorded when a buffer is delivered by the data receiver.</Description>
+			<DisplayName>Timestamp Source Effective</DisplayName>
+			<Visibility>Guru</Visibility>
+			<EnumEntry Name="Hardware"><Value>0</Value></EnumEntry>
+			<EnumEntry Name="Software"><Value>1</Value></EnumEntry>
+			<pValue>TimestampSourceEffectiveReg</pValue>
+		</Enumeration>
+		<IntReg Name="TimestampSourceEffectiveReg">
+			<Address>0xE87C</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Enumeration Name="TimestampSourcePreferred">
+			<ToolTip>Preferred source of the buffer timestamps used to track statistics.</ToolTip>
+			<Description>Preferred source of the buffer timestamps used to track statistics. Hardware refers to the device timestamp present in the GVSP header. Software refers to host-side timestamps recorded when a buffer is delivered by the data receiver.</Description>
+			<DisplayName>Timestamp Source Preferred</DisplayName>
+			<Visibility>Guru</Visibility>
+			<Streamable>Yes</Streamable>
+			<EnumEntry Name="Hardware"><Value>0</Value></EnumEntry>
+			<EnumEntry Name="Software"><Value>1</Value></EnumEntry>
+			<pValue>TimestampSourcePreferredReg</pValue>
+		</Enumeration>
+		<IntReg Name="TimestampSourcePreferredReg">
+			<Address>0xE880</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+	</Group>
+	<Group Comment="Counters">
+		<Category Name="Counters">
+			<pFeature>DataReceiver</pFeature>
+			<pFeature>Status</pFeature>
+			<pFeature>Errors</pFeature>
+			<pFeature>BlockIDsMissing</pFeature>
+			<pFeature>PipelineBlocksDropped</pFeature>
+		</Category>   
+		<Integer Name="BlockIDsMissing">
+			<ToolTip>Discontinuities in block IDs</ToolTip>
+			<Description>The number of missing block IDs. Calculated using the block ID of incoming blocks to count blocks sent by the GigE Vision device that were not successfully delivered. This is typically caused by the application not being able to de-queue and re-queue buffers quickly enough.</Description>
+			<DisplayName>Block IDs Missing</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>BlockIDsMissingValExpr</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntSwissKnife Name="BlockIDsMissingValExpr">
+			<pVariable Name="VAR_BLOCKIDSMISSINGHIGH">BlockIDsMissingHighReg</pVariable>
+			<pVariable Name="VAR_BLOCKIDSMISSINGLOW">BlockIDsMissingLowReg</pVariable>
+			<Formula>(VAR_BLOCKIDSMISSINGHIGH &lt;&lt; 32) | VAR_BLOCKIDSMISSINGLOW</Formula>
+		</IntSwissKnife>
+		<Integer Name="PipelineBlocksDropped">
+			<ToolTip>Count of blocks dropped by the PvPipeline.</ToolTip>
+			<Description>Count of blocks dropped by the PvPipeline. The oldest blocks are dropped from the PvPipeline output queue if it runs out of resources.</Description>
+			<DisplayName>Pipeline Blocks Dropped</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>PipelineBlocksDroppedReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="PipelineBlocksDroppedReg">
+			<Address>0xE884</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+	</Group>
+	<Group Comment="DataReceiver">
+		<Category Name="DataReceiver">
+			<pFeature>PacketsRecovered</pFeature>
+			<pFeature>PacketsRecoveredSingleResend</pFeature>
+			<pFeature>UnexpectedResend</pFeature>
+			<pFeature>ResendGroupRequested</pFeature>
+			<pFeature>ResendPacketRequested</pFeature>
+			<pFeature>LostPacket</pFeature>
+			<pFeature>IgnoredPacket</pFeature>
+			<pFeature>RedundantPacket</pFeature>
+			<pFeature>PacketOutOfOrder</pFeature>
+		</Category>   
+		<Integer Name="PacketsRecovered">
+			<ToolTip>The number of lost packets successfully recovered  by packet resend requests. Duplicate received packets are not counted.</ToolTip>
+			<Description>The number of lost packets successfully recovered  by packet resend requests. Duplicate received packets are not counted.</Description>
+			<DisplayName>Packets Recovered</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>PacketsRecoveredReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="PacketsRecoveredReg">
+			<Address>0xE888</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="PacketsRecoveredSingleResend">
+			<ToolTip>The number of lost packets successfully recovered  by packet resend requests without any resend request retries.</ToolTip>
+			<Description>The number of lost packets successfully recovered  by packet resend requests without any resend request retries.</Description>
+			<DisplayName>Packets Recovered Single Resend</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>PacketsRecoveredSingleResendAvailExpr</pIsAvailable>
+			<pValue>PacketsRecoveredSingleResendReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="PacketsRecoveredSingleResendReg">
+			<Address>0xE88C</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="PacketsRecoveredSingleResendAvailExpr">
+			<pVariable Name="VAR_DATARECEIVERTYPE">DataReceiverTypeReg</pVariable>
+			<Formula>(VAR_DATARECEIVERTYPE = 3) || (VAR_DATARECEIVERTYPE = 2)</Formula>
+		</IntSwissKnife>
+		<Integer Name="UnexpectedResend">
+			<ToolTip>Unexpected resent packet count.</ToolTip>
+			<Description>Unexpected resent packet count. This includes packets received multiple times for a buffer and packets received before a buffer has been completed.</Description>
+			<DisplayName>Unexpected Resend</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>UnexpectedResendReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="UnexpectedResendReg">
+			<Address>0xE890</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="ResendGroupRequested">
+			<ToolTip>The number of resend requests issued by the data receiver</ToolTip>
+			<Description>The number of resend requests issued by the data receiver</Description>
+			<DisplayName>Resend Group Requested</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>ResendGroupRequestedAvailExpr</pIsAvailable>
+			<pValue>ResendGroupRequestedReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ResendGroupRequestedReg">
+			<Address>0xE894</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="ResendGroupRequestedAvailExpr">
+			<pVariable Name="VAR_DATARECEIVERTYPE">DataReceiverTypeReg</pVariable>
+			<Formula>(VAR_DATARECEIVERTYPE = 3) || (VAR_DATARECEIVERTYPE = 2)</Formula>
+		</IntSwissKnife>
+		<Integer Name="ResendPacketRequested">
+			<ToolTip>The number of packets the data receiver requests with ResendGroupRequested.</ToolTip>
+			<Description>The number of packets the data receiver requests with ResendGroupRequested.</Description>
+			<DisplayName>Resend Packet Requested</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>ResendPacketRequestedReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ResendPacketRequestedReg">
+			<Address>0xE898</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="LostPacket">
+			<ToolTip>Lost packet count.</ToolTip>
+			<Description>Lost packet count. This counter tracks the number of expected packets that were not received. This counter does not include the packet count of missing blocks.</Description>
+			<DisplayName>Lost Packet</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>LostPacketReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="LostPacketReg">
+			<Address>0xE89C</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="IgnoredPacket">
+			<ToolTip>The number of packets received that are not related to the current set of blocks being processed. </ToolTip>
+			<Description>The number of packets received that are not related to the current set of blocks being processed.  This includes packets with block ids that have already been processed.</Description>
+			<DisplayName>Ignored Packet</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>IgnoredPacketReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="IgnoredPacketReg">
+			<Address>0xE8A0</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="RedundantPacket">
+			<ToolTip>Number of packets received more than once</ToolTip>
+			<Description>Number of packets received more than once</Description>
+			<DisplayName>Redundant Packet</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>RedundantPacketAvailExpr</pIsAvailable>
+			<pValue>RedundantPacketReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="RedundantPacketReg">
+			<Address>0xE8A4</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="RedundantPacketAvailExpr">
+			<pVariable Name="VAR_DATARECEIVERTYPE">DataReceiverTypeReg</pVariable>
+			<Formula>(VAR_DATARECEIVERTYPE = 3) || (VAR_DATARECEIVERTYPE = 2)</Formula>
+		</IntSwissKnife>
+		<Integer Name="PacketOutOfOrder">
+			<ToolTip>Number of packets received out of order</ToolTip>
+			<Description>Number of packets received out of order</Description>
+			<DisplayName>Packet Out Of Order</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>PacketOutOfOrderAvailExpr</pIsAvailable>
+			<pValue>PacketOutOfOrderReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="PacketOutOfOrderReg">
+			<Address>0xE8A8</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="PacketOutOfOrderAvailExpr">
+			<pVariable Name="VAR_DATARECEIVERTYPE">DataReceiverTypeReg</pVariable>
+			<Formula>(VAR_DATARECEIVERTYPE = 3) || (VAR_DATARECEIVERTYPE = 2)</Formula>
+		</IntSwissKnife>
+	</Group>
+	<Group Comment="Status">
+		<Category Name="Status">
+			<pFeature>DataOverrun</pFeature>
+			<pFeature>PartialLineMissing</pFeature>
+			<pFeature>FullLineMissing</pFeature>
+			<pFeature>BlocksDropped</pFeature>
+			<pFeature>EOFByLineCount</pFeature>
+			<pFeature>InterlacedEven</pFeature>
+			<pFeature>InterlacedOdd</pFeature>
+			<pFeature>LocalProblem</pFeature>
+			<pFeature>Unknown</pFeature>
+			<pFeature>PacketUnavailable</pFeature>
+		</Category>
+		<Integer Name="DataOverrun">
+			<ToolTip>Data overrun count on the device.</ToolTip>
+			<Description>Count of data overrun notifications received from the device. A data overrun notification is sent when the incoming (from a sensor) data rate exceeds the device&#39;s data capture rate.</Description>
+			<DisplayName>Data Overrun</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>DataOverrunReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="DataOverrunReg">
+			<Address>0xE8AC</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="PartialLineMissing">
+			<ToolTip>Partial line missing count on the device.</ToolTip>
+			<Description>Count of images that have at least one partial line missing. Only available for devices using a Pleora IP engine. </Description>
+			<DisplayName>Partial Line Missing</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>PleoraDevice</pIsAvailable>
+			<pValue>PartialLineMissingReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="PartialLineMissingReg">
+			<Address>0xE8B0</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="FullLineMissing">
+			<ToolTip>Full line missing count on the device.</ToolTip>
+			<Description>Count of images that have at least on full line missing. Only available for devices using a Pleora IP engine.</Description>
+			<DisplayName>Full Line Missing</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>PleoraDevice</pIsAvailable>
+			<pValue>FullLineMissingReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="FullLineMissingReg">
+			<Address>0xE8B4</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="BlocksDropped">
+			<ToolTip>Dropped block count on the device.</ToolTip>
+			<Description>Count of dropped block notifications received from the device. Dropped block notifications are sent when the frame buffer is full and the incoming data cannot be processed. Only available for devices using a Pleora IP engine.</Description>
+			<DisplayName>Blocks Dropped</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>PleoraDevice</pIsAvailable>
+			<pValue>BlocksDroppedReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="BlocksDroppedReg">
+			<Address>0xE8B8</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="EOFByLineCount">
+			<ToolTip>Count of frames where the previous frame was NOT the last one of a sequence of sub frames. </ToolTip>
+			<Description>Count of frames where the previous frame was NOT the last one of a sequence of sub frames but the line count was met. Only available for devices using a Pleora IP engine.</Description>
+			<DisplayName>EOF By Line Count</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>PleoraDevice</pIsAvailable>
+			<pValue>EOFByLineCountReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="EOFByLineCountReg">
+			<Address>0xE8BC</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="InterlacedEven">
+			<ToolTip>Count of interlaced even fields from an interlaced image.</ToolTip>
+			<Description>Count of interlaced even fields from an interlaced image. Only for devices using a Pleora IP engine.</Description>
+			<DisplayName>Interlaced Even</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>PleoraDevice</pIsAvailable>
+			<pValue>InterlacedEvenReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="InterlacedEvenReg">
+			<Address>0xE8C0</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="InterlacedOdd">
+			<ToolTip>Count of interlaced odd fields from an interlaced image.</ToolTip>
+			<Description>Count of interlaced odd fields from an interlaced image. Only for devices using a Pleora IP engine.</Description>
+			<DisplayName>Interlaced Odd</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>PleoraDevice</pIsAvailable>
+			<pValue>InterlacedOddReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="InterlacedOddReg">
+			<Address>0xE8C4</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="LocalProblem">
+			<ToolTip>Count of &quot;Local Problem&quot; status notifications received from the device</ToolTip>
+			<Description>Count of &quot;Local Problem&quot; status notifications received from the device. An internal problem in the device implementation occurred while processing the request. Optionally the device provides a mechanism for looking up a detailed description of the problem. (Log files, Event log, &#39;Get last error&#39; mechanics). This error is intended to report problems from underlying services (operating system, 3rd party library) in the device to the client side without translating every possible error code into a GigE Vision equivalent.</Description>
+			<DisplayName>Local Problem</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>LocalProblemAvailExpr</pIsAvailable>
+			<pValue>LocalProblemReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="LocalProblemReg">
+			<Address>0xE8C8</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="LocalProblemAvailExpr">
+			<pVariable Name="VAR_DATARECEIVERTYPE">DataReceiverTypeReg</pVariable>
+			<Formula>(VAR_DATARECEIVERTYPE = 3) || (VAR_DATARECEIVERTYPE = 2)</Formula>
+		</IntSwissKnife>
+		<Integer Name="Unknown">
+			<ToolTip>Count of status notifications received from the device not mapping to a known value</ToolTip>
+			<Description>Count of status notifications received from the device not mapping to a known value.</Description>
+			<DisplayName>Unknown</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>UnknownAvailExpr</pIsAvailable>
+			<pValue>UnknownReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="UnknownReg">
+			<Address>0xE8CC</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="UnknownAvailExpr">
+			<pVariable Name="VAR_DATARECEIVERTYPE">DataReceiverTypeReg</pVariable>
+			<Formula>(VAR_DATARECEIVERTYPE = 3) || (VAR_DATARECEIVERTYPE = 2)</Formula>
+		</IntSwissKnife>
+		<Integer Name="PacketUnavailable">
+			<ToolTip>Count of &quot;Packet Unavailable&quot; status notifications received from the device</ToolTip>
+			<Description>Count of &quot;Packet Unavailable&quot; status notifications received from the device. The device returns this status notification when a packet is requested but is no longer available.</Description>
+			<DisplayName>Packet Unavailable</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>PacketUnavailableAvailExpr</pIsAvailable>
+			<pValue>PacketUnavailableReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="PacketUnavailableReg">
+			<Address>0xE8D0</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="PacketUnavailableAvailExpr">
+			<pVariable Name="VAR_DATARECEIVERTYPE">DataReceiverTypeReg</pVariable>
+			<Formula>(VAR_DATARECEIVERTYPE = 3) || (VAR_DATARECEIVERTYPE = 2)</Formula>
+		</IntSwissKnife>
+	</Group>
+	<Group Comment="Errors">
+		<Category Name="Errors">
+			<pFeature>ResultImageError</pFeature>
+			<pFeature>ResultMissingPackets</pFeature>
+			<pFeature>ResultBufferTooSmall</pFeature>
+			<pFeature>ResultTimeout</pFeature>
+			<pFeature>ResultAborted</pFeature>
+			<pFeature>ResultAutoAborted</pFeature>
+			<pFeature>ResultStateError</pFeature>
+			<pFeature>ResultInvalidDataFormat</pFeature>
+			<pFeature>ResultTooManyResends</pFeature>
+			<pFeature>ResultTooManyConsecutiveResends</pFeature>
+			<pFeature>ResultResendsFailure</pFeature>
+			<pFeature>ResultNotInitialized</pFeature>
+		</Category> 
+		<Integer Name="ResultImageError">
+			<ToolTip>Count of failed buffers with operation result set to IMAGE_ERROR.</ToolTip>
+			<Description>Count of failed buffers with operation result set to IMAGE_ERROR. Incremented when a corrupt image arrives due to discontinuities in data between the camera and the hardware responsible for transmitting packets in the GigE Vision device. This can include data overrun, partial and full lines missing.</Description>
+			<DisplayName>Result Image Error</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>ResultImageErrorReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ResultImageErrorReg">
+			<Address>0xE8D4</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="ResultMissingPackets">
+			<ToolTip>Count of failed buffers with operation result set to MISSING_PACKETS.</ToolTip>
+			<Description>Count of failed buffers with operation result set to MISSING_PACKETS. Happens when at least one packet of the buffer is missing when it was released back to the calling application.</Description>
+			<DisplayName>Result Missing Packets</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>ResultMissingPacketsReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ResultMissingPacketsReg">
+			<Address>0xE8D8</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="ResultBufferTooSmall">
+			<ToolTip>Count of failed buffers with operation result set to BUFFER_TOO_SMALL.</ToolTip>
+			<Description>Count of failed buffers with operation result set to BUFFER_TOO_SMALL. Happens when a buffer queued for streaming was not large enough to contain the received payload. </Description>
+			<DisplayName>Result Buffer Too Small</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>ResultBufferTooSmallReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ResultBufferTooSmallReg">
+			<Address>0xE8DC</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="ResultTimeout">
+			<ToolTip>Count of failed buffers with operation result set to TIMEOUT.</ToolTip>
+			<Description>Count of failed buffers with operation result set to TIMEOUT. This happens when  FirstPacketTimeout has elapsed without receiving any packets or when RequestTimeout has elapsed after receiving the first packet for the buffer.</Description>
+			<DisplayName>Result Timeout</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>ResultTimeoutReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ResultTimeoutReg">
+			<Address>0xE8E0</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="ResultAborted">
+			<ToolTip>Count of failed buffers with operation result set to ABORTED.</ToolTip>
+			<Description>Count of failed buffers with operation result set to ABORTED. After calling AbortQueuedBuffers all buffers in the stream are completed with the ABORTED operation result.</Description>
+			<DisplayName>Result Aborted</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>ResultAbortedReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ResultAbortedReg">
+			<Address>0xE8E4</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="ResultAutoAborted">
+			<ToolTip>Count of failed buffers with operation result set to AUTO_ABORTED.</ToolTip>
+			<Description>Count of failed buffers with operation result set to AUTO_ABORTED. The data receiver may enter a state where packets arrive for a newer block while one or more packets for an older block are still missing. The AutoResetOnLackOfResources parameter is the threshold of free buffers maintained by the data receiver. If a packet arrives for a new block and only AutoResetOnLackOfResources buffers are currently available then all incomplete buffers that have not yet finished being filled are immediately returned with result code AUTO_ABORTED.</Description>
+			<DisplayName>Result Auto Aborted</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>ResultAutoAbortedReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ResultAutoAbortedReg">
+			<Address>0xE8E8</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="ResultStateError">
+			<ToolTip>Count of failed buffers with operation result set to STATE_ERROR.</ToolTip>
+			<Description>Count of failed buffers with operation result set to STATE_ERROR. The data receiver experienced an internal error while attempting to receive this buffer.</Description>
+			<DisplayName>Result State Error</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>ResultStateErrorAvailExpr</pIsAvailable>
+			<pValue>ResultStateErrorReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ResultStateErrorReg">
+			<Address>0xE8EC</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<IntSwissKnife Name="ResultStateErrorAvailExpr">
+			<pVariable Name="VAR_DATARECEIVERTYPE">DataReceiverTypeReg</pVariable>
+			<Formula>(VAR_DATARECEIVERTYPE &lt;= 1)</Formula>
+		</IntSwissKnife>
+		<Integer Name="ResultInvalidDataFormat">
+			<ToolTip>Count of failed buffers with operation result set to INVALID_DATA_FORMAT.</ToolTip>
+			<Description>Count of failed buffers with operation result set to INVALID_DATA_FORMAT. Poorly formatted data was received from the GigE Vision transmitter.</Description>
+			<DisplayName>Result Invalid Data Format</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>ResultInvalidDataFormatReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ResultInvalidDataFormatReg">
+			<Address>0xE8F0</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="ResultTooManyResends">
+			<ToolTip>Count of failed buffers with operation result set to TOO_MANY_RESENDS.</ToolTip>
+			<Description>Count of failed buffers with operation result set to TOO_MANY_RESENDS. The data receiver stops attempting to receive a block if too many packet resends were issued.</Description>
+			<DisplayName>Result Too Many Resends</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>ResultTooManyResendsReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ResultTooManyResendsReg">
+			<Address>0xE8F4</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="ResultTooManyConsecutiveResends">
+			<ToolTip>Count of failed buffers with operation result set to TOO_MANY_CONSECUTIVE_RESENDS.</ToolTip>
+			<Description>Count of failed buffers with operation result set to TOO_MANY_CONSECUTIVE_RESENDS. The data receiver stops attempting to receive a block if a set of consecutive lost packets exceeds MaximumResendGroupSize.</Description>
+			<DisplayName>Result Too Many Consecutive Resends</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>ResultTooManyConsecutiveResendsReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ResultTooManyConsecutiveResendsReg">
+			<Address>0xE8F8</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="ResultResendsFailure">
+			<ToolTip>Count of failed buffers with operation result set to RESENDS_FAILURE.</ToolTip>
+			<Description>Count of failed buffers with operation result set to RESENDS_FAILURE. The data receiver has attempted to recover missing packets by issuing resend requests. The maximum number of retries has been reached without having received the requested packet. The MaximumResendRequestRetryByPacket property can be used to configure how many times the data receiver re-attempts a request for a lost packet. </Description>
+			<DisplayName>Result Resends Failure</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>ResultResendsFailureReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ResultResendsFailureReg">
+			<Address>0xE8FC</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="ResultNotInitialized">
+			<ToolTip>Count of failed buffers with operation result set to RESENDS_FAILURE.</ToolTip>
+			<Description>Count of buffers with an operational state that is not initialized.
+This operational result is used when ForceMissingPacketsAtNextBlockStart is enabled. The buffer used by the current block is skipped because of a missing block and the operational result of the buffer is set to not initialized.  This means nothing in the buffer is valid.</Description>
+			<DisplayName>Result Not Initialized</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>ResultNotInitializedReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ResultNotInitializedReg">
+			<Address>0xE900</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+	</Group>
+	<Group Comment="Support">
+		<Category Name="Support">
+			<pFeature>BlockCountHigh</pFeature>
+			<pFeature>BlockCountLow</pFeature>
+			<pFeature>BlockIDsMissingHigh</pFeature>
+			<pFeature>BlockIDsMissingLow</pFeature>
+			<pFeature>BytesCountLow</pFeature>
+			<pFeature>BytesCountHigh</pFeature>
+			<pFeature>PleoraDevice</pFeature>
+			<pFeature>DataReceiverType</pFeature>
+			<pFeature>MaxQueuedBuffer</pFeature>
+			<pFeature>OperatingSystem</pFeature>
+			<pFeature>ResendsSupported</pFeature>
+		</Category>
+		<Integer Name="BlockCountHigh">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<Visibility>Invisible</Visibility>
+			<pValue>BlockCountHighReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="BlockCountHighReg">
+			<Address>0xE904</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>250</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="BlockCountLow">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<Visibility>Invisible</Visibility>
+			<pValue>BlockCountLowReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="BlockCountLowReg">
+			<Address>0xE908</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>250</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="BlockIDsMissingHigh">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<Visibility>Invisible</Visibility>
+			<pValue>BlockIDsMissingHighReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="BlockIDsMissingHighReg">
+			<Address>0xE90C</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="BlockIDsMissingLow">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<Visibility>Invisible</Visibility>
+			<pValue>BlockIDsMissingLowReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="BlockIDsMissingLowReg">
+			<Address>0xE910</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="BytesCountLow">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<Visibility>Invisible</Visibility>
+			<pValue>BytesCountLowReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="BytesCountLowReg">
+			<Address>0xE914</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>250</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="BytesCountHigh">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<Visibility>Invisible</Visibility>
+			<pValue>BytesCountHighReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="BytesCountHighReg">
+			<Address>0xE918</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>250</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Boolean Name="PleoraDevice">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<Visibility>Invisible</Visibility>
+			<pValue>PleoraDeviceReg</pValue>
+		</Boolean>
+		<IntReg Name="PleoraDeviceReg">
+			<Address>0xE91C</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="DataReceiverType">
+			<ToolTip>Enumeration of the DR type</ToolTip>
+			<Description>This allows us to turn on and off features in the xml</Description>
+			<Visibility>Invisible</Visibility>
+			<pValue>DataReceiverTypeReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="DataReceiverTypeReg">
+			<Address>0xE920</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="MaxQueuedBuffer">
+			<ToolTip>Max Buffers in the system</ToolTip>
+			<Description>Max Buffers in the system</Description>
+			<Visibility>Invisible</Visibility>
+			<pValue>MaxQueuedBufferReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="MaxQueuedBufferReg">
+			<Address>0xE924</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="OperatingSystem">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<Visibility>Invisible</Visibility>
+			<pValue>OperatingSystemReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="OperatingSystemReg">
+			<Address>0xE928</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Boolean Name="ResendsSupported">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<Visibility>Invisible</Visibility>
+			<Streamable>Yes</Streamable>
+			<pValue>ResendsSupportedReg</pValue>
+		</Boolean>
+		<IntReg Name="ResendsSupportedReg">
+			<Address>0xE92C</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+	</Group>
+	<Port Name="Device">
+		<ToolTip>Port giving access to the device.</ToolTip>
+	</Port>
+</RegisterDescription>

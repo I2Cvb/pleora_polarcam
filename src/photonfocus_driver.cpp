@@ -1,6 +1,6 @@
 /***************************************************************************
  *                                                                         *
- *   IRALab - Informatics & Robotics for Automation Laboratory             *
+ *   IRALab - Informatics & Robotics for Automation Laboratory             *8
  *      Universita' degli Studi Milano - Bicocca, DISCO                    *
  *      Building U14, viale Sarca 336, 20126, Milano, Italy                *
  *                                                                         *
@@ -82,6 +82,7 @@ public:
     {
         cv_bridge::CvImage cv_image;
         cv_image.encoding = "mono8";
+        //cv_image.encoding = "mono16";
         cv_image.image = img;
         cv_image.header.stamp = ros::Time::now();
         image = cv_image.toImageMsg();
@@ -110,34 +111,43 @@ public:
             camera->stop();
 
         camera->setDeviceAttribute<PvGenEnum,std::string>("PixelFormat","Mono8");
+        //camera->setDeviceAttribute<PvGenEnum,std::string>("PixelFormat","Mono10");
+        camera->setDeviceAttribute<PvGenEnum,std::string>("PixelSize","Bpp8");
 
         //# ----- Image Size Control -----
-        camera->setDeviceAttribute<PvGenInteger,long>("Width",config.Width*32+768);
-        camera->setDeviceAttribute<PvGenInteger,long>("Height",config.Height);
+        //camera->setDeviceAttribute<PvGenInteger,long>("Width",config.Width*32+768);
+        //camera->setDeviceAttribute<PvGenInteger,long>("Width",config.Width);
+        //camera->setDeviceAttribute<PvGenInteger,long>("Height",config.Height);
+        camera->setDeviceAttribute<PvGenInteger,long>("Width",640);
+        camera->setDeviceAttribute<PvGenInteger,long>("Height",460);
 
-        camera->setDeviceAttribute<PvGenInteger,long>("OffsetX",config.OffsetX*32);
+        //camera->setDeviceAttribute<PvGenInteger,long>("OffsetX",config.OffsetX*32);
+        camera->setDeviceAttribute<PvGenInteger,long>("OffsetX",config.OffsetX);
         camera->setDeviceAttribute<PvGenInteger,long>("OffsetY",config.OffsetY);
 
         //# ----- Exposure and FrameRate -----
-        camera->setDeviceAttribute<PvGenFloat,double>("ExposureTimeAbs",config.ExposureTimeAbs);
-        camera->setDeviceAttribute<PvGenBoolean,bool>("ConstantFramerate_CFR",config.ConstantFramerate_CFR);
-        if(config.ConstantFramerate_CFR)
-            camera->setDeviceAttribute<PvGenFloat,double>("Frametime",config.Frametime);
+        //camera->setDeviceAttribute<PvGenFloat,double>("ExposureTimeAbs",config.ExposureTimeAbs);
+        camera->setDeviceAttribute<PvGenInteger,long>("ExposureTimeRaw",config.ExposureTimeRaw);
+        camera->setDeviceAttribute<PvGenEnum,long>("ExposureMode",config.ExposureMode);
 
-        camera->setDeviceAttribute<PvGenBoolean,bool>("Trigger_Interleave",config.Trigger_Interleave);
-        if(!config.Trigger_Interleave)\
-        {
-            camera->setDeviceAttribute<PvGenEnum,long>("LinLog_Mode",config.LinLog_Mode);
-            if(config.LinLog_Mode == 4)
-            {
-                std::cout << "UserDefined" << std::endl;
-                camera->setDeviceAttribute<PvGenInteger,long>("LinLog_Value1",config.LinLog_Value1);
-                camera->setDeviceAttribute<PvGenInteger,long>("LinLog_Value2",config.LinLog_Value2);
-                camera->setDeviceAttribute<PvGenInteger,long>("LinLog_Time1",config.LinLog_Time1);
-                camera->setDeviceAttribute<PvGenInteger,long>("LinLog_Time2",config.LinLog_Time2);
-            }
-        }
-        camera->setDeviceAttribute<PvGenInteger,long>("Voltages_BlackLevelOffset",config.Voltages_BlackLevelOffset);
+        //camera->setDeviceAttribute<PvGenBoolean,bool>("ConstantFramerate_CFR",config.ConstantFramerate_CFR);
+//        if(config.ConstantFramerate_CFR)
+//            camera->setDeviceAttribute<PvGenFloat,double>("Frametime",config.Frametime);
+
+//        camera->setDeviceAttribute<PvGenBoolean,bool>("Trigger_Interleave",config.Trigger_Interleave);
+//        if(!config.Trigger_Interleave)\
+//        {
+//            camera->setDeviceAttribute<PvGenEnum,long>("LinLog_Mode",config.LinLog_Mode);
+//            if(config.LinLog_Mode == 4)
+//            {
+//                std::cout << "UserDefined" << std::endl;
+//                camera->setDeviceAttribute<PvGenInteger,long>("LinLog_Value1",config.LinLog_Value1);
+//                camera->setDeviceAttribute<PvGenInteger,long>("LinLog_Value2",config.LinLog_Value2);
+//                camera->setDeviceAttribute<PvGenInteger,long>("LinLog_Time1",config.LinLog_Time1);
+//                camera->setDeviceAttribute<PvGenInteger,long>("LinLog_Time2",config.LinLog_Time2);
+//            }
+//        }
+//        camera->setDeviceAttribute<PvGenInteger,long>("Voltages_BlackLevelOffset",config.Voltages_BlackLevelOffset);
 
         if(level >= (uint32_t) driver_base::SensorLevels::RECONFIGURE_STOP)
             camera->start();

@@ -1,0 +1,866 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RegisterDescription ModelName="ModelName" VendorName="VendorName" ToolTip="Model Description" StandardNameSpace="GEV" SchemaMajorVersion="1" SchemaMinorVersion="1" SchemaSubMinorVersion="1" MajorVersion="1" MinorVersion="0" SubMinorVersion="0" ProductGuid="CB9328DB-1273-42a3-90C7-EB3224537C39" VersionGuid="321DAFF5-A243-42ae-8B5D-B5BD18C31488" xmlns="http://www.genicam.org/GenApi/Version_1_1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.genicam.org/GenApi/Version_1_1  ../GenApiSchema_Version_1_1.xsd">
+	<Group Comment="Root">
+		<Category Name="Root">
+			<pFeature>Connection</pFeature>
+			<pFeature>Statistics</pFeature>
+			<pFeature>Support</pFeature>
+		</Category>
+	</Group>
+	<Group Comment="Connection">
+		<Category Name="Connection">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<pFeature>DeviceGUID</pFeature>
+			<pFeature>ConnectionSpeed</pFeature>
+			<pFeature>MaxPacketSize</pFeature>
+			<pFeature>MaxBurst</pFeature>
+			<pFeature>Channel</pFeature>
+		</Category>
+		<StringReg Name="DeviceGUID">
+			<ToolTip>USB3 Vision GUID of the device the controller is connected to.</ToolTip>
+			<Description>USB3 Vision GUID of the device the controller is connected to.</Description>
+			<Visibility>Beginner</Visibility>
+			<Address>0xE800</Address>
+			<Length>64</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+		</StringReg>
+		<Enumeration Name="ConnectionSpeed">
+			<ToolTip>Effective connection speed to the device once connected.</ToolTip>
+			<Description>Effective connection speed to the device once connected.</Description>
+			<DisplayName>Connection Speed</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<EnumEntry Name="LowSpeed">
+				<DisplayName>Low Speed</DisplayName>
+				<Value>0</Value>
+			</EnumEntry>
+			<EnumEntry Name="FullSpeed">
+				<DisplayName>Full Speed</DisplayName>
+				<Value>1</Value>
+			</EnumEntry>
+			<EnumEntry Name="HighSpeed">
+				<DisplayName>High Speed</DisplayName>
+				<Value>2</Value>
+			</EnumEntry>
+			<EnumEntry Name="SuperSpeed">
+				<DisplayName>Super Speed</DisplayName>
+				<Value>3</Value>
+			</EnumEntry>
+			<EnumEntry Name="NotConnected">
+				<DisplayName>Not Connected</DisplayName>
+				<Value>4</Value>
+			</EnumEntry>
+			<pValue>ConnectionSpeedReg</pValue>
+		</Enumeration>
+		<IntReg Name="ConnectionSpeedReg">
+			<Address>0xE840</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="MaxPacketSize">
+			<ToolTip>USB wMaxPacketSize parameter.</ToolTip>
+			<Description>USB wMaxPacketSize parameter.</Description>
+			<DisplayName>Max Packet Size</DisplayName>
+			<Visibility>Expert</Visibility>
+			<pValue>MaxPacketSizeReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="MaxPacketSizeReg">
+			<Address>0xE844</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="MaxBurst">
+			<ToolTip>USB bMaxBurst parameter.</ToolTip>
+			<Description>USB bMaxBurst parameter.</Description>
+			<DisplayName>Max Burst</DisplayName>
+			<Visibility>Expert</Visibility>
+			<pValue>MaxBurstReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="MaxBurstReg">
+			<Address>0xE848</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="Channel">
+			<ToolTip>TheUSB3 Vision streaming channel from which data is received.</ToolTip>
+			<Description>The USB3 Vision streaming channel from which data is received.</Description>
+			<DisplayName>Channel</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>ChannelReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ChannelReg">
+			<Address>0xE84C</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+	</Group>
+	<Group Comment="Statistics">
+		<Category Name="Statistics">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<pFeature>General</pFeature>
+			<pFeature>Counters</pFeature>
+		</Category> 
+	</Group>
+	<Group Comment="General">
+		<Category Name="General">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<pFeature>Reset</pFeature>
+			<pFeature>BitsCount</pFeature>
+			<pFeature>BytesCount</pFeature>
+			<pFeature>BlockCount</pFeature>
+			<pFeature>SamplingTime</pFeature>
+			<pFeature>AcquisitionRate</pFeature>
+			<pFeature>AcquisitionRateAverage</pFeature>
+			<pFeature>Bandwidth</pFeature>
+			<pFeature>BandwidthAverage</pFeature>
+			<pFeature>AbortCountedAsError</pFeature>
+			<pFeature>ResyncCountedAsError</pFeature>
+			<pFeature>ErrorCount</pFeature>
+			<pFeature>LastError</pFeature>
+			<pFeature>TimestampSourceEffective</pFeature>
+			<pFeature>TimestampSourcePreferred</pFeature>
+		</Category> 
+		<Command Name="Reset">
+			<ToolTip>Resets all stream statistic counters</ToolTip>
+			<Description>Resets all stream statistic counters</Description>
+			<DisplayName>Reset</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>ResetReg</pValue>
+			<CommandValue>0</CommandValue>
+		</Command>
+		<IntReg Name="ResetReg">
+			<Address>0xE850</Address>
+			<Length>4</Length>
+			<AccessMode>WO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="BitsCount">
+			<ToolTip>Number of data payload bits received by the stream.</ToolTip>
+			<Description>Number of data payload bits received by the stream.</Description>
+			<DisplayName>Bits Count</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>BitsCountValExpr</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntSwissKnife Name="BitsCountValExpr">
+			<pVariable Name="VAR_BYTESCOUNT">BytesCountValExpr</pVariable>
+			<Formula>VAR_BYTESCOUNT * 8</Formula>
+		</IntSwissKnife>
+		<Integer Name="BytesCount">
+			<ToolTip>Number of data payload bytes received by the stream.</ToolTip>
+			<Description>Number of data payload bytes received by the stream.</Description>
+			<DisplayName>Bytes Count</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>BytesCountValExpr</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntSwissKnife Name="BytesCountValExpr">
+			<pVariable Name="VAR_BYTESCOUNTHIGH">BytesCountHighReg</pVariable>
+			<pVariable Name="VAR_BYTESCOUNTLOW">BytesCountLowReg</pVariable>
+			<Formula>(VAR_BYTESCOUNTHIGH &lt;&lt; 32) | VAR_BYTESCOUNTLOW</Formula>
+		</IntSwissKnife>
+		<Integer Name="BlockCount">
+			<ToolTip>Number of blocks received from the device.</ToolTip>
+			<Description>Number of blocks received from the device.</Description>
+			<DisplayName>Block Count</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>BlockCountValExpr</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntSwissKnife Name="BlockCountValExpr">
+			<pVariable Name="VAR_BLOCKCOUNTHIGH">BlockCountHighReg</pVariable>
+			<pVariable Name="VAR_BLOCKCOUNTLOW">BlockCountLowReg</pVariable>
+			<Formula>(VAR_BLOCKCOUNTHIGH &lt;&lt; 32) | VAR_BLOCKCOUNTLOW</Formula>
+		</IntSwissKnife>
+		<Integer Name="SamplingTime">
+			<ToolTip>The time elapsed (in ms) between the first block received and the latest block received</ToolTip>
+			<Description>The time elapsed (in ms) between the first block received and the latest block received. Note the definition of the first block in this case would be the first block received after having either opening the stream or issuing the Reset command.</Description>
+			<DisplayName>Sampling Time</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>SamplingTimeReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="SamplingTimeReg">
+			<Address>0xE854</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Float Name="AcquisitionRate">
+			<ToolTip>Instant acquisition rate.</ToolTip>
+			<Description>Instant acquisition rate.</Description>
+			<DisplayName>Acquisition Rate</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>AcquisitionRateReg</pValue>
+			<Representation>Linear</Representation>
+		</Float>
+		<FloatReg Name="AcquisitionRateReg">
+			<Address>0xE858</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Endianess>BigEndian</Endianess>
+		</FloatReg>
+		<Float Name="AcquisitionRateAverage">
+			<ToolTip>Average acquisition rate since the first block was received.</ToolTip>
+			<Description>Average acquisition rate since the first block was received.</Description>
+			<DisplayName>Acquisition Rate Average</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>AcquisitionRateAverageReg</pValue>
+			<Representation>Linear</Representation>
+		</Float>
+		<FloatReg Name="AcquisitionRateAverageReg">
+			<Address>0xE85C</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Endianess>BigEndian</Endianess>
+		</FloatReg>
+		<Float Name="Bandwidth">
+			<ToolTip>Instant throughput in bps.</ToolTip>
+			<Description>Instant throughput in bits per second. Note that this value is calculated based on a finite sequence of received blocks within a finite period of time.</Description>
+			<DisplayName>Bandwidth</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>BandwidthReg</pValue>
+			<Representation>Linear</Representation>
+		</Float>
+		<FloatReg Name="BandwidthReg">
+			<Address>0xE860</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Endianess>BigEndian</Endianess>
+		</FloatReg>
+		<Float Name="BandwidthAverage">
+			<ToolTip>Average throughput since the last reset in bps.</ToolTip>
+			<Description>Average throughput since the last reset in bits per second.</Description>
+			<DisplayName>Bandwidth Average</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>BandwidthAverageReg</pValue>
+			<Representation>Linear</Representation>
+		</Float>
+		<FloatReg Name="BandwidthAverageReg">
+			<Address>0xE864</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Endianess>BigEndian</Endianess>
+		</FloatReg>
+		<Boolean Name="AbortCountedAsError">
+			<ToolTip>When enabled, aborted buffers are considered errors.</ToolTip>
+			<Description>When enabled, aborted buffers are considered errors. Depending on the nature and behavior of an application, aborted buffers can be normal occurrences or represent real errors.</Description>
+			<DisplayName>Abort Counted As Error</DisplayName>
+			<Visibility>Guru</Visibility>
+			<Streamable>Yes</Streamable>
+			<pValue>AbortCountedAsErrorReg</pValue>
+		</Boolean>
+		<IntReg Name="AbortCountedAsErrorReg">
+			<Address>0xE868</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Boolean Name="ResyncCountedAsError">
+			<ToolTip>When enabled, buffers released by the driver because of resychronization issues are considered errors.</ToolTip>
+			<Description>When enabled, buffers released by the driver because of resychronization issues are considered errors. Depending on the nature and behavior of an application, resynchronized buffers can be normal occurrences or be interpreted as real errors.</Description>
+			<DisplayName>Resync Counted As Error</DisplayName>
+			<Visibility>Guru</Visibility>
+			<pValue>ResyncCountedAsErrorReg</pValue>
+		</Boolean>
+		<IntReg Name="ResyncCountedAsErrorReg">
+			<Address>0xE86C</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="ErrorCount">
+			<ToolTip>Count of RetrieveBuffer operation result errors</ToolTip>
+			<Description>Count of RetrieveBuffer operation result errors since the last reset.</Description>
+			<DisplayName>Error Count</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>ErrorCountReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ErrorCountReg">
+			<Address>0xE870</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Enumeration Name="LastError">
+			<ToolTip>Last RetrieveBuffer operation result error.</ToolTip>
+			<Description>Last RetrieveBuffer operation result error.</Description>
+			<DisplayName>Last Error</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<EnumEntry Name="None"><Value>0</Value></EnumEntry>
+			<EnumEntry Name="NOT_INITIALIZED"><Value>1541</Value></EnumEntry>
+			<EnumEntry Name="NOT_FOUND"><Value>25</Value></EnumEntry>
+			<EnumEntry Name="CANNOT_OPEN_FILE"><Value>6</Value></EnumEntry>
+			<EnumEntry Name="NO_MORE_ITEM"><Value>21</Value></EnumEntry>
+			<EnumEntry Name="NOT_CONNECTED"><Value>23</Value></EnumEntry>
+			<EnumEntry Name="STATE_ERROR"><Value>28</Value></EnumEntry>
+			<EnumEntry Name="THREAD_ERROR"><Value>29</Value></EnumEntry>
+			<EnumEntry Name="INVALID_DATA_FORMAT"><Value>1281</Value></EnumEntry>
+			<EnumEntry Name="ABORTED"><Value>1</Value></EnumEntry>
+			<EnumEntry Name="NOT_ENOUGH_MEMORY"><Value>24</Value></EnumEntry>
+			<EnumEntry Name="GENERIC_ERROR"><Value>16384</Value></EnumEntry>
+			<EnumEntry Name="INVALID_PARAMETER"><Value>16385</Value></EnumEntry>
+			<EnumEntry Name="CANCEL"><Value>16386</Value></EnumEntry>
+			<EnumEntry Name="PENDING"><Value>65535</Value></EnumEntry>
+			<EnumEntry Name="TIMEOUT"><Value>30</Value></EnumEntry>
+			<EnumEntry Name="NO_LICENSE"><Value>1538</Value></EnumEntry>
+			<EnumEntry Name="GENICAM_XML_ERROR"><Value>2308</Value></EnumEntry>
+			<EnumEntry Name="NOT_IMPLEMENTED"><Value>1540</Value></EnumEntry>
+			<EnumEntry Name="NOT_SUPPORTED"><Value>26</Value></EnumEntry>
+			<EnumEntry Name="FILE_ERROR"><Value>16</Value></EnumEntry>
+			<EnumEntry Name="ERR_OVERFLOW"><Value>27</Value></EnumEntry>
+			<EnumEntry Name="IMAGE_ERROR"><Value>37</Value></EnumEntry>
+			<EnumEntry Name="MISSING_PACKETS"><Value>39</Value></EnumEntry>
+			<EnumEntry Name="BUFFER_TOO_SMALL"><Value>4</Value></EnumEntry>
+			<EnumEntry Name="TOO_MANY_RESENDS"><Value>2816</Value></EnumEntry>
+			<EnumEntry Name="RESENDS_FAILURE"><Value>2817</Value></EnumEntry>
+			<EnumEntry Name="TOO_MANY_CONSECUTIVE_RESENDS"><Value>2819</Value></EnumEntry>
+			<EnumEntry Name="AUTO_ABORTED"><Value>2818</Value></EnumEntry>
+			<EnumEntry Name="BAD_VERSION"><Value>513</Value></EnumEntry>
+			<EnumEntry Name="NO_MORE_ENTRY"><Value>1539</Value></EnumEntry>
+			<EnumEntry Name="NO_AVAILABLE_DATA"><Value>20</Value></EnumEntry>
+			<EnumEntry Name="NETWORK_ERROR"><Value>19</Value></EnumEntry>
+			<EnumEntry Name="RESYNC"><Value>40</Value></EnumEntry>
+			<EnumEntry Name="BUSY"><Value>514</Value></EnumEntry>
+			<pValue>LastErrorReg</pValue>
+		</Enumeration>
+		<IntReg Name="LastErrorReg">
+			<Address>0xE874</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Enumeration Name="TimestampSourceEffective">
+			<ToolTip>Source of the buffer timestamps in use.</ToolTip>
+			<Description>Source of the buffer timestamps in use. Hardware refers to the device timestamp present in the GVSP header. Software refers to host-side timestamps recorded when a buffer is delivered by the data receiver.</Description>
+			<DisplayName>Timestamp Source Effective</DisplayName>
+			<Visibility>Guru</Visibility>
+			<EnumEntry Name="Hardware"><Value>0</Value></EnumEntry>
+			<EnumEntry Name="Software"><Value>1</Value></EnumEntry>
+			<pValue>TimestampSourceEffectiveReg</pValue>
+		</Enumeration>
+		<IntReg Name="TimestampSourceEffectiveReg">
+			<Address>0xE878</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Enumeration Name="TimestampSourcePreferred">
+			<ToolTip>Preferred source of the buffer timestamps used to track statistics.</ToolTip>
+			<Description>Preferred source of the buffer timestamps used to track statistics. Hardware refers to the device timestamp present in the GVSP header. Software refers to host-side timestamps recorded when a buffer is delivered by the data receiver.</Description>
+			<DisplayName>Timestamp Source Preferred</DisplayName>
+			<Visibility>Guru</Visibility>
+			<Streamable>Yes</Streamable>
+			<EnumEntry Name="Hardware"><Value>0</Value></EnumEntry>
+			<EnumEntry Name="Software"><Value>1</Value></EnumEntry>
+			<pValue>TimestampSourcePreferredReg</pValue>
+		</Enumeration>
+		<IntReg Name="TimestampSourcePreferredReg">
+			<Address>0xE87C</Address>
+			<Length>4</Length>
+			<AccessMode>RW</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+	</Group>
+	<Group Comment="Counters">
+		<Category Name="Counters">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<pFeature>Status</pFeature>
+			<pFeature>Errors</pFeature>
+			<pFeature>BlockIDsMissing</pFeature>
+			<pFeature>PipelineBlocksDropped</pFeature>
+		</Category>  
+		<Integer Name="BlockIDsMissing">
+			<ToolTip>Discontinuities in block IDs</ToolTip>
+			<Description>The number of missing block IDs. Calculated using the block ID of incoming blocks to count blocks sent by the USB3 Vision device that were not successfully delivered. This is typically caused by the application not being able to de-queue and re-queue buffers quickly enough.</Description>
+			<DisplayName>Block IDs Missing</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>BlockIDsMissingValExpr</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntSwissKnife Name="BlockIDsMissingValExpr">
+			<pVariable Name="VAR_BLOCKIDSMISSINGHIGH">BlockIDsMissingHighReg</pVariable>
+			<pVariable Name="VAR_BLOCKIDSMISSINGLOW">BlockIDsMissingLowReg</pVariable>
+			<Formula>(VAR_BLOCKIDSMISSINGHIGH &lt;&lt; 32) | (VAR_BLOCKIDSMISSINGLOW)</Formula>
+		</IntSwissKnife>
+		<Integer Name="PipelineBlocksDropped">
+			<ToolTip>Count of blocks dropped by the PvPipeline.</ToolTip>
+			<Description>Count of blocks dropped by the PvPipeline. The oldest blocks are dropped from the PvPipeline output queue if it runs out of resources.</Description>
+			<DisplayName>Pipeline Block Drops</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>PipelineBlocksDroppedReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="PipelineBlocksDroppedReg">
+			<Address>0xE880</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+	</Group>
+	<Group Comment="Status">
+		<Category Name="Status">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<pFeature>DataOverrun</pFeature>
+			<pFeature>PartialLineMissing</pFeature>
+			<pFeature>FullLineMissing</pFeature>
+			<pFeature>BlocksDropped</pFeature>
+			<pFeature>InterlacedEven</pFeature>
+			<pFeature>InterlacedOdd</pFeature>
+		</Category>  
+		<Integer Name="DataOverrun">
+			<ToolTip>Data overrun count on the device.</ToolTip>
+			<Description>Count of data overrun notifications received from the device. A data overrun notification is sent when the incoming (from a sensor) data rate exceeds the device&#39;s data capture rate.</Description>
+			<DisplayName>Data Overrun</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>PleoraDevice</pIsAvailable>
+			<pValue>DataOverrunReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="DataOverrunReg">
+			<Address>0xE884</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="PartialLineMissing">
+			<ToolTip>Partial line missing count on the device.</ToolTip>
+			<Description>Count of images that have at least one partial line missing. Only available for devices using a Pleora IP engine. </Description>
+			<DisplayName>Partial Line Missing</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>PleoraDevice</pIsAvailable>
+			<pValue>PartialLineMissingReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="PartialLineMissingReg">
+			<Address>0xE888</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="FullLineMissing">
+			<ToolTip>Full line missing count on the device.</ToolTip>
+			<Description>Count of images that have at least on full line missing. Only available for devices using a Pleora IP engine.</Description>
+			<DisplayName>Full Line Missing</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>PleoraDevice</pIsAvailable>
+			<pValue>FullLineMissingReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="FullLineMissingReg">
+			<Address>0xE88C</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="BlocksDropped">
+			<ToolTip>Dropped block count on the device.</ToolTip>
+			<Description>Count of dropped block notifications received from the device. Dropped block notifications are sent when the frame buffer is full and the incoming data cannot be processed. Only available for devices using a Pleora IP engine.</Description>
+			<DisplayName>Blocks Dropped</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>PleoraDevice</pIsAvailable>
+			<pValue>BlocksDroppedReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="BlocksDroppedReg">
+			<Address>0xE890</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="InterlacedEven">
+			<ToolTip>Count of interlaced even fields from an interlaced image.</ToolTip>
+			<Description>Count of interlaced even fields from an interlaced image. Only for devices using a Pleora IP engine.</Description>
+			<DisplayName>Interlaced Even</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>PleoraDevice</pIsAvailable>
+			<pValue>InterlacedEvenReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="InterlacedEvenReg">
+			<Address>0xE894</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="InterlacedOdd">
+			<ToolTip>Count of interlaced odd fields from an interlaced image.</ToolTip>
+			<Description>Count of interlaced odd fields from an interlaced image. Only for devices using a Pleora IP engine.</Description>
+			<DisplayName>Interlaced Odd</DisplayName>
+			<Visibility>Beginner</Visibility>
+		<pIsAvailable>PleoraDevice</pIsAvailable>
+			<pValue>InterlacedOddReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="InterlacedOddReg">
+			<Address>0xE898</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+	</Group>
+	<Group Comment="Errors">
+		<Category Name="Errors">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<pFeature>ResultImageError</pFeature>
+			<pFeature>ResultBufferTooSmall</pFeature>
+			<pFeature>ResultAborted</pFeature>
+			<pFeature>ResultResync</pFeature>
+			<pFeature>ResultInvalidDataFormat</pFeature>
+		</Category>   
+		<Integer Name="ResultImageError">
+			<ToolTip>Count of failed buffers with operation result set to IMAGE_ERROR.</ToolTip>
+			<Description>Count of failed buffers with operation result set to IMAGE_ERROR. Incremented when a corrupt image arrives due to discontinuities in data between the camera and the hardware responsible for transmitting URBs in the USB3 Vision device. This can include data overrun, partial and full lines missing.</Description>
+			<DisplayName>Result Image Error</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>ResultImageErrorReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ResultImageErrorReg">
+			<Address>0xE89C</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="ResultBufferTooSmall">
+			<ToolTip>Count of failed buffers with operation result set to BUFFER_TOO_SMALL.</ToolTip>
+			<Description>Count of failed buffers with operation result set to BUFFER_TOO_SMALL. Happens when a buffer queued for streaming was not large enough to contain the received payload. </Description>
+			<DisplayName>Result Buffer Too Small</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>ResultBufferTooSmallReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ResultBufferTooSmallReg">
+			<Address>0xE8A0</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="ResultAborted">
+			<ToolTip>Count of failed buffers with operation result set to ABORTED.</ToolTip>
+			<Description>Count of failed buffers with operation result set to ABORTED. After calling AbortQueuedBuffers all buffers in the stream are completed with the ABORTED operation result.</Description>
+			<DisplayName>Result Aborted</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>ResultAbortedReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ResultAbortedReg">
+			<Address>0xE8A4</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="ResultResync">
+			<ToolTip>Buffer needs to be re-queued due to internal USB3 Vision driver contraints.</ToolTip>
+			<Description>Operation result assigned to buffers needing to be re-queued due to internal USB3 Vision driver contraints. Buffers from a previous acquisition sequence usually need to be re-queued. Not indicative of a streaming error.</Description>
+			<DisplayName>Result Resync</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>ResultResyncReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ResultResyncReg">
+			<Address>0xE8A8</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="ResultInvalidDataFormat">
+			<ToolTip>Count of failed buffers with operation result set to INVALID_DATA_FORMAT.</ToolTip>
+			<Description>Count of failed buffers with operation result set to INVALID_DATA_FORMAT. Poorly formatted data was received from the USB3 Vision transmitter.</Description>
+			<DisplayName>Result Invalid Data Format</DisplayName>
+			<Visibility>Beginner</Visibility>
+			<pValue>ResultInvalidDataFormatReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="ResultInvalidDataFormatReg">
+			<Address>0xE8AC</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+	</Group>
+	<Group Comment="Support">
+		<Category Name="Support">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<pFeature>BlockCountHigh</pFeature>
+			<pFeature>BlockCountLow</pFeature>
+			<pFeature>BlockIDsMissingHigh</pFeature>
+			<pFeature>BlockIDsMissingLow</pFeature>
+			<pFeature>BytesCountLow</pFeature>
+			<pFeature>BytesCountHigh</pFeature>
+			<pFeature>PleoraDevice</pFeature>
+		</Category>  
+		<Integer Name="BlockCountHigh">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<Visibility>Invisible</Visibility>
+			<pValue>BlockCountHighReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="BlockCountHighReg">
+			<Address>0xE8B0</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>250</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="BlockCountLow">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<Visibility>Invisible</Visibility>
+			<pValue>BlockCountLowReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="BlockCountLowReg">
+			<Address>0xE8B4</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>250</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="BlockIDsMissingHigh">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<Visibility>Invisible</Visibility>
+			<pValue>BlockIDsMissingHighReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="BlockIDsMissingHighReg">
+			<Address>0xE8B8</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>250</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="BlockIDsMissingLow">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<Visibility>Invisible</Visibility>
+			<pValue>BlockIDsMissingLowReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="BlockIDsMissingLowReg">
+			<Address>0xE8BC</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>250</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="BytesCountLow">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<Visibility>Invisible</Visibility>
+			<pValue>BytesCountLowReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="BytesCountLowReg">
+			<Address>0xE8C0</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>250</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Integer Name="BytesCountHigh">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<Visibility>Invisible</Visibility>
+			<pValue>BytesCountHighReg</pValue>
+			<Inc>1</Inc>
+			<Representation>Linear</Representation>
+		</Integer>
+		<IntReg Name="BytesCountHighReg">
+			<Address>0xE8C4</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>250</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+		<Boolean Name="PleoraDevice">
+			<ToolTip>ToolTip</ToolTip>
+			<Description>Description</Description>
+			<Visibility>Invisible</Visibility>
+			<pValue>PleoraDeviceReg</pValue>
+		</Boolean>
+		<IntReg Name="PleoraDeviceReg">
+			<Address>0xE8C8</Address>
+			<Length>4</Length>
+			<AccessMode>RO</AccessMode>
+			<pPort>Device</pPort>
+			<Cachable>NoCache</Cachable>
+			<PollingTime>1000</PollingTime>
+			<Sign>Unsigned</Sign>
+			<Endianess>BigEndian</Endianess>
+		</IntReg>
+	</Group>
+	<Port Name="Device">
+		<ToolTip>Port giving access to the device.</ToolTip>
+	</Port>
+</RegisterDescription>
