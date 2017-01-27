@@ -165,7 +165,7 @@ void signal_handler(int sig_code)
 
 int main(int argc, char **argv)
 {
-    ros::init(argc,argv,"ira_photonfocus");
+    ros::init(argc,argv,"pleora_polarcam");
     ros::NodeHandle node_handle("~");
 
     signal(SIGINT,signal_handler);

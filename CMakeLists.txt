@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(ira_photonfocus_driver)
+project(pleora_polarcam)
 
 set(CMAKE_BUILD_TYPE Debug)
 
@@ -289,7 +289,7 @@ add_library(ira_photonfocus src/photonfocus_camera.cpp)
 # add_executable(photonfocus_camera_node src/photonfocus_camera_node.cpp)
 
 # DRIVER
-add_executable(ira_photonfocus_driver src/photonfocus_driver.cpp)
+add_executable(pleora_polarcam_driver src/photonfocus_driver.cpp)
 
 # UTILITIES
 add_executable(set_ip src/utilities/set_ip.cpp)
@@ -298,7 +298,7 @@ add_executable(find_camera src/utilities/find_camera.cpp)
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(photonfocus_camera_node photonfocus_camera_generate_messages_cpp)
-add_dependencies(ira_photonfocus_driver ${PROJECT_NAME}_gencfg)
+add_dependencies(pleora_polarcam_driver ${PROJECT_NAME}_gencfg)
 
 
 ## Specify libraries to link a library or executable target against
@@ -312,7 +312,7 @@ target_link_libraries(ira_photonfocus
     ${GNUTLS_LIBRARIES}
 )
 
-target_link_libraries(ira_photonfocus_driver
+target_link_libraries(pleora_polarcam_driver
     ira_photonfocus
     ${EBUS_LIBRARIES}
     ${catkin_LIBRARIES}
@@ -338,10 +338,10 @@ target_link_libraries(find_camera
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-# install(PROGRAMS
-#   scripts/my_python_script
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+install(PROGRAMS
+  scripts/polar_process
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 ## Mark executables and/or libraries for installation
 # install(TARGETS photonfocus_camera photonfocus_camera_node
