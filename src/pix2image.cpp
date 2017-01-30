@@ -5,39 +5,7 @@
 namespace POLPro
 {
 
-    // cv::Mat raw2mat(const cv::Mat& origin)
-    // {
-    //     // create the output image with the same dimension than the original
-    //     // image. The raw image is a 8 bits image.
-    //     cv::Mat output(origin.height(), origin.width(), cv::CV_8U);
-
-    //     // define the size of the image without the useful info
-    //     int cols = origin.width() / 2;
-    //     int rows = origin.height() / 2;
-
-    //     // re-order the data keeping only the useful information
-    //     for (int i = 0; i < rows; ++i)
-    //     {
-    //         for (int j = 0; j < cols; ++j)
-    //         {
-    //             // get 0 degree
-    //             output.at<uchar>(i, j) = origin.at<uchar>(2 * i, 2 * j);
-    //             // get 45 degrees
-    //             output.at<uchar>(i + rows - 1, j) = origin.at<uchar>(2 * i + 1,
-    //                                                               2 * j);
-    //             // get 90 degrees
-    //             output.at<uchar>(i, j + cols - 1) = origin.at<uchar>(2 * i,
-    //                                                               2 * j + 1);
-    //             // get 135 degrees
-    //             output.at<uchar>(i + rows - 1, j + cols - 1) = origin.at<uchar>(
-    //                 2 * i + 1, 2 * j + 1);
-    //         }
-    //     }
-    //     // return the image
-    //     return output;
-    // }
-
-    std::vector<cv::Mat> raw2mat4d(const cv::Mat& origin)
+    std::vector<cv::Mat> raw2mat(const cv::Mat& origin)
     {
         // define the size of the output
         cv::Size output_size(origin.width() / 2, origin.height() / 2);
@@ -64,10 +32,28 @@ namespace POLPro
 
     cv::Mat compute_stokes(const cv::Mat& origin)
     {
-        // compute the min and max of the image
-        int min = 0, max = 0;
-        cv::Point id_min, id_max;
-        minMaxLoc(origin, &min, &max, &id_min, &id_max);
+        // refactor the raw image
+        std::vector<cv::Mat> angles_img = raw2mat(origin);
+
+        // define the size of the output
+        const cv::Size output_size(angles_img[0].width(),
+                                   angles_img[0].height());
+        // define the number of images to have for Stokes
+        const int nb_stokes_img = 3;
+        // Create zeros images
+        std::vector<cv::Mat> output_img(nb_stokes_img, cv::Mat::zeros());
+
+        // compute the Stokes parameters maps
+        // S0: add the different angles
+        for (auto it = angles_img.begin(); it != angles_img.end(); ++it)
+            output_img[0] += *it;
+        output_size[0] /= 2.0;
+        // S1: subtract angles 0 and 90
+        output_img[1] = angles_img[0] - angles_img[2];
+        // S2: subtract angles 45 and 135
+        output_img[2] = angles_img[1] - angles_img[3];
+
+        return output_img;
     }
 
     void Pix2Image::pix2rgb (cv::Mat img)
