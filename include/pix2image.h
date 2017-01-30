@@ -3,11 +3,11 @@
 
 #include <vector>
 
-#include <iomainip>
+//#include <iomainip>
 #include <stdexcept>
 
-#include <opencv2/opencv.hhp>
-#include <photonfocus_camera.h>
+#include <opencv2/opencv.hpp>
+//#include <photonfocus_camera.h>
 
 namespace POLPro
 {

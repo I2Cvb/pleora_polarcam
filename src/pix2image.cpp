@@ -1,5 +1,5 @@
 #include <pix2image.h>
-#include <photonfocus_camera.h>
+//#include <photonfocus_camera.h>
 
 
 namespace POLPro
