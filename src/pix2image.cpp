@@ -20,8 +20,8 @@ namespace POLPro
             for (int row = 0; row < output_size.height; ++row)
                 for (int col = 0; col < output_size.width; ++col)
                 {
-                    int offset_row = angles / 2;
-                    int offset_col = angles % 2;
+                    int offset_row = angle / 2;
+                    int offset_col = angle % 2;
                     output_img[angle].at<uchar>(row, col) = origin.at<uchar>(
                         2 * row + offset_row, 2 * col + offset_col);
                 }
