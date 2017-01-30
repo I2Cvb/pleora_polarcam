@@ -5,66 +5,61 @@
 namespace POLPro
 {
 
-    cv::Mat raw2mat(const cv::Mat& origin)
-    {
-        // create the output image with the same dimension than the original
-        // image. The raw image is a 8 bits image.
-        cv::Mat output(origin.height(), origin.width(), cv::CV_8U);
+    // cv::Mat raw2mat(const cv::Mat& origin)
+    // {
+    //     // create the output image with the same dimension than the original
+    //     // image. The raw image is a 8 bits image.
+    //     cv::Mat output(origin.height(), origin.width(), cv::CV_8U);
 
-        // define the size of the image without the useful info
-        int cols = origin.width() / 2;
-        int rows = origin.height() / 2;
+    //     // define the size of the image without the useful info
+    //     int cols = origin.width() / 2;
+    //     int rows = origin.height() / 2;
 
-        // re-order the data keeping only the useful information
-        for (int i = 0; i < rows; ++i)
-        {
-            for (int j = 0; j < cols; ++j)
-            {
-                // get 0 degree
-                output.at<uchar>(i, j) = origin.at<uchar>(2 * i, 2 * j);
-                // get 45 degrees
-                output.at<uchar>(i + rows - 1, j) = origin.at<uchar>(2 * i + 1,
-                                                                  2 * j);
-                // get 90 degrees
-                output.at<uchar>(i, j + cols - 1) = origin.at<uchar>(2 * i,
-                                                                  2 * j + 1);
-                // get 135 degrees
-                output.at<uchar>(i + rows - 1, j + cols - 1) = origin.at<uchar>(
-                    2 * i + 1, 2 * j + 1);
-            }
-        }
-        // return the image
-        return output;
-    }
+    //     // re-order the data keeping only the useful information
+    //     for (int i = 0; i < rows; ++i)
+    //     {
+    //         for (int j = 0; j < cols; ++j)
+    //         {
+    //             // get 0 degree
+    //             output.at<uchar>(i, j) = origin.at<uchar>(2 * i, 2 * j);
+    //             // get 45 degrees
+    //             output.at<uchar>(i + rows - 1, j) = origin.at<uchar>(2 * i + 1,
+    //                                                               2 * j);
+    //             // get 90 degrees
+    //             output.at<uchar>(i, j + cols - 1) = origin.at<uchar>(2 * i,
+    //                                                               2 * j + 1);
+    //             // get 135 degrees
+    //             output.at<uchar>(i + rows - 1, j + cols - 1) = origin.at<uchar>(
+    //                 2 * i + 1, 2 * j + 1);
+    //         }
+    //     }
+    //     // return the image
+    //     return output;
+    // }
 
     std::vector<cv::Mat> raw2mat4d(const cv::Mat& origin)
     {
-        // we will loop other the data
-        std::vector<cv::Mat> output;
+        // define the size of the output
+        cv::Size output_size(origin.width() / 2, origin.height() / 2);
 
-        // compute the size of the output image
-        int cols = img.cols / 2;
-        int rows = img.rows / 2;
-        // Create the four angles images
-        for (int i = 0; i < 4; ++i)
-        {
-            output.push_back(cv::Mat::zeros(rows, cols, cv::CV_8U))
-        }
+        // declare the vector containing the 4 angles images
+        const int nb_angles = 4;
+        std::vector<cv::Mat> output_img(nb_angles, cv::Mat::zeros(output_size,
+                                                                  CV_8U));
 
-        // Copy the data
-        for (int i = 0; i < rows; ++i)
-            for (int j = 0; j < cols; ++j)
-                // Get the different angles
-                for (int angles = 0; angles < 4; ++angles)
+        // copy the data in the new image
+        for (int angle = 0; angle < nb_angles; ++angle)
+            for (int row = 0; row < output_size.height(); ++row)
+                for (int col = 0; col < output_size.width(); ++col)
                 {
-                    int r = angles / 2;
-                    int c = angles % 2;
-                    output[angles].at<uchar>(i, j) = origin.at<uchar>(
-                        2 * i + r, 2 * j + c);
+                    int offset_row = angles / 2;
+                    int offset_col = angles % 2;
+                    output_img[angle].at<uchar>(row, col) = origin.at<uchar>(
+                        2 * row + offset_row, 2 * col + offset_col);
                 }
 
         // Return the image
-        return output;
+        return output_img;
     }
 
     cv::Mat compute_stokes(const cv::Mat& origin)
