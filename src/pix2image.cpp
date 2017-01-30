@@ -4,39 +4,75 @@
 
 namespace POLPro
 {
-    Pix2Image::Pix2Image(cv::Mat img)
+
+    cv::Mat raw2mat(const cv::Mat& origin)
     {
-	cv_bridge::CvImage cv_image; 
-	cv_image.encoding = "mono8"; 
-	cv_image.image = img; 
-	
-	
+        // create the output image with the same dimension than the original
+        // image. The raw image is a 8 bits image.
+        cv::Mat output(origin.height(), origin.width(), cv::CV_8U);
+
+        // define the size of the image without the useful info
+        int cols = origin.width() / 2;
+        int rows = origin.height() / 2;
+
+        // re-order the data keeping only the useful information
+        for (int i = 0; i < rows; ++i)
+        {
+            for (int j = 0; j < cols; ++j)
+            {
+                // get 0 degree
+                output.at<uchar>(i, j) = origin.at<uchar>(2 * i, 2 * j);
+                // get 45 degrees
+                output.at<uchar>(i + rows - 1, j) = origin.at<uchar>(2 * i + 1,
+                                                                  2 * j);
+                // get 90 degrees
+                output.at<uchar>(i, j + cols - 1) = origin.at<uchar>(2 * i,
+                                                                  2 * j + 1);
+                // get 135 degrees
+                output.at<uchar>(i + rows - 1, j + cols - 1) = origin.at<uchar>(
+                    2 * i + 1, 2 * j + 1);
+            }
+        }
+        // return the image
+        return output;
     }
-    
-    void Pix2Image::pix2parsed (cv::Mat img)
+
+    std::vector<cv::Mat> raw2mat4d(const cv::Mat& origin)
     {
+        // we will loop other the data
+        std::vector<cv::Mat> output;
 
-	using namespace cv;
-	using namespace std;
+        // compute the size of the output image
+        int cols = img.cols / 2;
+        int rows = img.rows / 2;
+        // Create the four angles images
+        for (int i = 0; i < 4; ++i)
+        {
+            output.push_back(cv::Mat::zeros(rows, cols, cv::CV_8U))
+        }
 
-	Mat output = img.clone();
-	cout << img.type() << "   " << CV_8U << std::endl;
-	int cols = img.cols/2;
-	int rows = img.rows/2;
+        // Copy the data
+        for (int i = 0; i < rows; ++i)
+            for (int j = 0; j < cols; ++j)
+                // Get the different angles
+                for (int angles = 0; angles < 4; ++angles)
+                {
+                    int r = angles / 2;
+                    int c = angles % 2;
+                    output[angles].at<uchar>(i, j) = origin.at<uchar>(
+                        2 * i + r, 2 * j + c);
+                }
 
-	for (int i=0; i<rows;i++){
-	    for (int j=0; j<cols;j++){
-		output.at<uchar>(i, j) = img.at<uchar>(2*i, 2*j);
-		output.at<uchar>(i+rows-1, j) = img.at<uchar>(2*i+1, 2*j);
-		output.at<uchar>(i, j+cols-1) = img.at<uchar>(2*i, 2*j+1);
-		output.at<uchar>(i+rows-1, j+cols-1) = img.at<uchar>(2*i+1, 2*j+1);
-		}
-	    }
-	imshow( "Parsed image", output ); // Show our image inside it. 
+        // Return the image
+        return output;
+    }
 
-	waitKey(0);                   // Wait for a keystroke in the window 
-	return output; 
-	    
+    cv::Mat compute_stokes(const cv::Mat& origin)
+    {
+        // compute the min and max of the image
+        int min = 0, max = 0;
+        cv::Point id_min, id_max;
+        minMaxLoc(origin, &min, &max, &id_min, &id_max);
     }
 
     void Pix2Image::pix2rgb (cv::Mat img)
@@ -62,7 +98,7 @@ namespace POLPro
 		I135.at<uchar>(i, j) = img.at<uchar>(2*i+1, 2*j+1);
 	    }
 	}
-       // S0 
+       // S0
 	Mat s0;
 	add(I0, I90, s0, noArray(), CV_32F);
 	add(I45, s0, s0, noArray(), CV_32F);
@@ -72,20 +108,20 @@ namespace POLPro
 	cout <<"min max s0: " << min << " " << max << std::endl;
 
 
-	//S1  
+	//S1
         Mat s1;
         subtract(I0, I90, s1, noArray(), CV_32F);
         minMaxLoc(s1, &min, &max, &idmin, &idmax) ;
         cout <<"min max s1: " << min << " " << max << std::endl;
-        //S2                                                    
+        //S2
         Mat s2;
         subtract(I45, I135, s2, noArray(), CV_32F);
         minMaxLoc(s2, &min, &max, &idmin, &idmax) ;
         cout <<"min max s2: " << min << " " << max << std::endl;
 
-        // DOP and AOP parameters                               
+        // DOP and AOP parameters
 	cv::Mat dop, aop;
-	cv::cartToPolar(s1, s2, dop, aop, true); // Provide angle in degree   
+	cv::cartToPolar(s1, s2, dop, aop, true); // Provide angle in degree
 	dop = dop / s0;
 	aop = 0.5 * aop;
 
@@ -100,7 +136,7 @@ namespace POLPro
 
 	/* HSV representation */
 	cv::Mat S = dop * 255; // S in the range 0:255
-	cv::Mat H = aop; // H in the range 0:180      
+	cv::Mat H = aop; // H in the range 0:180
 	S.convertTo(S, CV_8UC1);
 	H.convertTo(H, CV_8UC1);
 
@@ -121,7 +157,7 @@ namespace POLPro
 	s2.copyTo(Stokes(cv::Rect(0, rows, s2.cols, s2.rows)));
 
 	Mat PolFea = Mat(rows*2, cols*2, image.type());
-	S.copyTo(PolFea(cv::Rect(0, 0, S.cols, S.rows))); //DoP 
+	S.copyTo(PolFea(cv::Rect(0, 0, S.cols, S.rows))); //DoP
 	H.copyTo(PolFea(cv::Rect(cols, 0, H.cols, H.rows))); //AoP
 	/* show images */
 	imshow( "Pixelated image", image);
@@ -136,5 +172,3 @@ namespace POLPro
 
 
 }
-
-
