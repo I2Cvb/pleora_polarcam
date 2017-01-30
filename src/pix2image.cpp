@@ -41,17 +41,20 @@ namespace POLPro
         // define the number of images to have for Stokes
         const int nb_stokes_img = 3;
         // Create zeros images
-        std::vector<cv::Mat> output_img(nb_stokes_img, cv::Mat::zeros());
+        std::vector<cv::Mat> output_img(nb_stokes_img, cv::Mat::zeros(
+                                            output_size, cv::CV_32F));
 
         // compute the Stokes parameters maps
         // S0: add the different angles
         for (auto it = angles_img.begin(); it != angles_img.end(); ++it)
-            output_img[0] += *it;
+            cv::add(output_img[0], *it, output_img[0], cv::noArray(), CV_32F);
         output_size[0] /= 2.0;
         // S1: subtract angles 0 and 90
-        output_img[1] = angles_img[0] - angles_img[2];
+        cv::subtract(angles_img[0], angles_img[2], output_img[1],
+                     cv::noArray(), CV_32F);
         // S2: subtract angles 45 and 135
-        output_img[2] = angles_img[1] - angles_img[3];
+        cv::subtract(angles_img[1], angles_img[3], output_img[2],
+                     cv::noArray(), CV_32F);
 
         return output_img;
     }
