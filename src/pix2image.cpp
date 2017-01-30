@@ -87,6 +87,8 @@ namespace POLPro
         // normalize the maps
         output_img[0] /= stokes_img[0];
         output_img[1] *= 0.5;
+        // copy s0
+        stokes_img[0].copyTo(output_img[2]);
 
         return output_img;
     }
@@ -101,14 +103,6 @@ namespace POLPro
 
     // void Pix2Image::pix2rgb (cv::Mat img)
     // {
-
-
-    //     // DOP and AOP parameters
-    //     cv::Mat dop, aop;
-    //     cv::cartToPolar(s1, s2, dop, aop, true); // Provide angle in degree
-    //     dop = dop / s0;
-    //     aop = 0.5 * aop;
-
 
     //     /* Conversion into 8 bits depth image */
     //     s0 = s0/2;
