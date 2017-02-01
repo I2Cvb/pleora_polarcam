@@ -139,8 +139,6 @@ namespace POLPro
 
     void imshow(std::vector<cv::Mat> img, const bool as_hsv=false,
                 const bool is_stokes=true) {
-        int cols = img[0].rows;
-        int rows = img[0].cols;
 
         // through an error if there is not 3d img and hsv is turned on
         if ((img.size() != 3) && as_hsv)
