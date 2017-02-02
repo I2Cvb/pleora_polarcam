@@ -162,8 +162,7 @@ find_package(catkin REQUIRED COMPONENTS
 find_package(OpenCV REQUIRED)
 ##find_package(Boost REQUIRED COMPONENTS system log log_setup thread
 ##  program_options)
-find_package(Boost 1.54 COMPONENTS system log_setup log program_options thread  REQUIRED)
-#include_directories( ${Boost_INCLUDE_DIR} )
+find_package(Boost 1.54 COMPONENTS log_setup log program_options thread REQUIRED)
 
 # EBUS SDK
 set(EBUS_INCLUDE_DIRS ebus_sdk/include)
@@ -266,11 +265,11 @@ generate_dynamic_reconfigure_options(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#DEPENDS Boost 
-#INCLUDE_DIRS include
-#  LIBRARIES photonfocus_camera
-#CATKIN_DEPENDS cv_bridge image_transport roscpp
-#  DEPENDS system_lib
+# INCLUDE_DIRS include
+# LIBRARIES photonfocus_camera
+# CATKIN_DEPENDS cv_bridge image_transport roscpp
+# DEPENDS system_lib
+# DEPENDS Boost opencv 
  
 )
 
@@ -283,10 +282,10 @@ catkin_package(
 # include_directories(include)
 include_directories(
   include
+  ${Boost_INCLUDE_DIR}
   ${catkin_INCLUDE_DIRS}
   ${EBUS_INCLUDE_DIRS}
   ${GNUTLS_INCLUDE_DIR}
-  #${Boost_INCLUDE_DIR}
 )
 
 ## Declare a cpp library
@@ -305,6 +304,7 @@ add_executable(pix2image src/pix2image.cpp)
 
 # UTILITIES
 add_executable(set_ip src/utilities/set_ip.cpp)
+
 add_executable(find_camera src/utilities/find_camera.cpp)
 
 ## Add cmake target dependencies of the executable/library
@@ -333,16 +333,11 @@ target_link_libraries(pleora_polarcam_driver
 
 target_link_libraries(pix2image
     ${OpenCV_LIBRARIES}
-   # -lpthread
+    -lpthread
     ${Boost_LIBRARIES}
-   # ${Boost_FILESYSTEMS_LIBRARY}
-   # ${Boost_SYSTEM_LIBRARY}
     ${catkin_LIBRARIES}
-    ${GNUTLS_LIBRARIES}
 
 )
-
-
 
 target_link_libraries(set_ip
     ${EBUS_LIBRARIES}

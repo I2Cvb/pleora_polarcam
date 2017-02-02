@@ -31,8 +31,8 @@ namespace POLPro
         for (int angle = 0; angle < nb_angles; ++angle) {
             int offset_row = angle / 2;
             int offset_col = angle % 2;
-            BOOST_LOG_TRIVIAL(debug) << "offset_row " << offset_row
-                                     << " offset_col " << offset_col;
+            // BOOST_LOG_TRIVIAL(debug) << "offset_row " << offset_row
+            //                          << " offset_col " << offset_col;
 
             for (int row = 0; row < origin.rows/2; ++row)
                 for (int col = 0; col < origin.cols/2; ++col)
@@ -61,17 +61,17 @@ namespace POLPro
             cv::add(output_img[0], *it, output_img[0], cv::noArray(),
                     CV_32F);
         output_img[0] /= 2.0;
-        BOOST_LOG_TRIVIAL(debug) << minmax(output_img[0], "s0");
+        // BOOST_LOG_TRIVIAL(debug) << minmax(output_img[0], "s0");
 
         // S1: subtract angles 0 and 90
         cv::subtract(angles_img[0], angles_img[2], output_img[1],
                      cv::noArray(), CV_32F);
-        BOOST_LOG_TRIVIAL(debug) << minmax(output_img[1], "s1");
+        // BOOST_LOG_TRIVIAL(debug) << minmax(output_img[1], "s1");
 
         // S2: subtract angles 45 and 135
         cv::subtract(angles_img[1], angles_img[3], output_img[2],
                      cv::noArray(), CV_32F);
-        BOOST_LOG_TRIVIAL(debug) << minmax(output_img[2], "s2");
+        // BOOST_LOG_TRIVIAL(debug) << minmax(output_img[2], "s2");
 
         if (show)
             imshow(output_img, false, true);
