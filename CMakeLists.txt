@@ -162,7 +162,7 @@ find_package(catkin REQUIRED COMPONENTS
 find_package(OpenCV REQUIRED)
 ##find_package(Boost REQUIRED COMPONENTS system log log_setup thread
 ##  program_options)
-find_package(Boost COMPONENTS system log_setup log program_options thread  REQUIRED)
+find_package(Boost 1.54 COMPONENTS system log_setup log program_options thread  REQUIRED)
 #include_directories( ${Boost_INCLUDE_DIR} )
 
 # EBUS SDK
