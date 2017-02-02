@@ -24,21 +24,24 @@
 
 namespace POLPro
 {
-    std::vector<cv::Mat> raw2mat(const cv::Mat& origin, bool show);
+    std::vector<cv::Mat> raw2mat(const cv::Mat& origin, const bool show);
 
-    std::vector<cv::Mat> compute_stokes(const cv::Mat& origin, bool show);
+    std::vector<cv::Mat> compute_stokes(const cv::Mat& origin,
+                                        const bool show);
     std::vector<cv::Mat> compute_stokes(
-        const std::vector<cv::Mat>& angles_img, bool show);
+        const std::vector<cv::Mat>& angles_img, const bool show);
 
-    std::vector<cv::Mat> compute_polar_params(const cv::Mat& origin, bool show);
+    std::vector<cv::Mat> compute_polar_params(const cv::Mat& origin,
+                                              const bool show);
     std::vector<cv::Mat> compute_polar_params(
-        const std::vector<cv::Mat>& origin, bool show);
+        const std::vector<cv::Mat>& origin, const bool show);
 
-    void imshow(std::vector<cv::Mat> img, bool as_hsv, bool as_stokes);
-    int minmax(cv::Mat img, std::string s);
+    void imshow(std::vector<cv::Mat> img, const bool as_hsv,
+                const bool is_stokes);
+    std::string minmax(const cv::Mat& img, const std::string& s);
 
     //ros functions
-    void processCallback(const sensor_msgs::ImageConstPtr& msg); 
+    void processCallback(const sensor_msgs::ImageConstPtr& msg);
 
 }
 #endif //pix2image.h
