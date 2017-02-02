@@ -216,7 +216,7 @@ void processCallback(const sensor_msgs::ImageConstPtr& msg){
     try
     {
         cv_ptr = cv_bridge::toCvCopy(msg, "mono8");
-        //cv::imshow("view", cv_bridge::toCvCopy(msg, "mono8")-> image);
+        cv::imshow("view", cv_bridge::toCvCopy(msg, "mono8")-> image);
 
     }
     catch (cv_bridge::Exception& e)
@@ -228,9 +228,9 @@ void processCallback(const sensor_msgs::ImageConstPtr& msg){
 
     /* Add any OpenCV processing here */
     /* Gray scale image */
-    cv::Mat img;
-    img = cv_ptr->image.clone();
-    std::vector<cv::Mat> angle_image = POLPro::raw2mat(img, true);
+    //cv::Mat img;
+    //img = cv_ptr->image.clone();
+    //std::vector<cv::Mat> angle_image = POLPro::raw2mat(img, true);
 
     //cv::imshow("view", angle_image[0]);
 }
@@ -263,48 +263,8 @@ int main( int argc, char** argv )
 
 }
 
-//--------------------------------------------------//
-
-// int main( int argc, char** argv )
-// {
-//     if( argc != 2)
-//     {
-// 	cout <<" Usage: display_image ImageToLoadAndDisplay" << endl;
-//      return -1;
-//     }
-
-//     Mat image = imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);   // Read the file
-
-//     if(! image.data )                              // Check for invalid input
-//     {
-//         cout <<  "Could not open or find the image" << std::endl ;
-//         return -1;
-//     }
-
-//     // parsed image from original image
-//     std::vector<cv::Mat> angle_image = POLPro::raw2mat(image, true);
-
-//     // Stokes parameters
-//     //std::vector<cv::Mat> stokes_images = POLPro::compute_stokes(image);
-
-//     // polar componnets
-//     //std::vector<cv::Mat> polar_images =
-//     //POLPro::compute_polar_params(stokes_images);
-
-//     //showing the paramters
-
-//     //POLPro::imshow(angle_image);
-
-//     //POLPro::imshow(stokes_images);
-
-//     //POLPro::imshow(polar_images, false, false);
-
-//    waitKey(0);
-//    return 0 ;
-
-// }
 //---------------------------------------------//
-//int main(int argc, char** argv) {
+// int main(int argc, char** argv) {
 //    if (argc != 2) {
 //        std::cout <<" Usage: display_image ImageToLoadAndDisplay" << std::endl;
 //        return -1;
@@ -322,7 +282,7 @@ int main( int argc, char** argv )
 
 //    // Stokes parameters
 //    std::vector<cv::Mat> stokes_images = POLPro::compute_stokes(angle_image, 
-                                                                false);
+//                                                                false);
 
 //    // polar components
 //    std::vector<cv::Mat> polar_images =
@@ -332,4 +292,4 @@ int main( int argc, char** argv )
 //    // POLPro::imshow(stokes_images); 
 //    //POLPro::imshow(polar_images, false, false); 
 //   return 0;
-//}
+// }

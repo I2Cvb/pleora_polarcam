@@ -5,7 +5,8 @@ project(pleora_polarcam)
 add_definitions(-std=c++11)
 
 set(CMAKE_BUILD_TYPE Debug)
-
+set (CMAKE_CXX_FLAGS "-lboost_system") 
+set(CMAKE_CXX_FLAGS "-lpthread")
 # Architecture detection borrowed from: https://github.com/petroules/solar-cmake/blob/master/TargetArch.cmake
 # Based on the Qt 5 processor detection code, so should be very accurate
 # https://qt.gitorious.org/qt/qtbase/blobs/master/src/corelib/global/qprocessordetection.h
@@ -159,8 +160,10 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 find_package(OpenCV REQUIRED)
-find_package(Boost REQUIRED COMPONENTS log log_setup program_options thread)
-include_directories( ${Boost_INCLUDE_DIR} )
+##find_package(Boost REQUIRED COMPONENTS system log log_setup thread
+##  program_options)
+find_package(Boost COMPONENTS system log_setup log program_options thread  REQUIRED)
+#include_directories( ${Boost_INCLUDE_DIR} )
 
 # EBUS SDK
 set(EBUS_INCLUDE_DIRS ebus_sdk/include)
@@ -263,10 +266,12 @@ generate_dynamic_reconfigure_options(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
+#DEPENDS Boost 
+#INCLUDE_DIRS include
 #  LIBRARIES photonfocus_camera
-#  CATKIN_DEPENDS cv_bridge image_transport roscpp
+#CATKIN_DEPENDS cv_bridge image_transport roscpp
 #  DEPENDS system_lib
+ 
 )
 
 ###########
@@ -281,6 +286,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
   ${EBUS_INCLUDE_DIRS}
   ${GNUTLS_INCLUDE_DIR}
+  #${Boost_INCLUDE_DIR}
 )
 
 ## Declare a cpp library
@@ -326,9 +332,11 @@ target_link_libraries(pleora_polarcam_driver
 )
 
 target_link_libraries(pix2image
-    -lpthread
     ${OpenCV_LIBRARIES}
+   # -lpthread
     ${Boost_LIBRARIES}
+   # ${Boost_FILESYSTEMS_LIBRARY}
+   # ${Boost_SYSTEM_LIBRARY}
     ${catkin_LIBRARIES}
     ${GNUTLS_LIBRARIES}
 
