@@ -3,7 +3,7 @@ project(pleora_polarcam)
 
 
 add_definitions(-std=c++11)
-
+add_definitions(-DBOOST_LOG_DYN_LINK=1)
 set(CMAKE_BUILD_TYPE Debug)
 set (CMAKE_CXX_FLAGS "-lboost_system") 
 set(CMAKE_CXX_FLAGS "-lpthread")

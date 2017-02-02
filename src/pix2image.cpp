@@ -61,17 +61,17 @@ namespace POLPro
             cv::add(output_img[0], *it, output_img[0], cv::noArray(),
                     CV_32F);
         output_img[0] /= 2.0;
-        // BOOST_LOG_TRIVIAL(debug) << minmax(output_img[0], "s0");
+        BOOST_LOG_TRIVIAL(debug) << minmax(output_img[0], "s0");
 
         // S1: subtract angles 0 and 90
         cv::subtract(angles_img[0], angles_img[2], output_img[1],
                      cv::noArray(), CV_32F);
-        // BOOST_LOG_TRIVIAL(debug) << minmax(output_img[1], "s1");
+        BOOST_LOG_TRIVIAL(debug) << minmax(output_img[1], "s1");
 
         // S2: subtract angles 45 and 135
         cv::subtract(angles_img[1], angles_img[3], output_img[2],
                      cv::noArray(), CV_32F);
-        // BOOST_LOG_TRIVIAL(debug) << minmax(output_img[2], "s2");
+        BOOST_LOG_TRIVIAL(debug) << minmax(output_img[2], "s2");
 
         if (show)
             imshow(output_img, false, true);
@@ -235,61 +235,61 @@ void processCallback(const sensor_msgs::ImageConstPtr& msg){
     //cv::imshow("view", angle_image[0]);
 }
 
-int main( int argc, char** argv )
-{
-    // initializing the ros node
-    ros::init(argc, argv, "pix2image");
-    // creating ros handle, main access point to communicate to ros
-    ros::NodeHandle nh;
+// int main( int argc, char** argv )
+// {
+//     // initializing the ros node
+//     ros::init(argc, argv, "pix2image");
+//     // creating ros handle, main access point to communicate to ros
+//     ros::NodeHandle nh;
 
-    // suscribing to the pleora_polarcam node and topic raw_image
-    //ros::Subscriber sub = n.subscribe("pleora_polarcam/raw_image",
-    //				      1000, processCallback);
-
-
-
-    // cv::namedWindow("parsed Image");
-    // cv::startWindowThread();
-    image_transport::ImageTransport n(nh);
-    image_transport::Subscriber sub = n.subscribe("pleora_polarcam/image_raw"
-                                                  , 1, processCallback);
-
-    ros::spin();
-    // cv::destroyWindow("parsed Image");
+//     // suscribing to the pleora_polarcam node and topic raw_image
+//     //ros::Subscriber sub = n.subscribe("pleora_polarcam/raw_image",
+//     //				      1000, processCallback);
 
 
-    ros::spin();
-    return 0 ;
 
-}
+//     // cv::namedWindow("parsed Image");
+//     // cv::startWindowThread();
+//     image_transport::ImageTransport n(nh);
+//     image_transport::Subscriber sub = n.subscribe("pleora_polarcam/image_raw"
+//                                                   , 1, processCallback);
+
+//     ros::spin();
+//     // cv::destroyWindow("parsed Image");
+
+
+//     ros::spin();
+//     return 0 ;
+
+// }
 
 //---------------------------------------------//
-// int main(int argc, char** argv) {
-//    if (argc != 2) {
-//        std::cout <<" Usage: display_image ImageToLoadAndDisplay" << std::endl;
-//        return -1;
-//    }
+int main(int argc, char** argv) {
+   if (argc != 2) {
+       std::cout <<" Usage: display_image ImageToLoadAndDisplay" << std::endl;
+       return -1;
+   }
 
-//    cv::Mat image = cv::imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
+   cv::Mat image = cv::imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
 
-//    if (!image.data) {
-//        std::cout <<  "Could not open or find the image" << std::endl;
-//        return -1;
-//    }
+   if (!image.data) {
+       std::cout <<  "Could not open or find the image" << std::endl;
+       return -1;
+   }
 
-//    // parsed image from original image
-//    std::vector<cv::Mat> angle_image = POLPro::raw2mat(image, true);
+   // parsed image from original image
+   std::vector<cv::Mat> angle_image = POLPro::raw2mat(image, true);
 
-//    // Stokes parameters
-//    std::vector<cv::Mat> stokes_images = POLPro::compute_stokes(angle_image, 
-//                                                                false);
+   // Stokes parameters
+   std::vector<cv::Mat> stokes_images = POLPro::compute_stokes(angle_image, 
+                                                               false);
 
-//    // polar components
-//    std::vector<cv::Mat> polar_images =
-//        POLPro::compute_polar_params(stokes_images, true);
+   // polar components
+   std::vector<cv::Mat> polar_images =
+       POLPro::compute_polar_params(stokes_images, true);
 
-//    //POLPro::imshow(angle_image);
-//    // POLPro::imshow(stokes_images); 
-//    //POLPro::imshow(polar_images, false, false); 
-//   return 0;
-// }
+   //POLPro::imshow(angle_image);
+   // POLPro::imshow(stokes_images); 
+   //POLPro::imshow(polar_images, false, false); 
+  return 0;
+}
