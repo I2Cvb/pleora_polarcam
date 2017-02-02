@@ -116,7 +116,7 @@ namespace POLPro
         // copy s0
         stokes_img[0].copyTo(output_img[2]);
         if (show)
-            imshow(output_img, true, false);
+            imshow(output_img, false, false);
 
         return output_img;
     }
@@ -134,7 +134,9 @@ namespace POLPro
         cv::Point idmin, idmax;
         cv::minMaxLoc(img, &min, &max, &idmin, &idmax) ;
 
-        return "min max " + s + " : " << min << " " << max;
+        return "Image " + s
+            + ": min=" + std::to_string(min)
+            + " - max= " + std::to_string(max);
     }
 
     void imshow(std::vector<cv::Mat> img, const bool as_hsv=false,
@@ -158,36 +160,53 @@ namespace POLPro
                 img[2] = img[2] / 2;
             }
             // Convert to uint8
-            for (auto it = img.begin(); it != img.end(); ++it)
-                *it.convertTo(*it, CV_8UC1);
+            // for (auto it = img.begin(); it != img.end(); ++it)
+            //     *it.convertTo(*it, CV_8UC1);
+            for (int i = 0; i < img.size(); ++i)
+                img[i].convertTo(img[i], CV_8UC1);
         }
+
+        // Declare the output image
+        cv::Mat output_img;
 
         if (as_hsv) {
             // Merge the image together to have a 3 channels image
-            cv::Mat bgr_img, output_img;
-            cv::merge(img, bgr_img);
+
+            std::vector<cv::Mat> channels;
+            channels.push_back(img[1].clone()); 
+            channels.push_back(img[0].clone()); 
+            channels.push_back(img[2].clone());
+
+            cv::Mat bgr_img;
+            cv::merge(channels, bgr_img);
             cv::cvtColor(bgr_img, output_img, CV_HLS2BGR);
         } else {
             // Concatenate the images available together
             cv::Size img_size(img[0].cols, img[0].rows);
-            cv::Mat output_img(img_size.height() * 2, img_size.width() * 2,
-                               CV_8UC1);
-
+            output_img = cv::Mat::zeros
+                (img[0].rows*2, img[0].cols*2, CV_8UC1);
+            int rows = img[0].rows; 
+            int cols = img[0].cols;
+            
+    
             for (int i = 0; i < img.size(); ++i) {
                 // we need to shift the image next to each other properly
-                int offset_row = i / 2;
                 int offset_col = i % 2;
+                int offset_row = i / 2;
+               
                 img[i].copyTo(output_img(
-                                  cv::Rect(img_size.height() * offset_row,
-                                           img_size.width() * offset_col,
-                                           img_size.width(),
-                                           img_size.height())));
+                                  cv::Rect(img_size.width * offset_col,
+                                           img_size.height * offset_row,
+                                           img_size.width,
+                                           img_size.height)));
+
             }
         }
 
         cv::imshow("Output image", output_img);
         cv::waitKey(0);
-}
+    }
+}  // Namespace POLPro
 
 void processCallback(const sensor_msgs::ImageConstPtr& msg){
 
@@ -211,9 +230,9 @@ void processCallback(const sensor_msgs::ImageConstPtr& msg){
     /* Gray scale image */
     cv::Mat img;
     img = cv_ptr->image.clone();
-    std::vector<cv::Mat> angle_image = POLPro::raw2mat(img, false);
+    std::vector<cv::Mat> angle_image = POLPro::raw2mat(img, true);
 
-    cv::imshow("view", angle_image[0]);
+    //cv::imshow("view", angle_image[0]);
 }
 
 int main( int argc, char** argv )
@@ -284,3 +303,33 @@ int main( int argc, char** argv )
 //    return 0 ;
 
 // }
+//---------------------------------------------//
+//int main(int argc, char** argv) {
+//    if (argc != 2) {
+//        std::cout <<" Usage: display_image ImageToLoadAndDisplay" << std::endl;
+//        return -1;
+//    }
+
+//    cv::Mat image = cv::imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
+
+//    if (!image.data) {
+//        std::cout <<  "Could not open or find the image" << std::endl;
+//        return -1;
+//    }
+
+//    // parsed image from original image
+//    std::vector<cv::Mat> angle_image = POLPro::raw2mat(image, true);
+
+//    // Stokes parameters
+//    std::vector<cv::Mat> stokes_images = POLPro::compute_stokes(angle_image, 
+                                                                false);
+
+//    // polar components
+//    std::vector<cv::Mat> polar_images =
+//        POLPro::compute_polar_params(stokes_images, true);
+
+//    //POLPro::imshow(angle_image);
+//    // POLPro::imshow(stokes_images); 
+//    //POLPro::imshow(polar_images, false, false); 
+//   return 0;
+//}

@@ -159,8 +159,8 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 find_package(OpenCV REQUIRED)
-find_package(Boost REQUIRED COMPONENTS program_options thread)
-#INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
+find_package(Boost REQUIRED COMPONENTS log log_setup program_options thread)
+include_directories( ${Boost_INCLUDE_DIR} )
 
 # EBUS SDK
 set(EBUS_INCLUDE_DIRS ebus_sdk/include)
@@ -326,6 +326,7 @@ target_link_libraries(pleora_polarcam_driver
 )
 
 target_link_libraries(pix2image
+    -lpthread
     ${OpenCV_LIBRARIES}
     ${Boost_LIBRARIES}
     ${catkin_LIBRARIES}
