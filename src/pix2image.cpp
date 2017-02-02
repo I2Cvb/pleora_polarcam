@@ -31,8 +31,8 @@ namespace POLPro
         for (int angle = 0; angle < nb_angles; ++angle) {
             int offset_row = angle / 2;
             int offset_col = angle % 2;
-            // BOOST_LOG_TRIVIAL(debug) << "offset_row " << offset_row
-            //                          << " offset_col " << offset_col;
+            BOOST_LOG_TRIVIAL(debug) << "offset_row " << offset_row
+                                     << " offset_col " << offset_col;
 
             for (int row = 0; row < origin.rows/2; ++row)
                 for (int col = 0; col < origin.cols/2; ++col)
