@@ -1,8 +1,0 @@
-prefix=/home/lemaitre/catkin_ws/src/pleora_polarcam/devel
-
-Name: pleora_polarcam
-Description: Description of pleora_polarcam
-Version: 1.0.0
-Cflags: -I/home/lemaitre/catkin_ws/src/pleora_polarcam/devel/include
-Libs: -L/home/lemaitre/catkin_ws/src/pleora_polarcam/devel/lib 
-Requires: 

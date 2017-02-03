@@ -1,8 +1,0 @@
-prefix=/usr/local
-
-Name: pleora_polarcam
-Description: Description of pleora_polarcam
-Version: 1.0.0
-Cflags: -I/usr/local/include
-Libs: -L/usr/local/lib 
-Requires: 
