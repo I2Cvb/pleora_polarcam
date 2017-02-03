@@ -1,5 +1,5 @@
 <launch>
-	<node name="pleora_polarcam_driver" pkg="pleora_polarcam" type="pleora_polarcam_driver" args="_ip:=169.254.28.4" />
+	<node name="pleora_polarcam_driver" pkg="pleora_polarcam" type="pleora_polarcam_driver" args="_ip:=169.254.56.68" output="screen"/>
 	<!-- <node pkg="rqt_image_view" type="rqt_image_view" name="rqt_image_view" /> -->
 	<!-- <node pkg="rosbag" type="record" name="polar_data" respawn="true" output="screen" args="/pleora_polarcam/image_raw  /pleora_polarcam/camera_info -o $(find pleora_polarcam)/bags/ " /> -->
 	
