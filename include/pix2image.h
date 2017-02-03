@@ -41,7 +41,7 @@ namespace POLPro
     std::string minmax(const cv::Mat& img, const std::string& s);
 
     //ros functions
-    void processCallback(const sensor_msgs::ImageConstPtr& msg);
+    void processCallback(const sensor_msgs::ImageConstPtr& msg, std::string& s);
 
 }
 #endif //pix2image.h
