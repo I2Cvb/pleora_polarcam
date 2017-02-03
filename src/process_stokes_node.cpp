@@ -28,7 +28,7 @@ void processCallback(const sensor_msgs::ImageConstPtr& msg,
     try
     {
         cv_ptr = cv_bridge::toCvCopy(msg, "mono8");
-        //cv::imshow("view", cv_bridge::toCvCopy(msg, "mono8")-> image);
+        cv::imshow("Output image", cv_bridge::toCvCopy(msg, "mono8")-> image);
 
     }
     catch (cv_bridge::Exception& e)
@@ -42,12 +42,14 @@ void processCallback(const sensor_msgs::ImageConstPtr& msg,
     img = cv_ptr->image.clone();
     
    
-    //std::vector<cv::Mat> angle_image = POLPro::raw2mat(img, false);
-    std::vector<cv::Mat> output_img = POLPro::compute_stokes
-        (img, false);
-    POLPro::imshow(output_img, false, true); 
+    // //std::vector<cv::Mat> angle_image = POLPro::raw2mat(img, false);
+    // std::vector<cv::Mat> output_img = POLPro::compute_stokes
+    //     (img, false);
+    // POLPro::imshow(output_img, false, true); 
  
 }
+
+bool ros_shutdown = false;
 
 
 int main( int argc, char** argv )
@@ -72,11 +74,17 @@ int main( int argc, char** argv )
                                                               _1, 
                                                               boost::ref(nh)));
     
-    ros::spin();
-    cv::destroyWindow("Output image");
+    // ros::spin();
+    // cv::destroyWindow("Output image");
 
 
-    ros::spin();
+    while(ros::ok() && !ros_shutdown)
+        ros::spinOnce();
+
+
+    ros::shutdown();
+
+    //ros::spin();
     return 0 ;
 
 }

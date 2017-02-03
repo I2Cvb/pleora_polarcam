@@ -357,6 +357,7 @@ target_link_libraries(process_stokes_node
   -lpthread
   ${Boost_LIBRARIES}
   ${catkin_LIBRARIES}
+  ${GNUTLS_LIBRARIES}
 
 )
 
