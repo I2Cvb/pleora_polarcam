@@ -40,9 +40,6 @@ namespace POLPro
                 const bool is_stokes);
     std::string minmax(const cv::Mat& img, const std::string& s);
 
-    //ros functions
-    void processCallback(const sensor_msgs::ImageConstPtr& msg, std::string& s, 
-                         ros::NodeHandle &node_handle);
 
 }
 #endif //pix2image.h

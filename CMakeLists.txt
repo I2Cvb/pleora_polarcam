@@ -293,14 +293,16 @@ include_directories(
 #   src/${PROJECT_NAME}/photonfocus_camera.cpp
 # )
 add_library(ira_photonfocus src/photonfocus_camera.cpp)
+add_library(pix2image src/pix2image.cpp)
 
 ## Declare a cpp executable
 # add_executable(photonfocus_camera_node src/photonfocus_camera_node.cpp)
 
 # DRIVER
 add_executable(pleora_polarcam_driver src/photonfocus_driver.cpp)
-## pix2image executable
-add_executable(pix2image src/pix2image.cpp)
+## process executable
+add_executable(pix2image_node src/pix2image_node.cpp)
+add_executable(process_stokes_node src/process_stokes_node.cpp)
 
 # UTILITIES
 add_executable(set_ip src/utilities/set_ip.cpp)
@@ -324,6 +326,15 @@ target_link_libraries(ira_photonfocus
     ${GNUTLS_LIBRARIES}
 )
 
+
+target_link_libraries(pix2image
+  ${OpenCV_LIBRARIES}
+  -lpthread
+  ${Boost_LIBRARIES}
+  ${catkin_LIBRARIES}
+)
+
+
 target_link_libraries(pleora_polarcam_driver
     ira_photonfocus
     ${EBUS_LIBRARIES}
@@ -331,22 +342,33 @@ target_link_libraries(pleora_polarcam_driver
     ${GNUTLS_LIBRARIES}
 )
 
-target_link_libraries(pix2image
-    ${OpenCV_LIBRARIES}
-    -lpthread
-    ${Boost_LIBRARIES}
-    ${catkin_LIBRARIES}
+target_link_libraries(pix2image_node
+  pix2image
+  ${OpenCV_LIBRARIES}
+  -lpthread
+  ${Boost_LIBRARIES}
+  ${catkin_LIBRARIES}
 
 )
 
+target_link_libraries(process_stokes_node
+  pix2image
+  ${OpenCV_LIBRARIES}
+  -lpthread
+  ${Boost_LIBRARIES}
+  ${catkin_LIBRARIES}
+
+)
+
+
 target_link_libraries(set_ip
-    ${EBUS_LIBRARIES}
-    ${GNUTLS_LIBRARIES}
+  ${EBUS_LIBRARIES}
+  ${GNUTLS_LIBRARIES}
 )
 
 target_link_libraries(find_camera
-    ${EBUS_LIBRARIES}
-    ${GNUTLS_LIBRARIES}
+  ${EBUS_LIBRARIES}
+  ${GNUTLS_LIBRARIES}
 )
 
 #############

@@ -1,0 +1,3 @@
+<launch>
+	<node name="polar_process" pkg="pleora_polarcam" type="process_stokes_node" output="screen" />
+</launch>
