@@ -33,6 +33,8 @@
 *.out
 *.app
 
+# Bags
+
 # CMake
 
 CMakeCache.txt

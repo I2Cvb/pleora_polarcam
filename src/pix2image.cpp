@@ -11,10 +11,11 @@
 #include <cv_bridge/cv_bridge.h>
 #include <dynamic_reconfigure/server.h>
 #include <driver_base/SensorLevels.h>
-//#include <ira_photonfocus_driver/photonfocusConfig.h>
+#include <boost/filesystem.hpp>
+#include <std_msgs/String.h>
+
 
 #include <pix2image.h>
-//#include <photonfocus_camera.h>
 
 namespace POLPro
 {
@@ -26,7 +27,7 @@ namespace POLPro
         std::vector<cv::Mat> output_img(nb_angles);
         for (auto it = output_img.begin(); it != output_img.end(); ++it)
             *it = cv::Mat::zeros(output_size, CV_8U);
-
+        
         // copy the data in the new image
         for (int angle = 0; angle < nb_angles; ++angle) {
             int offset_row = angle / 2;
@@ -139,6 +140,7 @@ namespace POLPro
             + " - max= " + std::to_string(max);
     }
 
+
     void imshow(std::vector<cv::Mat> img, const bool as_hsv=false,
                 const bool is_stokes=true) {
 
@@ -146,7 +148,7 @@ namespace POLPro
         if ((img.size() != 3) && as_hsv)
             throw std::invalid_argument("img needs to be a 3 channels images"
                                         " if you need hsv support");
-
+       
         // Convert the data if Stokes or polarization parameters
         if (img.size() == 3) {
             if (is_stokes) {
@@ -160,12 +162,11 @@ namespace POLPro
                 img[2] = img[2] / 2;
             }
             // Convert to uint8
-            // for (auto it = img.begin(); it != img.end(); ++it)
-            //     *it.convertTo(*it, CV_8UC1);
-            for (int i = 0; i < img.size(); ++i)
+            for (int i = 0; i < img.size(); ++i){
                 img[i].convertTo(img[i], CV_8UC1);
+            }
+            
         }
-
         // Declare the output image
         cv::Mat output_img;
 
@@ -208,7 +209,7 @@ namespace POLPro
 }  // Namespace POLPro
 
 void processCallback(const sensor_msgs::ImageConstPtr& msg, 
-                     const std::string& s){
+                     const std::string& s, ros::NodeHandle &node_handle){
 
     // parsed image from original image
 
@@ -228,21 +229,45 @@ void processCallback(const sensor_msgs::ImageConstPtr& msg,
     /* Gray scale image */
     cv::Mat img;
     img = cv_ptr->image.clone();
+    
     if (s == "stokes"){
 
-        std::vector<cv::Mat> angle_image = POLPro::raw2mat(img, false);
-        std::vector<cv::Mat> stokes_images = POLPro::compute_stokes
-            (angle_image, true); 
+        //std::vector<cv::Mat> angle_image = POLPro::raw2mat(img, false);
+        std::vector<cv::Mat> output_img = POLPro::compute_stokes
+            (img, false);
+        POLPro::imshow(output_img, false, true); 
+        
     }else if (s == "polar"){
-        std::vector<cv::Mat> angle_image = POLPro::raw2mat(img, false);
-        std::vector<cv::Mat> stokes_images = POLPro::compute_stokes
-            (angle_image, false);
-        std::vector<cv::Mat> polar_images = POLPro::compute_polar_params
-            (stokes_images, true);   
+        std::vector<cv::Mat> output_img = POLPro::compute_polar_params
+            (img, false);
+        POLPro::imshow(output_img, false, false); 
     }else{
-         std::vector<cv::Mat> angle_image = POLPro::raw2mat(img, true);
+         std::vector<cv::Mat> output_img = POLPro::raw2mat(img, true);
+         POLPro::imshow(output_img); 
+
+         // //publishing array of images
+         // image_transport::Publisher pub = node_handle.advertise
+         //     <Static_Image_Publisher::ArrayImages>("/"+ s, 1, true); 
+ 
+         // sensor_msgs::CvBridge bridge_;
+         // Static_Image_Publisher::ArrayImages rosimgs;
+         // for (int i = 0; i < output_img.size(); ++i) {
+         //     output_img[i].convertTo(output_img[i], CV_8UC1);
+
+         //     try {
+         //         rosimgs.data.push_back(*(bridge_.cvToImgMsg(output_img[i], 
+         //                                                     "mono8")));
+         //     } catch (sensor_msgs::CvBridgeException error) {
+         //         ROS_ERROR("error");
+         //     }
+         // }
+         // pub.publish(rosimgs);     // publishing array of images 
+
+         
     }
+
 }
+
 
 int main( int argc, char** argv )
 {
@@ -264,11 +289,15 @@ int main( int argc, char** argv )
     cv::namedWindow("Output image");
     cv::startWindowThread();
     image_transport::ImageTransport n(nh);
+
+    // suscribing to image_raw topic 
     image_transport::Subscriber sub = n.subscribe("pleora_polarcam/image_raw"
                                                   , 1,
                                                   boost::bind(processCallback,
-                                                             _1, s));
-
+                                                              _1, s, 
+                                                              boost::ref(nh)));
+    
+    
     ros::spin();
     cv::destroyWindow("Output image");
 
