@@ -1,15 +1,10 @@
 <launch>
 	<node pkg="rosbag" type="play" name="rosbag" args="-d 2 $(find pleora_polarcam)/bags/_2016-12-07-17-09-15.bag" />
 	<node name="extract" pkg= "image_view" type="extract_images" respawn="false" output="screen" cwd ="node">
-	<remap from="image" to="/pleora_polarcam/image_raw/" />
+	<remap from="image" to="/pleora_polarcam_driver/image_raw/" />
 	<param name="filename_format" value="/home/lemaitre/test/frame%06i.jpg" />
 
 	</node>
 
-	<node name="extract2" pkg= "image_view" type="extract_images" respawn="false" output="screen" cwd ="node">
-	<remap from="image" to="/Stokes_params" />
-	<param name="filename_format" value="/home/lemaitre/test/images/frame%06i.jpg" />
-
-	</node>
 
 </launch>

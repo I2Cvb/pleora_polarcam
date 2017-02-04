@@ -1,7 +1,0 @@
-<launch>
-	<node name="find_camera" pkg="pleora_polarcam" type="find_camera">
-	<node name="pleora_polarcam_driver" pkg="pleora_polarcam" type="pleora_polarcam_driver" args="_ip:=169.254.28.4" />
-	<node name="polarized_analysis" pkg="pleora_polarcam" type="polar_process.py"/>
-	<!-- <node pkg="rosbag" type="record" name="polar_data" respawn="true" output="screen" args="/pleora_polarcam/image_raw  /pleora_polarcam/camera_info -o $(find pleora_polarcam)/bags/ " /> -->
-	
-</launch>

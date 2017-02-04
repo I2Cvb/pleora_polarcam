@@ -235,7 +235,7 @@ class polarized_analysis():
 
         # Suscribe to topic camera/image to get the data
         self.bridge = CvBridge()
-        self.image_sub = rospy.Subscriber("/pleora_polarcam/image_raw", Image, self.callback)
+        self.image_sub = rospy.Subscriber("/pleora_polarcam/image_raw",1, Image, self.callback)
 
         rospy.spin()
 
