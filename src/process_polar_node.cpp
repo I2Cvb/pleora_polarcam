@@ -43,9 +43,9 @@ void processCallback(const sensor_msgs::ImageConstPtr& msg,
     
    
     // //std::vector<cv::Mat> angle_image = POLPro::raw2mat(img, false);
-    std::vector<cv::Mat> output_img = POLPro::compute_stokes
+    std::vector<cv::Mat> output_img = POLPro::compute_polar_params
         (img, false);
-    POLPro::imshow(output_img, false, true); 
+    POLPro::imshow(output_img, false, false); 
  
 }
 
@@ -55,7 +55,7 @@ bool ros_shutdown = false;
 int main( int argc, char** argv )
 {
     // initializing the ros node
-    ros::init(argc, argv, "stokes");
+    ros::init(argc, argv, "polars");
     // creating ros handle, main access point to communicate to ros
     ros::NodeHandle nh;
 

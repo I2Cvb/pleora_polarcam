@@ -83,7 +83,7 @@ void processCallback(const sensor_msgs::ImageConstPtr& msg,
 int main( int argc, char** argv )
 {
     // initializing the ros node
-    ros::init(argc, argv, "pix2image");
+    ros::init(argc, argv, "process");
     // creating ros handle, main access point to communicate to ros
     ros::NodeHandle nh;
 
@@ -102,7 +102,7 @@ int main( int argc, char** argv )
     image_transport::ImageTransport n(nh);
 
     // suscribing to image_raw topic 
-    image_transport::Subscriber sub = n.subscribe("pleora_polarcam/image_raw"
+    image_transport::Subscriber sub = n.subscribe("pleora_polarcam_driver/image_raw"
                                                   , 1,
                                                   boost::bind(processCallback,
                                                               _1, s, 

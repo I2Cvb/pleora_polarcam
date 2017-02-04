@@ -303,6 +303,7 @@ add_executable(pleora_polarcam_driver src/photonfocus_driver.cpp)
 ## process executable
 add_executable(pix2image_node src/pix2image_node.cpp)
 add_executable(process_stokes_node src/process_stokes_node.cpp)
+add_executable(process_polar_node src/process_polar_node.cpp)
 
 # UTILITIES
 add_executable(set_ip src/utilities/set_ip.cpp)
@@ -352,6 +353,16 @@ target_link_libraries(pix2image_node
 )
 
 target_link_libraries(process_stokes_node
+  pix2image
+  ${OpenCV_LIBRARIES}
+  -lpthread
+  ${Boost_LIBRARIES}
+  ${catkin_LIBRARIES}
+  ${GNUTLS_LIBRARIES}
+
+)
+
+target_link_libraries(process_polar_node
   pix2image
   ${OpenCV_LIBRARIES}
   -lpthread
