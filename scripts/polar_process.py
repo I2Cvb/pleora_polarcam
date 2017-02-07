@@ -231,11 +231,11 @@ class polarized_analysis():
         # publishing to the topic stokes_params and Polar_params
         self.stokes_pub = rospy.Publisher("Stokes_params", Image,
                                           queue_size=5)
-        self.polar_pub = rospy.Publisher("Polar_params", Image, queue_size=5)
+        self.polar_pub = rospy.Publisher("Polar_params", Image, queue_size=1)
 
         # Suscribe to topic camera/image to get the data
         self.bridge = CvBridge()
-        self.image_sub = rospy.Subscriber("/pleora_polarcam/image_raw",1, Image, self.callback)
+        self.image_sub = rospy.Subscriber("/pleora_polarcam_driver/image_raw",1, Image, self.callback)
 
         rospy.spin()
 

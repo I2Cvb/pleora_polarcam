@@ -24,7 +24,7 @@
 
 #include <dynamic_reconfigure/server.h>
 #include <driver_base/SensorLevels.h>
-#include <ira_photonfocus_driver/photonfocusConfig.h>
+#include <pleora_polarcam/photonfocusConfig.h>
 
 #include <camera_info_manager/camera_info_manager.h>
 
