@@ -33,8 +33,8 @@ namespace POLPro
         for (int angle = 0; angle < nb_angles; ++angle) {
             int offset_row = angle / 2;
             int offset_col = angle % 2;
-            BOOST_LOG_TRIVIAL(debug) << "offset_row " << offset_row
-                                     << " offset_col " << offset_col;
+            // BOOST_LOG_TRIVIAL(debug) << "offset_row " << offset_row
+            //                          << " offset_col " << offset_col;
 
             for (int row = 0; row < origin.rows/2; ++row)
                 for (int col = 0; col < origin.cols/2; ++col)
@@ -113,10 +113,16 @@ namespace POLPro
         // normalize the maps
         // degree of polarization
         output_img[0] /= stokes_img[0];
+        BOOST_LOG_TRIVIAL(debug) << minmax(output_img[0], "DoP");
+
         // angle of polarization
         output_img[1] *= 0.5;
+        BOOST_LOG_TRIVIAL(debug) << minmax(output_img[1], "AoP");
+
         // copy s0
         stokes_img[0].copyTo(output_img[2]);
+        BOOST_LOG_TRIVIAL(debug) << minmax(output_img[2], "s0");
+
         if (show)
             imshow(output_img, false, false);
 
@@ -159,13 +165,20 @@ namespace POLPro
                 img[2] = (img[2] + 255.0) / 2.0;
             } else {
                 // polarization parameters normalization
+	        // DoP normalization
                 img[0] = img[0] * 255;
-                img[2] = img[2] / 2;
+		// AoP remains untouched since it is between 0 - 180, representing degree 
+                // S0 normalization 
+		img[2] = img[2] / 2;
             }
             // Convert to uint8
+	    BOOST_LOG_TRIVIAL(debug) << "The min and max value of the converted images: \n";
+
             for (int i = 0; i < img.size(); ++i){
                 img[i].convertTo(img[i], CV_8UC1);
-            }
+		BOOST_LOG_TRIVIAL(debug) << minmax(img[i], "img" + std::to_string(i));
+		    
+	    }
             
         }
         // Declare the output image
