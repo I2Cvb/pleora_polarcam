@@ -1,38 +1,107 @@
-ira_photonfocus_driver
+# pleora_polarcam
 ======================
-ROS device driver for PhotonFocus cameras based on Pleora’s eBUS™ Software Development Kit (SDK)
+ROS device driver and vision and image processing toolbox for imprex polar-cameras based on Pleora’s eBUS™ Software Development Kit (SDK)
 
-Requirements
-======================
-- Ubuntu 14.04 (or 12.04) x86_64
-- ROS Indigo (or Hydro)
+The driver was originally cloned from IRALab [ira_photonfocus_driver](
+https://github.com/iralabdisco/ira_photonfocus_driver.git) repository. 
 
-ROS Package contents
-======================
-This ROS package contains:
-- the ROS node which acts as driver for the camera;
-- a utility for scanning the ethernet interface for connected cameras
-- a utility for changing the IP of a specified camera (the ip changes temporarly, camera boot sets it to default)
+## Management of the repo 
+=========================
+You are on branch **8_bts_process**
 
-FAQ
-======================
-- Does it work on 32bit architecture?
-In order to make it work on 32bit architectures it should be sufficient to update the two symlink libudev.so.0 and libexpat.so.0 inside the folder ebus_sdk/lib and make them point to the 32bit version of the respective libraries. This can be done with the following commands within the folder of the package:
 
-for 32bit architecture:
-sudo ln -s /lib/i386-linux-gnu/libudev.so.1 ebus_sdk/lib/libudev.so.0
-sudo ln –s /lib/i386-linux-gnu/libexpat.so.1 ebus_sdk/lib/libexpat.so.0
+Each user should fork the project or clone (if they have the admin permision) and in their user space create extra branches if they like.
+In case of merging the new created branch with any of the existing branches, the users can request a PR (pull request). 
 
-for 64bit architecture [default]:
-sudo ln -s /lib/x86_64-linux-gnu/libudev.so.1 ebus_sdk/lib/libudev.so.0
-sudo ln –s /lib/x86_64-linux-gnu/libexpat.so.1 ebus_sdk/lib/libexpat.so.0
+## Running the program
+========================
+Assuming the pleora SDK and ROS requirements are installed, and the package is compiled with `catkin_make` to run the package use: 
 
-More Info
-======================
-Supported cameras         http://www.photonfocus.com/
-Pleora’s eBUS™ (SDK)      http://www.pleora.com/our-products/ebus-sdk
+### Using `rosrun`
 
-This ROS driver uses the Pleora’s eBUS™ SDK 4.0.6 for connecting and communicating with the camera devices.
+#### Initialize a roscore
+In a terminal 
+```
+	roscore 
+```
 
-It has been tested with Photonfocus AG MV1-D1312-40-GB-12 cameras and both ROS Indigo (Ubuntu 14.04)
-and ROS Hydro (Ubuntu 13.10).
+
+#### Finding the ip of the camera and strating the driver
+In another terminal
+```
+rosrun pleora_polarcam find_camera
+
+``` 
+This will return the ip of the camera to be used 
+
+```
+rosrun pleora_polarcam pleora_poalrcam_driver _ip:=THE_IP_FROM_FIND_CAMERA
+
+```
+
+#### Showing the 4 angle images acquired with the camera 
+
+```
+rosrun pleora_polarcam pix2image_node 'mat'
+
+```
+or 
+
+```
+rosrun pleora_polarcam process_angles_node 
+
+```
+
+#### Showing the 3 stokes images
+
+``` 
+rosrun pleora_polarcam pix2image_node 'stokes'
+
+``` 
+or
+
+``` 
+rosrun pleora_polarcam process_stokes_node
+
+```
+
+#### Showing the polarized parameters (DoP, AoP and S0) 
+
+```
+rosrun pleora_polarcam pix2image_node 'polar'
+
+```
+or 
+
+```
+rosrun pleora_polarcam process_polar_node 
+
+```
+
+
+### Using `roslaunch`
+
+First the ip address of the camera in the `pleora_polarcam_driver.launch` file should be adjusted to the found ip of the camera
+Second remeber ther is no need for roscore 
+
+#### Starting the driver 
+```
+roslaunch pleora_polarcam pleora_polarcam_driver.launch
+
+```
+
+### Showing angle images
+```
+roslaunch pleora_polarcam pix2image_process_mat.launch
+
+``` 
+### Showing stokes images
+```
+roslaunch pleora_polarcam pix2image_process_stokes.launch
+
+``` 
+### Showing polarized parameters
+```
+roslaunch pleora_polarcam pix2image_process_polar.launch
+
+``` 
