@@ -153,12 +153,18 @@ void PhotonFocusCamera::acquireImages()
                 if(buffer->GetPayloadType() == PvPayloadTypeImage)
                 {
                     image = buffer->GetImage();
-                    raw_image = cv::Mat(image->GetHeight(),image->GetWidth(),CV_8UC1,image->GetDataPointer());
-                    //raw_image = cv::Mat(image->GetHeight(),image->GetWidth(),CV_16UC1,image->GetDataPointer());
+                    //raw_image = cv::Mat(image->GetHeight(),image->GetWidth(),CV_8UC1,image->GetDataPointer());
+                    raw_image = cv::Mat(image->GetHeight(),image->GetWidth(),CV_16U,image->GetDataPointer());
+		    raw_image = raw_image * 64 ; 
+                    // std::cout << " W:" << std::setw(4) << std::setfill(' ') << std::left << std::dec << raw_image.cols
+                    //           << " H:" << std::setw(4) << std::setfill(' ') << std::left << std::dec << raw_image.rows;
 
-                    std::cout << " W:" << std::setw(4) << std::setfill(' ') << std::left << std::dec << raw_image.cols
-                              << " H:" << std::setw(4) << std::setfill(' ') << std::left << std::dec << raw_image.rows;
-
+		    //  double min, max ;
+		    // cv::Point idmin, idmax;
+		    //cv::minMaxLoc(raw_image, &min, &max, &idmin, &idmax);
+		    //		    std::cout << "min max values :" << min <<  "  _ " << max << std::endl;
+		    // cv::imshow ("raw image", raw_image);
+		      
                     // !!!! THIS IS THE POINT WHERE THE EXTERNAL CALLBACK IS CALLED !!!!
                     callback(raw_image);
                 }

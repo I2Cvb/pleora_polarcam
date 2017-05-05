@@ -20,6 +20,7 @@
 
 namespace POLPro
 {
+
     std::vector<cv::Mat> raw2mat(const cv::Mat& origin, const bool show=true) {
         // define the size of the output
         cv::Size output_size(origin.cols / 2, origin.rows / 2);
@@ -27,18 +28,18 @@ namespace POLPro
         const int nb_angles = 4;
         std::vector<cv::Mat> output_img(nb_angles);
         for (auto it = output_img.begin(); it != output_img.end(); ++it)
-            *it = cv::Mat::zeros(output_size, CV_8U);
+            *it = cv::Mat::zeros(output_size, CV_16U);
         
         // copy the data in the new image
         for (int angle = 0; angle < nb_angles; ++angle) {
             int offset_row = angle / 2;
             int offset_col = angle % 2;
-            BOOST_LOG_TRIVIAL(debug) << "offset_row " << offset_row
-                                     << " offset_col " << offset_col;
+            // BOOST_LOG_TRIVIAL(debug) << "offset_row " << offset_row
+            //                          << " offset_col " << offset_col;
 
             for (int row = 0; row < origin.rows/2; ++row)
                 for (int col = 0; col < origin.cols/2; ++col)
-                    output_img[angle].at<uchar>(row, col) = origin.at<uchar>(
+		  output_img[angle].at<unsigned short>(row, col) = origin.at<unsigned short>(
                         2 * row + offset_row, 2 * col + offset_col);
         }
 
@@ -113,10 +114,14 @@ namespace POLPro
         // normalize the maps
         // degree of polarization
         output_img[0] /= stokes_img[0];
+        BOOST_LOG_TRIVIAL(debug) << minmax(output_img[0], "DoP");
         // angle of polarization
         output_img[1] *= 0.5;
+        BOOST_LOG_TRIVIAL(debug) << minmax(output_img[1], "AoP");
         // copy s0
         stokes_img[0].copyTo(output_img[2]);
+        BOOST_LOG_TRIVIAL(debug) << minmax(output_img[2], "s0");
+
         if (show)
             imshow(output_img, false, false);
 
@@ -155,16 +160,22 @@ namespace POLPro
             if (is_stokes) {
                 // Stokes parameters normalization
                 img[0] /= 2.0;
-                img[1] = (img[1] + 255.0) / 2.0;
-                img[2] = (img[2] + 255.0) / 2.0;
+                img[1] = (img[1] + (cv::pow(2, 16)-1)) / 2.0;
+		img[2] = (img[2] + (cv::pow(2, 16)-1)) / 2.0;
             } else {
                 // polarization parameters normalization
-                img[0] = img[0] * 255;
-                img[2] = img[2] / 2;
+	      img[0] = img[0] * (cv::pow(2, 16) -1);
+	      //angle is between 0 and 180 to show it in the CV_16U we just applify it by the maxVal/2
+	      // img[1] = img[1] + (cv::pow(2, 10) -1); // original computation
+	      img[1] = (img[1] / 180.0) * (cv::pow(2, 16) -1);  // added by Olivier
+	      img[2] = img[2] / 2;
             }
-            // Convert to uint8
-            for (int i = 0; i < img.size(); ++i){
-                img[i].convertTo(img[i], CV_8UC1);
+            // Convert to uint16
+
+	    BOOST_LOG_TRIVIAL(debug) << "The min and maximum of the converted image : \n "  ;
+	    for (int i = 0; i < img.size(); ++i){
+                img[i].convertTo(img[i], CV_16U);
+		BOOST_LOG_TRIVIAL(debug) << minmax(img[i], "Img" + std::to_string(i));
             }
             
         }
@@ -186,7 +197,7 @@ namespace POLPro
             // Concatenate the images available together
             cv::Size img_size(img[0].cols, img[0].rows);
             output_img = cv::Mat::zeros
-                (img[0].rows*2, img[0].cols*2, CV_8UC1);
+                (img[0].rows*2, img[0].cols*2, CV_16U);
             int rows = img[0].rows; 
             int cols = img[0].cols;
             
@@ -195,6 +206,7 @@ namespace POLPro
                 // we need to shift the image next to each other properly
                 int offset_col = i % 2;
                 int offset_row = i / 2;
+		BOOST_LOG_TRIVIAL(debug) << minmax(img[i], "origin"+ std::to_string(i)); 
                
                 img[i].copyTo(output_img(
                                   cv::Rect(img_size.width * offset_col,

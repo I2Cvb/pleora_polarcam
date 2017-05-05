@@ -7,11 +7,7 @@ https://github.com/iralabdisco/ira_photonfocus_driver.git) repository.
 
 ## Management of the repo 
 =========================
-The current version of the repo contains three branches: 
-
-* master 
-* 8_bts_process
-* 10_bts_process
+You are on the branch ** 10_bts_process **
 
 Each user should fork the project or clone (if they have the admin permision) and in their user space create extra branches if they like.
 In case of merging the new created branch with any of the existing branches, the users can request a PR (pull request). 
