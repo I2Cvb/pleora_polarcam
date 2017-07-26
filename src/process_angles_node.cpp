@@ -40,12 +40,10 @@ void processCallback(const sensor_msgs::ImageConstPtr& msg,
     /* Gray scale image */
     cv::Mat img;
     img = cv_ptr->image.clone();
-    
    
     std::vector<cv::Mat> output_img = POLPro::raw2mat(img, false); 
         (img, false);
     POLPro::imshow(output_img, false, false); 
- 
 }
 
 bool ros_shutdown = false;

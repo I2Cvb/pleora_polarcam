@@ -41,6 +41,7 @@ void processCallback(const sensor_msgs::ImageConstPtr& msg,
     /* Gray scale image */
     cv::Mat img;
     img = cv_ptr->image.clone();
+
     std_msgs::Header h = msg -> header; 
     std::string name; 
     name = std::to_string(h.stamp.sec) + ".tiff"; 
@@ -59,13 +60,20 @@ void processCallback(const sensor_msgs::ImageConstPtr& msg,
 	POLPro::imshow(output_img, false, true); 
 
     }else if (s == "polar"){
-        std::vector<cv::Mat> output_img = POLPro::compute_polar_params
-            (img, false);
+        
         if (save){
-	  output_img = POLPro::polar_stokes_preprocessing(output_img, false);
-	  POLPro::imsave(output_img, name, s, PathtoSave); 
+	  std::vector<cv::Mat> out_to_save_imgs = POLPro::compute_polar_params
+            (img, false);
+	
+	  out_to_save_imgs = POLPro::polar_stokes_preprocessing(out_to_save_imgs, false);
+	  POLPro::imsave(out_to_save_imgs, name, s, PathtoSave); 
 	}
+	
+	std::vector<cv::Mat> output_img = POLPro::compute_polar_params
+            (img, false);
+	
 	POLPro::imshow(output_img, false, false); 
+
 	
     }else{
          std::vector<cv::Mat> output_img = POLPro::raw2mat(img, true);
