@@ -20,7 +20,8 @@
 
 
 void processCallback(const sensor_msgs::ImageConstPtr& msg, 
-                     const std::string& s, ros::NodeHandle &node_handle){
+                     const std::string& s, 
+		     ros::NodeHandle &node_handle, const bool save=false){
 
     // parsed image from original image
 
@@ -40,40 +41,38 @@ void processCallback(const sensor_msgs::ImageConstPtr& msg,
     /* Gray scale image */
     cv::Mat img;
     img = cv_ptr->image.clone();
+    std_msgs::Header h = msg -> header; 
+    std::string name; 
+    name = std::to_string(h.stamp.sec) + ".tiff"; 
+    std::string PathtoSave; 
+    PathtoSave = "/home/viper/ros/indigo/catkin_ws/src/pleora_polarcam/images/"; 
     
     if (s == "stokes"){
 
         //std::vector<cv::Mat> angle_image = POLPro::raw2mat(img, false);
         std::vector<cv::Mat> output_img = POLPro::compute_stokes
             (img, false);
-        POLPro::imshow(output_img, false, true); 
-        
+    	if (save){
+	  output_img = POLPro::polar_stokes_preprocessing(output_img, true); 
+	  POLPro::imsave(output_img, name, s, PathtoSave); 
+	}
+	POLPro::imshow(output_img, false, true); 
+
     }else if (s == "polar"){
         std::vector<cv::Mat> output_img = POLPro::compute_polar_params
             (img, false);
-        POLPro::imshow(output_img, false, false); 
+        if (save){
+	  output_img = POLPro::polar_stokes_preprocessing(output_img, false);
+	  POLPro::imsave(output_img, name, s, PathtoSave); 
+	}
+	POLPro::imshow(output_img, false, false); 
+	
     }else{
          std::vector<cv::Mat> output_img = POLPro::raw2mat(img, true);
          POLPro::imshow(output_img, false, false); 
-
-         // //publishing array of images
-         // image_transport::Publisher pub = node_handle.advertise
-         //     <Static_Image_Publisher::ArrayImages>("/"+ s, 1, true); 
- 
-         // sensor_msgs::CvBridge bridge_;
-         // Static_Image_Publisher::ArrayImages rosimgs;
-         // for (int i = 0; i < output_img.size(); ++i) {
-         //     output_img[i].convertTo(output_img[i], CV_8UC1);
-
-         //     try {
-         //         rosimgs.data.push_back(*(bridge_.cvToImgMsg(output_img[i], 
-         //                                                     "mono8")));
-         //     } catch (sensor_msgs::CvBridgeException error) {
-         //         ROS_ERROR("error");
-         //     }
-         // }
-         // pub.publish(rosimgs);     // publishing array of images 
-
+	 if (save){
+	   POLPro::imsave(output_img, name, s, PathtoSave); 
+	     }
          
     }
 
@@ -91,12 +90,13 @@ int main( int argc, char** argv )
     //ros::Subscriber sub = n.subscribe("pleora_polarcam/raw_image",
     //				      1000, processCallback);
 
-    if (argc != 2) {
-        std::cout <<" Usage: display_image Option (mat, stokes, polar)" 
+    if (argc <=1) {
+        std::cout <<" Usage: display_image Option (mat, stokes, polar) save(true, None)" 
                   << std::endl;
         return -1;
     }
-    std::string s = argv[1]; 
+    std::string s = argv[1];
+
     cv::namedWindow("Output image");
     cv::startWindowThread();
     image_transport::ImageTransport n(nh);
@@ -105,8 +105,7 @@ int main( int argc, char** argv )
     image_transport::Subscriber sub = n.subscribe("pleora_polarcam_driver/image_raw"
                                                   , 1,
                                                   boost::bind(processCallback,
-                                                              _1, s, 
-                                                              boost::ref(nh)));
+                                                              _1, s, boost::ref(nh), argv[2]));
     
     ros::spin();
     cv::destroyWindow("Output image");
