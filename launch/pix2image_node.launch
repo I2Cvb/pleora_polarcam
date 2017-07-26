@@ -1,3 +1,0 @@
-<launch>
-	<node name="process" pkg="pleora_polarcam" type="pix2image_node" args=" 'mat' "  output="screen" />
-</launch>
