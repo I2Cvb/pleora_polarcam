@@ -7,6 +7,7 @@ add_definitions(-DBOOST_LOG_DYN_LINK=1)
 set(CMAKE_BUILD_TYPE Debug)
 set (CMAKE_CXX_FLAGS "-lboost_system") 
 set(CMAKE_CXX_FLAGS "-lpthread")
+
 # Architecture detection borrowed from: https://github.com/petroules/solar-cmake/blob/master/TargetArch.cmake
 # Based on the Qt 5 processor detection code, so should be very accurate
 # https://qt.gitorious.org/qt/qtbase/blobs/master/src/corelib/global/qprocessordetection.h
@@ -159,7 +160,7 @@ find_package(catkin REQUIRED COMPONENTS
   camera_info_manager
 )
 
-find_package(OpenCV REQUIRED)
+find_package(OpenCV 2.4.8 EXACT REQUIRED)
 ##find_package(Boost REQUIRED COMPONENTS system log log_setup thread
 ##  program_options)
 find_package(Boost 1.54 COMPONENTS log_setup log program_options thread REQUIRED)
@@ -339,6 +340,7 @@ target_link_libraries(pix2image
 
 target_link_libraries(pleora_polarcam_driver
     ira_photonfocus
+    ${OpenCV_LIBRARIES}
     ${EBUS_LIBRARIES}
     ${catkin_LIBRARIES}
     ${GNUTLS_LIBRARIES}

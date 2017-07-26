@@ -1,5 +1,5 @@
 <launch>
-	<node name="pleora_polarcam_driver" pkg="pleora_polarcam" type="pleora_polarcam_driver" args="_ip:=169.254.16.4" output="screen"/>
+	<node name="pleora_polarcam_driver" pkg="pleora_polarcam" type="pleora_polarcam_driver" args="_ip:=169.254.48.4" output="screen"/>
 
 	<!-- initialisation of the IMU has to be performed BEFORE launching this file -->
     	<!-- but does not work on the flow - to be fixed -->
