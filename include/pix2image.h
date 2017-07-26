@@ -17,7 +17,7 @@
 #include <ros/ros.h>
 #include <sensor_msgs/Image.h>
 #include <boost/scoped_ptr.hpp>
-
+//#include <boost/filesystem.hpp>
 
 
 //#include <photonfocus_camera.h>
@@ -39,6 +39,10 @@ namespace POLPro
     void imshow(std::vector<cv::Mat> img, const bool as_hsv,
                 const bool is_stokes);
     std::string minmax(const cv::Mat& img, const std::string& s);
+
+    std::vector<cv::Mat> polar_stokes_preprocessing(std::vector<cv::Mat> img, const bool as_stokes); 
+
+    void imsave(std::vector<cv::Mat> img, const std::string& s, const std::string method, const std::string PathtoSave);
 
 
 }

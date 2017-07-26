@@ -49,3 +49,9 @@ CTestTestfile.cmake
 
 # emacs backup
 *~
+
+
+# images 
+*.tiff
+*.jpg
+*.png
