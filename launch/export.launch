@@ -1,9 +1,9 @@
 <launch>
-	<node pkg="rosbag" type="play" name="rosbag" args="-d 2 $(find pleora_polarcam)/bags/calibration-pattern.bag" />
+	<node pkg="rosbag" type="play" name="rosbag" args="-d 2 $(find pleora_polarcam)/bags/roll-pitch-yaw_aprilgridA3.bag" />
 	<node name="extract" pkg= "image_view" type="extract_images" respawn="false" output="screen" cwd ="node">
 	<remap from="image" to="/pleora_polarcam_driver/image_raw/" />
-	<param name="filename_format" value="$(find pleora_polarcam)/images/frame%06i.tiff" />
-
+	<!-- <param name="filename_format" value="$(find pleora_polarcam)/images/frame.tiff" /> -->
+	
 	</node>
 
 

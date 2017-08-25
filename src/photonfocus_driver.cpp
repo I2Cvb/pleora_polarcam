@@ -121,9 +121,6 @@ public:
         camera->setDeviceAttribute<PvGenEnum,std::string>("PixelSize","Bpp16");
 
         //# ----- Image Size Control -----
-        //camera->setDeviceAttribute<PvGenInteger,long>("Width",config.Width*32+768);
-        //camera->setDeviceAttribute<PvGenInteger,long>("Width",config.Width);
-        //camera->setDeviceAttribute<PvGenInteger,long>("Height",config.Height);
         camera->setDeviceAttribute<PvGenInteger,long>("Width",640);
         camera->setDeviceAttribute<PvGenInteger,long>("Height",460);
 
@@ -136,9 +133,12 @@ public:
         camera->setDeviceAttribute<PvGenInteger,long>("ExposureTimeRaw",config.ExposureTimeRaw);
         camera->setDeviceAttribute<PvGenEnum,long>("ExposureMode",config.ExposureMode);
 
-        //camera->setDeviceAttribute<PvGenBoolean,bool>("ConstantFramerate_CFR",config.ConstantFramerate_CFR);
-//        if(config.ConstantFramerate_CFR)
-//            camera->setDeviceAttribute<PvGenFloat,double>("Frametime",config.Frametime);
+        // camera->setDeviceAttribute<PvGenBoolean,bool>("ConstantFramerate_CFR",config.ConstantFramerate_CFR);
+	// if(config.ConstantFramerate_CFR)
+        //    camera->setDeviceAttribute<PvGenFloat,double>("Frametime",config.Frametime);
+
+
+   	
 
 //        camera->setDeviceAttribute<PvGenBoolean,bool>("Trigger_Interleave",config.Trigger_Interleave);
 //        if(!config.Trigger_Interleave)\

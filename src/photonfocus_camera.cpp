@@ -147,7 +147,8 @@ void PhotonFocusCamera::acquireImages()
                 CHECK_RESULT(stream_parameters->GetIntegerValue("ErrorCount",error_count));
                 CHECK_RESULT(stream_parameters->GetEnumValue("LastError",last_error));
 //                CHECK_RESULT(device_parameters->GetIntegerValue("Average_Value",image_average));
-
+		std::cout << framerate << "FPS-set" <<std::endl;
+                
                 std::cout << std::fixed << std::setprecision(1);
                 std::cout << doodle[doodle_index];
                 if(buffer->GetPayloadType() == PvPayloadTypeImage)

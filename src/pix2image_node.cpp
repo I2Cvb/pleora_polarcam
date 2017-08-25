@@ -44,7 +44,7 @@ void processCallback(const sensor_msgs::ImageConstPtr& msg,
 
     std_msgs::Header h = msg -> header; 
     std::string name; 
-    name = std::to_string(h.stamp.sec) + ".tiff"; 
+    name = std::to_string(h.stamp.sec) + std::to_string(h.stamp.nsec) + ".tiff"; 
     std::string PathtoSave; 
     PathtoSave = "/home/viper/ros/indigo/catkin_ws/src/pleora_polarcam/images/"; 
     

@@ -87,11 +87,19 @@ or poa
 First the ip address of the camera in the `pleora_polarcam_driver.launch` file should be adjusted to the found ip of the camera
 Second remeber ther is no need for roscore 
 
-#### Starting the driver 
+#### Starting the driver and saving the images into a bag file
+The bag file is saved in ../bags folder 
+ 
 ```
 	roslaunch pleora_polarcam pleora_polarcam_driver.launch
 
 ```
+#### Starting the pleora and imu driver and saving the images and imu informatiom in a bag file
+```
+	roslaunch pleora_polarcam driver_imu.launch
+
+```
+
 
 #### Showing only 
 
