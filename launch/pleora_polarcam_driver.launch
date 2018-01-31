@@ -1,8 +1,8 @@
 <launch>
-	<node name="pleora_polarcam_driver" pkg="pleora_polarcam" type="pleora_polarcam_driver" args="_ip:=169.254.48.4" output="screen"/>
+	<node name="pleora_polarcam_driver" pkg="pleora_polarcam" type="pleora_polarcam_driver" args="_ip:=169.254.52.68" output="screen"/>
 
 
-	<node pkg="rosbag" type="record" name="driver_data" respawn="true" output="screen" args="/pleora_polarcam_driver/image_raw  /clock -o $(find pleora_polarcam)/bags/ " /> 
+	<!-- <node pkg="rosbag" type="record" name="driver_data" respawn="true" output="screen" args="/pleora_polarcam_driver/image_raw  /clock -o $(find pleora_polarcam)/bags/ " /> -->
 
 	<!-- <node pkg="rosbag" type="record" name="driver_data" respawn="true" output="screen" args="/pleora_polarcam_driver/image_raw  /pleora_polarcam_driver/camera_info -o $(find pleora_polarcam)/bags/ " /> -->
 	

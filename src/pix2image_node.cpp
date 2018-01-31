@@ -19,8 +19,8 @@
 #include <pix2image.h>
 
 
-void processCallback(const sensor_msgs::ImageConstPtr& msg, 
-                     const std::string& s, 
+void processCallback(const sensor_msgs::ImageConstPtr& msg,
+                     const std::string& s,
 		     ros::NodeHandle &node_handle, const bool save=false){
 
     // parsed image from original image
@@ -42,46 +42,46 @@ void processCallback(const sensor_msgs::ImageConstPtr& msg,
     cv::Mat img;
     img = cv_ptr->image.clone();
 
-    std_msgs::Header h = msg -> header; 
-    std::string name; 
-    name = std::to_string(h.stamp.sec) + std::to_string(h.stamp.nsec) + ".tiff"; 
-    std::string PathtoSave; 
-    PathtoSave = "/home/viper/ros/indigo/catkin_ws/src/pleora_polarcam/images/"; 
-    
+    std_msgs::Header h = msg -> header;
+    std::string name;
+    name = std::to_string(h.stamp.sec) + std::to_string(h.stamp.nsec) + ".tiff";
+    std::string PathtoSave;
+    PathtoSave = "/home/viper/ros/indigo/catkin_ws/src/pleora_polarcam/images/";
+
     if (s == "stokes"){
 
         //std::vector<cv::Mat> angle_image = POLPro::raw2mat(img, false);
         std::vector<cv::Mat> output_img = POLPro::compute_stokes
             (img, false);
     	if (save){
-	  output_img = POLPro::polar_stokes_preprocessing(output_img, true); 
-	  POLPro::imsave(output_img, name, s, PathtoSave); 
+	  output_img = POLPro::polar_stokes_preprocessing(output_img, true);
+	  POLPro::imsave(output_img, name, s, PathtoSave);
 	}
-	POLPro::imshow(output_img, false, true); 
+	POLPro::imshow(output_img, false, true);
 
     }else if (s == "polar"){
-        
+
         if (save){
 	  std::vector<cv::Mat> out_to_save_imgs = POLPro::compute_polar_params
             (img, false);
-	
+
 	  out_to_save_imgs = POLPro::polar_stokes_preprocessing(out_to_save_imgs, false);
-	  POLPro::imsave(out_to_save_imgs, name, s, PathtoSave); 
+	  POLPro::imsave(out_to_save_imgs, name, s, PathtoSave);
 	}
-	
+
 	std::vector<cv::Mat> output_img = POLPro::compute_polar_params
             (img, false);
-	
-	POLPro::imshow(output_img, false, false); 
 
-	
+	POLPro::imshow(output_img, false, false);
+
+
     }else{
          std::vector<cv::Mat> output_img = POLPro::raw2mat(img, true);
-         POLPro::imshow(output_img, false, false); 
+         POLPro::imshow(output_img, false, false);
 	 if (save){
-	   POLPro::imsave(output_img, name, s, PathtoSave); 
+	   POLPro::imsave(output_img, name, s, PathtoSave);
 	     }
-         
+
     }
 
 }
@@ -99,7 +99,7 @@ int main( int argc, char** argv )
     //				      1000, processCallback);
 
     if (argc <=1) {
-        std::cout <<" Usage: display_image Option (mat, stokes, polar) save(true, None)" 
+        std::cout <<" Usage: display_image Option (mat, stokes, polar) save(true, None)"
                   << std::endl;
         return -1;
     }
@@ -109,12 +109,12 @@ int main( int argc, char** argv )
     cv::startWindowThread();
     image_transport::ImageTransport n(nh);
 
-    // suscribing to image_raw topic 
+    // suscribing to image_raw topic
     image_transport::Subscriber sub = n.subscribe("pleora_polarcam_driver/image_raw"
                                                   , 1,
                                                   boost::bind(processCallback,
                                                               _1, s, boost::ref(nh), argv[2]));
-    
+
     ros::spin();
     cv::destroyWindow("Output image");
 
@@ -123,4 +123,3 @@ int main( int argc, char** argv )
     return 0 ;
 
 }
-
