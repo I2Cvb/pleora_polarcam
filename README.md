@@ -1,6 +1,6 @@
 # pleora_polarcam
 
-ROS device driver and vision and image processing toolbox for imprex polar-cameras based on Pleora’s eBUS™ Software Development Kit (SDK)
+ROS driver and image processing toolbox for imprex polar-cameras based on Pleora’s eBUS™ Software Development Kit (SDK)
 
 The driver was originally cloned from IRALab [ira_photonfocus_driver](
 https://github.com/iralabdisco/ira_photonfocus_driver.git) repository. 
@@ -8,8 +8,7 @@ https://github.com/iralabdisco/ira_photonfocus_driver.git) repository.
 ## Management of the repo 
 The current version of the repo contains three branches: 
 
-* master 
-* 8_bts_process
+* master (8_bts_process)
 * 10_bts_process
 
 You are on the branch ** 8_bts_process **
