@@ -1,6 +1,6 @@
 # pleora_polarcam
 
-ROS device driver and vision and image processing toolbox for imprex polar-cameras based on Pleora’s eBUS™ Software Development Kit (SDK)
+ROS driver for imprex polar-cameras based on Pleora’s eBUS™ Software Development Kit (SDK)
 
 The driver was originally cloned from IRALab [ira_photonfocus_driver](
 https://github.com/iralabdisco/ira_photonfocus_driver.git) repository. 
@@ -136,4 +136,23 @@ The bag file is saved in ../bags folder
 ```
 	roslaunch pleora_polarcam save_polar_images.launch
 
+```
+
+#### Saving a bag file with imu information
+
+* Initialize the imu before strating the acqusition, following the instruction in [euler_imu](https://github.com/ralphseulin/euler_imu) repository
+* find the camera ip using `rosrun pleora_polarcam find_camera`
+* replace the ip in the `driver_imu.launch` file
+* launch the `driverl_imu.launch` file
+```
+	roslaunch pleora_polarcam driver_imu.launch
 ``` 
+
+This launch file will save  a bag file with the following topics:
+```
+	- /pleora_polarcam_driver/image_raw
+	- /imu_3dm_node/imu/pose
+	- /imu_3dm_node/imu/data
+	- /euler
+
+```
