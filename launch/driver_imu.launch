@@ -1,0 +1,18 @@
+<launch>
+	<node name="pleora_polarcam_driver" pkg="pleora_polarcam" type="pleora_polarcam_driver" args="_ip:=169.254.28.4" output="screen"/>
+
+	<!-- initialisation of the IMU has to be performed BEFORE launching this file -->
+    	<!-- but does not work on the flow - to be fixed -->
+    	<!-- with include file="$(find euler_imu)/launch/imu_gx3-35_init.launch" /-->
+  	
+    	<!-- launch microstrain_3dm_gx3_35 driver to publish raw data & pose -->
+    	<include file="$(find microstrain_3dm_gx3_35)/launch/imu.launch" />
+
+    	<!-- starts python script to convert quaternions to euler angles  -->
+	<node pkg="euler_imu" name="euler2imu" type="quaternion2euler.py">
+	</node>
+	
+
+	<node pkg="rosbag" type="record" name="driver_data" respawn="true" output="screen" args="/pleora_polarcam_driver/image_raw /imu_3dm_node/imu/data /imu_3dm_node/imu/pose /euler /clock -o $(find pleora_polarcam)/bags/ " /> 
+	
+</launch>

@@ -74,7 +74,7 @@ or
 	rosrun pleora_polarcam pix2image_node 'polar'
 
 ```
-or poa
+or 
 
 ```
 	rosrun pleora_polarcam process_polar_node 
